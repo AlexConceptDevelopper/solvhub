@@ -10,6 +10,7 @@ import SolutionStatsCard from "../components/SolutionStatsCard";
 import type { Vote } from "../types/vote";
 import VoteList from "../components/VoteList";
 import ErrorMessage from "../components/ErrorMessage";
+import useAsync from "../hooks/useAsync";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
@@ -20,53 +21,62 @@ export default function SolutionDetailPage() {
   const [votes, setVotes] = useState<Vote[]>([]);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    loading: loadingSolution,
+    error: errorSolution,
+    execute: executeSolution,
+  } = useAsync<Solution>();
 
-  const solutionId = Number(id);
+  const {
+    loading: loadingStats,
+    error: errorStats,
+    execute: executeStats,
+  } = useAsync<SolutionStats>();
 
-  if (Number.isNaN(solutionId)) {
-    setError("Identifiant de solution invalide");
-    setLoading(false);
-    return;
-  }
+  const {
+    loading: loadingVotes,
+    error: errorVotes,
+    execute: executeVotes,
+  } = useAsync<Vote[]>();
+
+  const {
+    loading: voting,
+    error: voteError,
+    execute: executeVote,
+  } = useAsync<Vote>();
 
   const loadSolution = async () => {
-    if (!id) {
-      setError("Identifiant manquant");
-      setLoading(false);
-      return;
-    }
+    if (!id) return;
 
     const solutionId = Number(id);
 
     if (Number.isNaN(solutionId)) {
-      setError("Identifiant de solution invalide");
-      setLoading(false);
       return;
     }
 
-    try {
-      setLoading(true);
-      setError(null);
+    const solutionData = await executeSolution(() =>
+      getSolutionById(solutionId),
+    );
 
-      const solutionData = await getSolutionById(solutionId);
+    if (solutionData) {
       setSolution(solutionData);
-
-      const statsData = await getSolutionStats(solutionId);
-      setStats(statsData);
-
-      const votesData = await getVotesBySolution(solutionId);
-      setVotes(votesData);
-
-      const voted = await hasUserVoted(solutionId, 1);
-      setAlreadyVoted(voted);
-    } catch (error) {
-      console.error(error);
-      setError("Impossible de charger la solution");
-    } finally {
-      setLoading(false);
     }
+
+    const statsData = await executeStats(() => getSolutionStats(solutionId));
+
+    if (statsData) {
+      setStats(statsData);
+    }
+
+    const votesData = await executeVotes(() => getVotesBySolution(solutionId));
+
+    if (votesData) {
+      setVotes(votesData);
+    }
+
+    const voted = await hasUserVoted(solutionId, 1);
+
+    setAlreadyVoted(voted);
   };
 
   useEffect(() => {
@@ -76,23 +86,39 @@ export default function SolutionDetailPage() {
   const handleVote = async (status: "SUCCESS" | "PARTIAL" | "FAILURE") => {
     if (!solution || alreadyVoted) return;
 
-    await createVote({
-      status,
-      comment: "",
-      userId: 1,
-      solutionId: solution.idSolution,
-    });
+    const result = await executeVote(() =>
+      createVote({
+        status,
+        comment: "",
+        userId: 1,
+        solutionId: solution.idSolution,
+      }),
+    );
+
+    if (result === null) {
+      return;
+    }
 
     setAlreadyVoted(true);
 
-    const updatedStats = await getSolutionStats(solution.idSolution);
-    setStats(updatedStats);
+    const updatedStats = await executeStats(() =>
+      getSolutionStats(solution.idSolution),
+    );
 
-    const updatedVotes = await getVotesBySolution(solution.idSolution);
-    setVotes(updatedVotes);
+    if (updatedStats) {
+      setStats(updatedStats);
+    }
+
+    const updatedVotes = await executeVotes(() =>
+      getVotesBySolution(solution.idSolution),
+    );
+
+    if (updatedVotes) {
+      setVotes(updatedVotes);
+    }
   };
 
-  if (loading) {
+  if (loadingSolution || loadingStats || loadingVotes) {
     return (
       <div
         className="
@@ -107,8 +133,19 @@ export default function SolutionDetailPage() {
     );
   }
 
-  if (error) {
-    return <ErrorMessage message={error} onRetry={loadSolution} />;
+  if (errorSolution || errorStats || errorVotes || voteError) {
+    return (
+      <ErrorMessage
+        message={
+          errorSolution ||
+          errorStats ||
+          errorVotes ||
+          voteError ||
+          "Une erreur est survenue"
+        }
+        onRetry={loadSolution}
+      />
+    );
   }
 
   if (!solution) {
@@ -151,6 +188,7 @@ export default function SolutionDetailPage() {
             text-blue-600
             font-semibold
             hover:underline
+            cursor-pointer
           "
         >
           ← Retour au problème
@@ -227,7 +265,7 @@ export default function SolutionDetailPage() {
         "
         >
           <button
-            disabled={alreadyVoted}
+            disabled={alreadyVoted || voting}
             onClick={() => handleVote("SUCCESS")}
             className="
             flex-1
@@ -243,11 +281,11 @@ export default function SolutionDetailPage() {
             disabled:cursor-not-allowed
           "
           >
-            👍 Réussie
+            {voting ? "Envoi..." : "👍 Réussie"}
           </button>
 
           <button
-            disabled={alreadyVoted}
+            disabled={alreadyVoted || voting}
             onClick={() => handleVote("PARTIAL")}
             className="
             flex-1
@@ -263,11 +301,11 @@ export default function SolutionDetailPage() {
             disabled:cursor-not-allowed
           "
           >
-            😐 Partielle
+            {voting ? "Envoi..." : "😐 Partielle"}
           </button>
 
           <button
-            disabled={alreadyVoted}
+            disabled={alreadyVoted || voting}
             onClick={() => handleVote("FAILURE")}
             className="
             flex-1
@@ -283,7 +321,7 @@ export default function SolutionDetailPage() {
             disabled:cursor-not-allowed
           "
           >
-            👎 Échec
+            {voting ? "Envoi..." : "👎 Échec"}
           </button>
         </div>
       </section>

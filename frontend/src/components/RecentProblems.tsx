@@ -3,15 +3,42 @@ import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "./ProblemCard";
 
+import useAsync from "../hooks/useAsync";
+import ErrorMessage from "./ErrorMessage";
+
 export default function RecentProblems() {
   const [problems, setProblems] = useState<Problem[]>([]);
+  const { loading, error, execute } = useAsync<Problem[]>();
 
   useEffect(() => {
-    getProblems().then((data) => {
-      // pour le moment on prend les 3 premiers
-      setProblems(data.slice(0, 3));
-    });
+    const loadProblems = async () => {
+      const data = await execute(() => getProblems());
+      if (data) {
+        setProblems(data.slice(0, 3));
+      }
+    };
+
+    loadProblems();
   }, []);
+
+  if (loading) {
+    return (
+      <section className="mt-12 text-center text-slate-500">
+        Chargement des derniers problèmes...
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="mt-12">
+        <ErrorMessage
+          message={error}
+          onRetry={() => window.location.reload()}
+        />
+      </section>
+    );
+  }
 
   return (
     <section

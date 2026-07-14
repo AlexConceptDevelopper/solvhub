@@ -2,7 +2,6 @@ import RecentProblems from "../components/RecentProblems";
 import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-
   const navigate = useNavigate();
 
   const categories = [
@@ -25,7 +24,6 @@ export default function HomePage() {
 
   return (
     <div className="max-w-6xl px-4 md:px-6 mx-auto">
-
       {/* HERO */}
       <section
         className="
@@ -39,9 +37,7 @@ export default function HomePage() {
           shadow-xl
         "
       >
-
         <div className="max-w-3xl">
-
           <p
             className="
               uppercase
@@ -54,7 +50,6 @@ export default function HomePage() {
           >
             Plateforme communautaire
           </p>
-
 
           <h1
             className="
@@ -69,7 +64,6 @@ export default function HomePage() {
             chaque problème.
           </h1>
 
-
           <p
             className="
               mt-5
@@ -79,11 +73,9 @@ export default function HomePage() {
               max-w-xl
             "
           >
-            Trouvez de l'aide, partagez vos expériences
-            et améliorez les solutions ensemble avec
-            la communauté SolvHub.
+            Trouvez de l'aide, partagez vos expériences et améliorez les
+            solutions ensemble avec la communauté SolvHub.
           </p>
-
 
           <div
             className="
@@ -93,7 +85,6 @@ export default function HomePage() {
               mt-8
             "
           >
-
             <a
               href="/problems"
               className="
@@ -110,7 +101,6 @@ export default function HomePage() {
               Trouver une solution
             </a>
 
-
             <button
               onClick={() => navigate("/problem/create")}
               className="
@@ -125,24 +115,14 @@ export default function HomePage() {
             >
               Poser un problème
             </button>
-
-
           </div>
-
         </div>
-
       </section>
-
-
 
       {/* CATEGORIES */}
       <section className="mt-12">
-
-
         <div className="flex justify-between items-end mb-6">
-
           <div>
-
             <h2
               className="
                 text-2xl
@@ -154,7 +134,6 @@ export default function HomePage() {
               Catégories populaires
             </h2>
 
-
             <p
               className="
                 text-slate-500
@@ -163,13 +142,8 @@ export default function HomePage() {
             >
               Explorez les problèmes les plus fréquents.
             </p>
-
           </div>
-
-
         </div>
-
-
 
         <div
           className="
@@ -179,9 +153,7 @@ export default function HomePage() {
             gap-6
           "
         >
-
           {categories.map((category) => (
-
             <div
               key={category.name}
               className="
@@ -198,7 +170,6 @@ export default function HomePage() {
                 cursor-pointer
               "
             >
-
               <div
                 className="
                   text-4xl
@@ -206,7 +177,6 @@ export default function HomePage() {
               >
                 {category.icon}
               </div>
-
 
               <h3
                 className="
@@ -219,7 +189,6 @@ export default function HomePage() {
                 {category.name}
               </h3>
 
-
               <p
                 className="
                   text-slate-500
@@ -228,58 +197,38 @@ export default function HomePage() {
               >
                 {category.count}
               </p>
-
-
             </div>
-
           ))}
-
-
         </div>
-
-
       </section>
 
-
-    <RecentProblems />
-      {/* FUTUR BLOCK */}
-      <section
+      <RecentProblems />
+      <div
         className="
-          mt-12
-          bg-white/70
-          rounded-2xl
-          border
-          border-slate-200
-          p-8
-          text-center
+          mt-8
+          flex
+          justify-center
         "
       >
-
-        <h2
+        <button
+          onClick={() => navigate("/problems")}
           className="
-            text-2xl
-            font-bold
-            text-slate-800
+            rounded-xl
+            border
+            border-blue-600
+            px-6
+            py-3
+            font-semibold
+            text-blue-600
+            hover:bg-blue-600
+            hover:text-white
+            transition
+            cursor-pointer
           "
         >
-          Une communauté qui avance ensemble
-        </h2>
-
-
-        <p
-          className="
-            text-slate-500
-            mt-3
-          "
-        >
-          Posez vos questions, partagez vos solutions
-          et aidez les autres membres.
-        </p>
-
-
-      </section>
-
-
+          Voir tous les problèmes →
+        </button>
+      </div>
     </div>
   );
 }

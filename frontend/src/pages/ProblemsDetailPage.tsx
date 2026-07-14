@@ -8,6 +8,8 @@ import SolutionCard from "../components/SolutionCard";
 
 import type { Problem } from "../types/problem";
 import type { Solution } from "../types/solution";
+
+import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 
 export default function ProblemDetailPage() {
@@ -16,43 +18,45 @@ export default function ProblemDetailPage() {
 
   const [problem, setProblem] = useState<Problem | null>(null);
   const [solutions, setSolutions] = useState<Solution[]>([]);
+  const {
+    loading: loadingProblem,
+    error: errorProblem,
+    execute: executeProblem,
+  } = useAsync<Problem>();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    loading: loadingSolutions,
+    error: errorSolutions,
+    execute: executeSolutions,
+  } = useAsync<Solution[]>();
 
-  const loadProblem = async () => {
+  useEffect(() => {
     if (!id) return;
 
     const problemId = Number(id);
 
-    if (Number.isNaN(problemId)) {
-      setError("Identifiant de problème invalide");
-      setLoading(false);
-      return;
-    }
+    if (Number.isNaN(problemId)) return;
 
-    try {
-      setLoading(true);
-      setError(null);
+    const load = async () => {
+      const problemData = await executeProblem(() => getProblemById(problemId));
 
-      const problemData = await getProblemById(problemId);
-      setProblem(problemData);
+      if (problemData) {
+        setProblem(problemData);
+      }
 
-      const solutionsData = await getSolutionsByProblem(problemId);
-      setSolutions(solutionsData);
-    } catch (error) {
-      console.error(error);
-      setError("Impossible de charger le problème");
-    } finally {
-      setLoading(false);
-    }
-  };
+      const solutionsData = await executeSolutions(() =>
+        getSolutionsByProblem(problemId),
+      );
 
-  useEffect(() => {
-    loadProblem();
+      if (solutionsData) {
+        setSolutions(solutionsData);
+      }
+    };
+
+    load();
   }, [id]);
 
-  if (loading) {
+  if (loadingProblem) {
     return (
       <div
         className="
@@ -62,13 +66,18 @@ export default function ProblemDetailPage() {
         text-slate-500
       "
       >
-        Chargement...
+        Chargement du problème...
       </div>
     );
   }
 
-  if (error) {
-    return <ErrorMessage message={error} onRetry={loadProblem} />;
+  if (errorProblem) {
+    return (
+      <ErrorMessage
+        message={errorProblem}
+        onRetry={() => window.location.reload()}
+      />
+    );
   }
 
   if (!problem) {
@@ -83,6 +92,21 @@ export default function ProblemDetailPage() {
         space-y-10
       "
     >
+      <button
+        onClick={() => navigate("/problems")}
+        className="
+          mb-6
+          flex
+          items-center
+          gap-2
+          text-blue-600
+          font-semibold
+          hover:underline
+          cursor-pointer
+        "
+      >
+        ← Retour aux problèmes
+      </button>
       {/* PROBLEME */}
 
       <section
@@ -160,6 +184,7 @@ export default function ProblemDetailPage() {
             font-semibold
             hover:bg-blue-700
             transition
+            cursor-pointer
           "
         >
           Proposer une solution
@@ -189,9 +214,9 @@ export default function ProblemDetailPage() {
 
             <p
               className="
-                text-slate-500
-                mt-1
-              "
+              text-slate-500
+              mt-1
+            "
             >
               Les solutions proposées par la communauté.
             </p>
@@ -207,7 +232,30 @@ export default function ProblemDetailPage() {
           </span>
         </div>
 
-        {solutions.length === 0 && (
+        {loadingSolutions && (
+          <div
+            className="
+            bg-white/70
+            rounded-2xl
+            border
+            border-slate-200
+            p-6
+            text-center
+            text-slate-500
+          "
+          >
+            Chargement des solutions...
+          </div>
+        )}
+
+        {errorSolutions && (
+          <ErrorMessage
+            message={errorSolutions}
+            onRetry={() => window.location.reload()}
+          />
+        )}
+
+        {!loadingSolutions && solutions.length === 0 && (
           <div
             className="
               bg-white/70
@@ -222,9 +270,11 @@ export default function ProblemDetailPage() {
             Aucune solution disponible pour le moment.
           </div>
         )}
+
         <div
           className="
             space-y-5
+            mt-5
           "
         >
           {solutions.map((solution) => (

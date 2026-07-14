@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { createProblem } from "../api/problem.api";
 import type { ProblemCreate, Problem } from "../types/problem";
 import useAsync from "../hooks/useAsync";
+import ErrorMessage from "../components/ErrorMessage";
 
 export default function CreateProblemPage() {
   const navigate = useNavigate();
@@ -64,6 +65,8 @@ export default function CreateProblemPage() {
         >
           Poser un problème
         </h1>
+
+        {error && <ErrorMessage message={error} />}
 
         <p
           className="

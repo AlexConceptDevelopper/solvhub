@@ -83,21 +83,6 @@ export default function Navbar() {
           </button>
 
           <button
-            onClick={() => navigate("/problem/create")}
-            className="
-            bg-blue-600
-            text-white
-            px-4
-            py-2
-            rounded-xl
-            hover:bg-blue-700
-            transition
-          "
-          >
-            Poser un problème
-          </button>
-
-          <button
             onClick={() => navigate("/login")}
             className="
              bg-blue-600
