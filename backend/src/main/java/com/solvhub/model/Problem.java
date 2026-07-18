@@ -24,8 +24,9 @@ public class Problem {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, length = 50)
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "id_category", nullable = false)
+    private Category category;
 
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

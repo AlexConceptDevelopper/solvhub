@@ -16,7 +16,7 @@ public class ProblemDTO {
 
     private String description;
 
-    private String category;
+    private CategoryDTO category;
 
     private Instant createdAt;
 

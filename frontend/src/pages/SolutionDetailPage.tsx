@@ -74,7 +74,7 @@ export default function SolutionDetailPage() {
       setVotes(votesData);
     }
 
-    const voted = await hasUserVoted(solutionId, 1);
+    const voted = await hasUserVoted(solutionId,0);
 
     setAlreadyVoted(voted);
   };
@@ -90,7 +90,7 @@ export default function SolutionDetailPage() {
       createVote({
         status,
         comment: "",
-        userId: 1,
+        userId: 0,
         solutionId: solution.idSolution,
       }),
     );

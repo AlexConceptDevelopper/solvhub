@@ -1,0 +1,498 @@
+[
+  {
+    "problemTitle": "Mon PC ne démarre plus",
+    "title": "Vérifier le câble d'alimentation",
+    "steps": "1. Débrancher puis rebrancher le câble d'alimentation.\n2. Tester une autre prise secteur.\n3. Vérifier que l'interrupteur à l'arrière de l'alimentation est sur ON.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Mon PC ne démarre plus",
+    "title": "Réinitialiser le CMOS",
+    "steps": "1. Ouvrir le boîtier.\n2. Retirer la pile CMOS pendant 5 minutes.\n3. Remettre la pile et redémarrer.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Mon PC ne démarre plus",
+    "title": "Tester l'alimentation avec un autre bloc",
+    "steps": "1. Emprunter une alimentation compatible.\n2. La brancher à la carte mère et au processeur.\n3. Tenter un démarrage pour isoler la panne.",
+    "difficulty": 3,
+    "timeMinutes": 45,
+    "riskLevel": 3
+  },
+  {
+    "problemTitle": "Windows reste bloqué au démarrage",
+    "title": "Forcer un redémarrage propre",
+    "steps": "1. Maintenir le bouton d'alimentation 10 secondes.\n2. Redémarrer normalement.\n3. Laisser Windows terminer sa réparation automatique si proposée.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Windows reste bloqué au démarrage",
+    "title": "Démarrer en mode sans échec",
+    "steps": "1. Redémarrer 3 fois de suite en forçant l'arrêt pendant le chargement.\n2. Choisir 'Mode sans échec' dans les options de récupération.\n3. Désinstaller la dernière mise à jour ou le dernier pilote installé.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Windows reste bloqué au démarrage",
+    "title": "Restaurer le système via une clé USB",
+    "steps": "1. Créer une clé USB de réparation Windows.\n2. Démarrer dessus.\n3. Lancer l'outil de restauration système vers un point antérieur.",
+    "difficulty": 3,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Le Wi-Fi se déconnecte sans arrêt",
+    "title": "Redémarrer la box internet",
+    "steps": "1. Éteindre la box 30 secondes.\n2. La rallumer et attendre la reconnexion complète.\n3. Vérifier la stabilité pendant 10 minutes.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Le Wi-Fi se déconnecte sans arrêt",
+    "title": "Mettre à jour le pilote Wi-Fi",
+    "steps": "1. Ouvrir le gestionnaire de périphériques.\n2. Sélectionner l'adaptateur réseau sans fil.\n3. Mettre à jour le pilote automatiquement.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Le Wi-Fi se déconnecte sans arrêt",
+    "title": "Changer le canal Wi-Fi de la box",
+    "steps": "1. Se connecter à l'interface d'administration de la box.\n2. Passer en canal fixe moins encombré (1, 6 ou 11).\n3. Redémarrer la box pour appliquer le changement.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Écran bleu au démarrage",
+    "title": "Noter le code d'erreur affiché",
+    "steps": "1. Photographier l'écran bleu avant redémarrage.\n2. Rechercher le code d'arrêt exact (ex: IRQL, MEMORY_MANAGEMENT).\n3. Identifier la cause probable selon le code.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Écran bleu au démarrage",
+    "title": "Désinstaller le dernier pilote installé",
+    "steps": "1. Démarrer en mode sans échec.\n2. Ouvrir le gestionnaire de périphériques.\n3. Désinstaller ou revenir à la version précédente du pilote suspect.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Écran bleu au démarrage",
+    "title": "Vérifier la mémoire RAM",
+    "steps": "1. Lancer l'outil de diagnostic de la mémoire Windows.\n2. Redémarrer et laisser le test s'exécuter.\n3. Remplacer la barrette défectueuse si une erreur est détectée.",
+    "difficulty": 3,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Chauffage qui ne fonctionne plus",
+    "title": "Vérifier la pression de la chaudière",
+    "steps": "1. Regarder le manomètre de la chaudière.\n2. Si la pression est trop basse, ouvrir le robinet de remplissage.\n3. Refermer une fois la pression revenue à 1.5 bar.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Chauffage qui ne fonctionne plus",
+    "title": "Purger les radiateurs",
+    "steps": "1. Ouvrir la vis de purge de chaque radiateur avec la clé adaptée.\n2. Laisser l'air s'échapper jusqu'à ce que l'eau coule sans bulle.\n3. Refermer la vis fermement.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Chauffage qui ne fonctionne plus",
+    "title": "Faire intervenir un chauffagiste",
+    "steps": "1. Contacter un professionnel certifié.\n2. Décrire les symptômes précis observés.\n3. Faire réaliser un diagnostic complet de la chaudière.",
+    "difficulty": 3,
+    "timeMinutes": 120,
+    "riskLevel": 3
+  },
+  {
+    "problemTitle": "Robinet qui fuit",
+    "title": "Resserrer le raccord",
+    "steps": "1. Couper l'arrivée d'eau.\n2. Resserrer le raccord avec une clé plate.\n3. Rouvrir l'eau et vérifier l'absence de fuite.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Robinet qui fuit",
+    "title": "Remplacer le joint",
+    "steps": "1. Couper l'eau et démonter la tête du robinet.\n2. Retirer l'ancien joint usé.\n3. Installer un joint neuf de même diamètre et remonter.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Robinet qui fuit",
+    "title": "Remplacer la cartouche du mitigeur",
+    "steps": "1. Couper l'eau et démonter le levier du mitigeur.\n2. Retirer la cartouche défectueuse.\n3. Installer une cartouche neuve compatible et remonter l'ensemble.",
+    "difficulty": 3,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Batterie déchargée",
+    "title": "Démarrer avec des câbles de démarrage",
+    "steps": "1. Brancher les câbles sur une voiture donneuse, moteur éteint.\n2. Démarrer la voiture donneuse puis attendre 2 minutes.\n3. Démarrer la voiture en panne et laisser tourner 15 minutes.",
+    "difficulty": 1,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Batterie déchargée",
+    "title": "Recharger la batterie avec un chargeur",
+    "steps": "1. Brancher un chargeur de batterie adapté.\n2. Laisser charger plusieurs heures selon les indications du chargeur.\n3. Tester le démarrage une fois la charge terminée.",
+    "difficulty": 2,
+    "timeMinutes": 120,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Batterie déchargée",
+    "title": "Remplacer la batterie",
+    "steps": "1. Débrancher la borne négative puis la positive.\n2. Retirer l'ancienne batterie et installer la neuve.\n3. Rebrancher la positive puis la négative et vérifier le démarrage.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Voyant moteur orange allumé",
+    "title": "Vérifier le bouchon du réservoir",
+    "steps": "1. Contrôler que le bouchon d'essence est bien vissé.\n2. Revisser fermement jusqu'au clic.\n3. Attendre quelques trajets pour voir si le voyant s'éteint.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Voyant moteur orange allumé",
+    "title": "Lire le code défaut avec une valise OBD",
+    "steps": "1. Brancher une valise de diagnostic OBD2 sur la prise véhicule.\n2. Lancer la lecture des codes défauts.\n3. Identifier la pièce ou le capteur concerné.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Voyant moteur orange allumé",
+    "title": "Faire contrôler le véhicule en garage",
+    "steps": "1. Prendre rendez-vous chez un mécanicien.\n2. Communiquer le code défaut relevé si disponible.\n3. Faire réparer la pièce identifiée comme défectueuse.",
+    "difficulty": 3,
+    "timeMinutes": 120,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Four qui ne chauffe plus",
+    "title": "Vérifier le disjoncteur dédié",
+    "steps": "1. Ouvrir le tableau électrique.\n2. Vérifier que le disjoncteur du four n'a pas sauté.\n3. Réenclencher si nécessaire et tester le four.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Four qui ne chauffe plus",
+    "title": "Tester la résistance de chauffe",
+    "steps": "1. Débrancher le four.\n2. Accéder à la résistance à l'arrière du four.\n3. Tester sa continuité au multimètre et remplacer si besoin.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Four qui ne chauffe plus",
+    "title": "Faire appel à un technicien électroménager",
+    "steps": "1. Contacter un réparateur agréé.\n2. Décrire la panne et la marque du four.\n3. Faire diagnostiquer et remplacer la pièce défectueuse.",
+    "difficulty": 3,
+    "timeMinutes": 120,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Réfrigérateur trop chaud",
+    "title": "Vérifier le thermostat",
+    "steps": "1. Ouvrir le réfrigérateur et localiser la molette du thermostat.\n2. S'assurer qu'il n'est pas réglé au minimum.\n3. Ajuster sur une position intermédiaire et attendre quelques heures.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Réfrigérateur trop chaud",
+    "title": "Nettoyer les grilles de ventilation arrière",
+    "steps": "1. Débrancher le réfrigérateur.\n2. Dépoussiérer les grilles et le condenseur à l'arrière.\n3. Rebrancher et attendre le retour à température normale.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Réfrigérateur trop chaud",
+    "title": "Faire contrôler le circuit de froid",
+    "steps": "1. Contacter un technicien frigoriste agréé.\n2. Décrire les symptômes précis (bruit, givre, température).\n3. Faire vérifier le compresseur et le niveau de gaz réfrigérant.",
+    "difficulty": 3,
+    "timeMinutes": 120,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Mon smartphone ne charge plus",
+    "title": "Nettoyer le port de charge",
+    "steps": "1. Éteindre le téléphone.\n2. Retirer délicatement la poussière du port avec un cure-dent en bois.\n3. Rebrancher le câble et tester la charge.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Mon smartphone ne charge plus",
+    "title": "Tester avec un autre câble et chargeur",
+    "steps": "1. Emprunter un câble et un chargeur différents.\n2. Brancher le téléphone et observer si la charge démarre.\n3. Remplacer le câble ou le chargeur si le problème venait de là.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Enceinte Bluetooth qui ne s'appaire plus",
+    "title": "Réinitialiser l'enceinte",
+    "steps": "1. Maintenir le bouton power et volume simultanément 10 secondes.\n2. Attendre le signal sonore de réinitialisation.\n3. Relancer l'appairage depuis les paramètres Bluetooth du téléphone.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Enceinte Bluetooth qui ne s'appaire plus",
+    "title": "Oublier puis réappairer l'appareil",
+    "steps": "1. Supprimer l'enceinte de la liste des appareils Bluetooth du téléphone.\n2. Redémarrer le Bluetooth du téléphone.\n3. Relancer une recherche et réappairer depuis zéro.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Perceuse qui ne tient plus la charge",
+    "title": "Nettoyer les contacts de la batterie",
+    "steps": "1. Retirer la batterie de la perceuse.\n2. Nettoyer les contacts métalliques avec un chiffon sec.\n3. Réinsérer la batterie et tester l'autonomie.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Perceuse qui ne tient plus la charge",
+    "title": "Remplacer la batterie",
+    "steps": "1. Identifier le modèle exact de batterie compatible.\n2. Commander une batterie neuve du même voltage.\n3. Installer la nouvelle batterie et tester la perceuse.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Vis impossible à dévisser",
+    "title": "Appliquer un dégrippant",
+    "steps": "1. Vaporiser un dégrippant sur la vis rouillée.\n2. Laisser agir 10 minutes.\n3. Tenter de dévisser à nouveau avec un tournevis adapté.",
+    "difficulty": 1,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Vis impossible à dévisser",
+    "title": "Utiliser un extracteur de vis",
+    "steps": "1. Percer légèrement le centre de la vis si la tête est abîmée.\n2. Insérer un extracteur de vis adapté.\n3. Dévisser à l'aide d'une clé à cliquet.",
+    "difficulty": 3,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Tondeuse qui ne démarre plus",
+    "title": "Vérifier le niveau d'essence et l'huile",
+    "steps": "1. Contrôler le niveau d'essence dans le réservoir.\n2. Vérifier le niveau d'huile moteur.\n3. Compléter si nécessaire et retenter le démarrage.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Tondeuse qui ne démarre plus",
+    "title": "Nettoyer ou remplacer la bougie",
+    "steps": "1. Démonter la bougie d'allumage.\n2. Nettoyer les dépôts de carbone avec une brosse métallique.\n3. Remonter la bougie ou la remplacer si l'électrode est usée.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Pelouse qui jaunit par endroits",
+    "title": "Ajuster la fréquence d'arrosage",
+    "steps": "1. Arroser tôt le matin plutôt qu'en pleine chaleur.\n2. Augmenter légèrement la durée d'arrosage sur les zones touchées.\n3. Observer l'évolution sur une semaine.",
+    "difficulty": 1,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Pelouse qui jaunit par endroits",
+    "title": "Vérifier la présence de champignons ou larves",
+    "steps": "1. Soulever une motte de pelouse jaunie.\n2. Inspecter les racines à la recherche de larves ou moisissures.\n3. Appliquer un traitement adapté si un parasite est identifié.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Vélo qui fait un bruit de frottement",
+    "title": "Lubrifier la chaîne",
+    "steps": "1. Nettoyer la chaîne avec un chiffon sec.\n2. Appliquer un lubrifiant spécifique vélo maillon par maillon.\n3. Faire tourner les pédales pour répartir le lubrifiant.",
+    "difficulty": 1,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Vélo qui fait un bruit de frottement",
+    "title": "Régler le frein qui frotte sur la jante",
+    "steps": "1. Vérifier l'alignement des patins de frein.\n2. Desserrer légèrement le câble de frein si le patin touche la jante en permanence.\n3. Retendre progressivement en testant le freinage.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Pneu qui se dégonfle sans crevaison visible",
+    "title": "Tester la valve dans l'eau savonneuse",
+    "steps": "1. Gonfler légèrement le pneu.\n2. Passer de l'eau savonneuse sur la valve.\n3. Observer si des bulles se forment, signe d'une valve défectueuse.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Pneu qui se dégonfle sans crevaison visible",
+    "title": "Vérifier la chambre à air complète",
+    "steps": "1. Démonter le pneu et sortir la chambre à air.\n2. Gonfler la chambre hors du pneu et la plonger dans l'eau.\n3. Repérer les bulles indiquant une micro-perforation et réparer ou remplacer.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Photos floues malgré la mise au point",
+    "title": "Nettoyer la lentille de l'objectif",
+    "steps": "1. Retirer les traces de doigts ou poussière avec un chiffon microfibre.\n2. Utiliser une poire soufflante pour enlever les particules.\n3. Reprendre une photo test pour vérifier la netteté.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Photos floues malgré la mise au point",
+    "title": "Vérifier la vitesse d'obturation",
+    "steps": "1. Passer en mode priorité vitesse.\n2. Augmenter la vitesse d'obturation pour limiter le flou de bougé.\n3. Reprendre une série de photos en comparant les réglages.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Objectif qui ne fait plus la mise au point",
+    "title": "Basculer en mise au point manuelle",
+    "steps": "1. Passer le sélecteur AF/MF sur manuel.\n2. Ajuster la netteté à la bague de mise au point.\n3. Revenir en autofocus pour voir si le problème persiste.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Objectif qui ne fait plus la mise au point",
+    "title": "Nettoyer les contacts électroniques de l'objectif",
+    "steps": "1. Retirer l'objectif du boîtier.\n2. Nettoyer délicatement les contacts dorés avec un chiffon sec.\n3. Remonter l'objectif et tester l'autofocus.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 2
+  },
+  {
+    "problemTitle": "Manette qui se déconnecte en jeu",
+    "title": "Recharger complètement la manette",
+    "steps": "1. Brancher la manette avec son câble d'origine.\n2. Laisser charger jusqu'à 100%.\n3. Retester en jeu en filaire puis en sans-fil.",
+    "difficulty": 1,
+    "timeMinutes": 45,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Manette qui se déconnecte en jeu",
+    "title": "Réappairer la manette à la console",
+    "steps": "1. Éteindre la manette et la console.\n2. Rebrancher la manette en filaire pour la réassocier.\n3. Débrancher et tester la connexion sans fil.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Jeu qui plante au chargement",
+    "title": "Vérifier les mises à jour du jeu",
+    "steps": "1. Ouvrir le store de la console ou du launcher PC.\n2. Vérifier qu'aucune mise à jour du jeu n'est en attente.\n3. Installer la mise à jour et relancer le jeu.",
+    "difficulty": 1,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Jeu qui plante au chargement",
+    "title": "Réinstaller le jeu",
+    "steps": "1. Désinstaller complètement le jeu.\n2. Vérifier l'espace disque disponible.\n3. Réinstaller le jeu depuis le store officiel.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Aspirateur qui perd en puissance",
+    "title": "Vider et nettoyer le bac ou changer le sac",
+    "steps": "1. Retirer le bac à poussière ou le sac.\n2. Le vider complètement et nettoyer le filtre.\n3. Remonter l'ensemble et tester l'aspiration.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Aspirateur qui perd en puissance",
+    "title": "Vérifier les tuyaux à la recherche d'un bouchon",
+    "steps": "1. Débrancher l'aspirateur.\n2. Inspecter le tuyau flexible à la recherche d'un objet coincé.\n3. Retirer l'obstruction et remonter le tuyau.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Lave-linge qui laisse des traces sur le linge",
+    "title": "Réduire la quantité de lessive",
+    "steps": "1. Vérifier le dosage recommandé selon la dureté de l'eau.\n2. Réduire la quantité de lessive utilisée.\n3. Relancer un lavage test avec le nouveau dosage.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Lave-linge qui laisse des traces sur le linge",
+    "title": "Lancer un cycle de nettoyage à vide",
+    "steps": "1. Lancer un cycle à 90°C sans linge.\n2. Ajouter du vinaigre blanc ou un nettoyant dédié.\n3. Nettoyer le bac à lessive et le joint après le cycle.",
+    "difficulty": 2,
+    "timeMinutes": 45,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Fermeture éclair bloquée",
+    "title": "Lubrifier les dents de la fermeture",
+    "steps": "1. Frotter un crayon de cire ou du savon sec sur les dents.\n2. Faire coulisser doucement le curseur plusieurs fois.\n3. Vérifier que la fermeture glisse librement.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Fermeture éclair bloquée",
+    "title": "Dégager le tissu coincé avec une pince",
+    "steps": "1. Identifier le tissu pincé dans le curseur.\n2. Tirer délicatement le tissu avec une pince fine.\n3. Une fois libéré, refermer doucement la fermeture.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Montre connectée qui ne se synchronise plus",
+    "title": "Redémarrer la montre et le téléphone",
+    "steps": "1. Éteindre puis rallumer la montre connectée.\n2. Redémarrer le téléphone associé.\n3. Rouvrir l'application et relancer la synchronisation.",
+    "difficulty": 1,
+    "timeMinutes": 5,
+    "riskLevel": 1
+  },
+  {
+    "problemTitle": "Montre connectée qui ne se synchronise plus",
+    "title": "Réinstaller l'application compagnon",
+    "steps": "1. Désinstaller l'application de la montre sur le téléphone.\n2. La réinstaller depuis le store officiel.\n3. Reconnecter la montre en suivant l'appairage initial.",
+    "difficulty": 2,
+    "timeMinutes": 15,
+    "riskLevel": 1
+  }
+]

@@ -8,6 +8,7 @@ import ProblemDetailPage from "./pages/ProblemsDetailPage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import SolutionDetailPage from "./pages/SolutionDetailPage";
 import CreateSolutionPage from "./pages/CreateSolutionPage";
+import CategoryProblemsPage from "./pages/CategoryProblemsPage";
 
 function App() {
   return (
@@ -33,8 +34,9 @@ function App() {
           <Route path="/problem/create" element={<CreateProblemPage />} />
           <Route path="/problem/:id" element={<ProblemDetailPage />} />
           <Route path="/solution/:id" element={<SolutionDetailPage />} />
-          <Route path="/problem/:problemId/create-solution" element={<CreateSolutionPage />}
-          />
+          <Route path="/problem/:problemId/create-solution" element={<CreateSolutionPage />} />
+          <Route path="/categories/:idCategory" element={<CategoryProblemsPage />} />
+          
         </Routes>
       </main>
     </BrowserRouter>

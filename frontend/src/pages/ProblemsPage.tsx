@@ -33,7 +33,7 @@ export default function ProblemsPage() {
       problem.description.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory =
-      category === "Toutes" || problem.category === category;
+      category === "Toutes" || problem.category.name === category;
 
     return matchesSearch && matchesCategory;
   });

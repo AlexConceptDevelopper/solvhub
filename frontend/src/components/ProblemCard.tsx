@@ -41,7 +41,8 @@ export default function ProblemCard({problem}: Props) {
           mb-3
         "
       >
-        {problem.category}
+        <span>{problem.category.icon}</span>
+        <span>{problem.category.name}</span>
       </div>
 
 

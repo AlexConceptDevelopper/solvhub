@@ -132,7 +132,8 @@ export default function ProblemDetailPage() {
             rounded-full
           "
         >
-          {problem.category}
+          <span>{problem.category.icon}</span>
+          <span>{problem.category.name}</span>
         </span>
 
         <h1

@@ -9,9 +9,11 @@ import com.solvhub.model.Problem;
 public class ProblemMapper {
 
     private final UserMapper userMapper;
+    private final CategoryMapper categoryMapper;
 
-    public ProblemMapper(UserMapper userMapper) {
+    public ProblemMapper(UserMapper userMapper, CategoryMapper categoryMapper) {
         this.userMapper = userMapper;
+        this.categoryMapper = categoryMapper;
     }
 
 
@@ -25,7 +27,7 @@ public class ProblemMapper {
                 problem.getIdProblem(),
                 problem.getTitle(),
                 problem.getDescription(),
-                problem.getCategory(),
+                categoryMapper.toDTO(problem.getCategory()),
                 problem.getCreatedAt(),
                 userMapper.toDTO(problem.getUser())
         );

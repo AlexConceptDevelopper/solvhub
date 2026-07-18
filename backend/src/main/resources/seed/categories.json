@@ -1,0 +1,14 @@
+[
+  { "name": "Informatique", "icon": "💻" },
+  { "name": "Maison", "icon": "🏠" },
+  { "name": "Automobile", "icon": "🚗" },
+  { "name": "Électronique", "icon": "📱" },
+  { "name": "Bricolage", "icon": "🔧" },
+  { "name": "Jardin", "icon": "🌱" },
+  { "name": "Cuisine", "icon": "🍳" },
+  { "name": "Vélo", "icon": "🚲" },
+  { "name": "Photographie", "icon": "📷" },
+  { "name": "Jeux vidéo", "icon": "🎮" },
+  { "name": "Entretien", "icon": "🧹" },
+  { "name": "Divers", "icon": "📦" }
+]

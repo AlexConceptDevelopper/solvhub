@@ -45,6 +45,7 @@ public class SolutionService {
         return repo.save(solution);
     }
 
+    @Transactional
     public List<SolutionDTO> findAllDTO() {
 
         return repo.findAll()
@@ -53,6 +54,7 @@ public class SolutionService {
                 .toList();
     }
 
+    @Transactional
     public SolutionDTO findByIdDTO(Integer id) {
 
         Solution solution = repo.findById(id)

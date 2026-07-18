@@ -1,26 +1,28 @@
 import RecentProblems from "../components/RecentProblems";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import type { Category } from "../types/category";
+import { getCategoriesWithCount } from "../api/category.api";
+import { useEffect, useState } from "react";
+import useAsync from "../hooks/useAsync";
 
 export default function HomePage() {
   const navigate = useNavigate();
 
-  const categories = [
-    {
-      icon: "💻",
-      name: "Informatique",
-      count: "245 problèmes",
-    },
-    {
-      icon: "🏠",
-      name: "Maison",
-      count: "120 problèmes",
-    },
-    {
-      icon: "🚗",
-      name: "Automobile",
-      count: "80 problèmes",
-    },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { execute } = useAsync<Category[]>();
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await execute(() => getCategoriesWithCount());
+      if (data) {
+        const sorted = [...data].sort(
+          (a, b) => b.problemCount - a.problemCount,
+        );
+        setCategories(sorted);
+      }
+    };
+    loadCategories();
+  }, []);
 
   return (
     <div className="max-w-6xl px-4 md:px-6 mx-auto">
@@ -85,21 +87,21 @@ export default function HomePage() {
               mt-8
             "
           >
-            <a
-              href="/problems"
+            <Link
+              to="/problems"
               className="
-                bg-white
-                text-blue-600
-                px-5
-                py-2.5
-                rounded-xl
-                font-semibold
-                hover:bg-blue-50
-                transition
-              "
+              bg-white
+              text-blue-600
+              px-5
+              py-2.5
+              rounded-xl
+              font-semibold
+              hover:bg-blue-50
+              transition
+            "
             >
               Trouver une solution
-            </a>
+            </Link>
 
             <button
               onClick={() => navigate("/problem/create")}
@@ -123,83 +125,67 @@ export default function HomePage() {
       <section className="mt-12">
         <div className="flex justify-between items-end mb-6">
           <div>
-            <h2
-              className="
-                text-2xl
-                md:text-3xl
-                font-bold
-                text-slate-800
-              "
-            >
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
               Catégories populaires
             </h2>
 
-            <p
-              className="
-                text-slate-500
-                mt-1
-              "
-            >
+            <p className="text-slate-500 mt-1">
               Explorez les problèmes les plus fréquents.
             </p>
           </div>
         </div>
 
-        <div
-          className="
-            grid
-            grid-cols-1
-            md:grid-cols-3
-            gap-6
-          "
-        >
-          {categories.map((category) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {categories.slice(0, 6).map((category) => (
             <div
-              key={category.name}
+              key={category.idCategory}
+              onClick={() => navigate(`/categories/${category.idCategory}`)}
               className="
-                bg-white/80
-                backdrop-blur
-                rounded-2xl
-                p-6
-                shadow-md
-                border
-                border-slate-200
-                hover:-translate-y-1
-                hover:shadow-lg
-                transition
-                cursor-pointer
-              "
+              bg-white/80
+              backdrop-blur
+              rounded-2xl
+              p-6
+              shadow-md
+              border
+              border-slate-200
+              hover:-translate-y-1
+              hover:shadow-lg
+              transition
+              cursor-pointer
+              text-center
+            "
             >
-              <div
-                className="
-                  text-4xl
-                "
-              >
-                {category.icon}
-              </div>
+              <div className="text-4xl">{category.icon}</div>
 
-              <h3
-                className="
-                  text-xl
-                  font-bold
-                  mt-4
-                  text-slate-800
-                "
-              >
+              <h3 className="text-xl font-bold mt-4 text-slate-800">
                 {category.name}
               </h3>
 
-              <p
-                className="
-                  text-slate-500
-                  mt-2
-                "
-              >
-                {category.count}
+              <p className="text-slate-500 mt-2">
+                {category.problemCount} problème
+                {category.problemCount > 1 ? "s" : ""}
               </p>
             </div>
           ))}
         </div>
+
+        {categories.length > 6 && (
+          <button
+            onClick={() => navigate("/categories")}
+            className="
+            mt-6
+            flex
+            items-center
+            gap-2
+            text-blue-600
+            font-semibold
+            hover:underline
+            cursor-pointer
+          "
+          >
+            Voir toutes les catégories →
+          </button>
+        )}
       </section>
 
       <RecentProblems />

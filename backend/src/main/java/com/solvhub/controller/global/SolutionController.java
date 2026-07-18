@@ -7,11 +7,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.solvhub.dto.SolutionDTO;
 import com.solvhub.dto.SolutionStatsDTO;
-import com.solvhub.mapper.SolutionStatsMapper;
-import com.solvhub.model.SolutionStats;
-import com.solvhub.repository.global.SolutionRepository;
-import com.solvhub.repository.global.SolutionStatsRepository;
 import com.solvhub.service.SolutionService;
+import com.solvhub.service.SolutionStatsService;
 import com.solvhub.dto.SolutionCreateDTO;
 
 @RestController
@@ -20,19 +17,13 @@ import com.solvhub.dto.SolutionCreateDTO;
 public class SolutionController {
 
     private final SolutionService solutionService;
-    private final SolutionStatsRepository statsRepository;
-
-    private final SolutionStatsMapper statsMapper;
+    private final SolutionStatsService solutionStatsService;
 
     public SolutionController(
-            SolutionRepository repository,
             SolutionService solutionService,
-            SolutionStatsRepository statsRepository,
-            SolutionStatsMapper statsMapper) {
-
+            SolutionStatsService solutionStatsService) {
         this.solutionService = solutionService;
-        this.statsRepository = statsRepository;
-        this.statsMapper = statsMapper;
+        this.solutionStatsService = solutionStatsService;
     }
 
     @GetMapping("/dto")
@@ -49,10 +40,7 @@ public class SolutionController {
     @GetMapping("/{id}/stats")
     public SolutionStatsDTO getStats(
             @PathVariable Integer id) {
-
-        SolutionStats stats = statsRepository.findBySolutionIdSolution(id);
-
-        return statsMapper.toDTO(stats);
+        return solutionStatsService.getStatsDTO(id);
     }
 
     @PostMapping

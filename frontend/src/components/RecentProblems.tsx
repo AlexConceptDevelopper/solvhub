@@ -14,7 +14,7 @@ export default function RecentProblems() {
     const loadProblems = async () => {
       const data = await execute(() => getProblems());
       if (data) {
-        setProblems(data.slice(0, 3));
+        setProblems(data.slice(0, 4));
       }
     };
 
@@ -69,10 +69,10 @@ export default function RecentProblems() {
 
       <div
         className="
-          flex
-          flex-wrap
+          grid
+          grid-cols-1
+          sm:grid-cols-2
           gap-6
-          justify-center
         "
       >
         {problems.map((problem) => (

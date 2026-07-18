@@ -37,6 +37,7 @@ export default function Navbar() {
             to-indigo-600
             bg-clip-text
             text-transparent
+            cursor-pointer
           "
         >
           SolvHub
@@ -55,6 +56,7 @@ export default function Navbar() {
             text-slate-600
             hover:text-blue-600
             transition
+            cursor-pointer
           "
           >
             Accueil
@@ -66,6 +68,7 @@ export default function Navbar() {
             text-slate-600
             hover:text-blue-600
             transition
+            cursor-pointer
           "
           >
             Problèmes
@@ -77,6 +80,7 @@ export default function Navbar() {
             text-slate-600
             hover:text-blue-600
             transition
+            cursor-pointer
           "
           >
             Classement
@@ -92,6 +96,7 @@ export default function Navbar() {
             rounded-xl
             hover:bg-blue-700
             transition
+            cursor-pointer
               "
           >
             Connexion

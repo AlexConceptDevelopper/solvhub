@@ -1,0 +1,12 @@
+[
+  { "username": "admin", "email": "admin@solvhub.fr" },
+  { "username": "Lucas", "email": "lucas@solvhub.fr" },
+  { "username": "Emma", "email": "emma@solvhub.fr" },
+  { "username": "Thomas", "email": "thomas@solvhub.fr" },
+  { "username": "Julie", "email": "julie@solvhub.fr" },
+  { "username": "Nathan", "email": "nathan@solvhub.fr" },
+  { "username": "Sophie", "email": "sophie@solvhub.fr" },
+  { "username": "Alex", "email": "alex@solvhub.fr" },
+  { "username": "Marie", "email": "marie@solvhub.fr" },
+  { "username": "Antoine", "email": "antoine@solvhub.fr" }
+]
