@@ -3,6 +3,8 @@ package com.solvhub.controller.global;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.solvhub.dto.SolutionDTO;
@@ -49,5 +51,12 @@ public class SolutionController {
             @RequestBody SolutionCreateDTO dto) {
 
         return solutionService.createSolution(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        solutionService.delete(id); // Assure-toi que ton service gère la suppression
+        return ResponseEntity.noContent().build();
     }
 }

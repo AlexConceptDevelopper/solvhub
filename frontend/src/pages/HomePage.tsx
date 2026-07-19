@@ -4,12 +4,14 @@ import type { Category } from "../types/category";
 import { getCategoriesWithCount } from "../api/category.api";
 import { useEffect, useState } from "react";
 import useAsync from "../hooks/useAsync";
+import { useAuth } from "../context/AuthContext";
 
 export default function HomePage() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const { execute } = useAsync<Category[]>();
+
 
   useEffect(() => {
     const loadCategories = async () => {

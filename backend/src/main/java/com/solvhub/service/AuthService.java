@@ -58,14 +58,16 @@ public class AuthService {
     }
 
     public void verifyEmail(String token) {
-
+        // 1. On cherche l'utilisateur par le token
         User user = userRepository.findByVerificationToken(token)
-                .orElseThrow(() -> new IllegalArgumentException("Token de vérification invalide"));
+                .orElseThrow(() -> new IllegalArgumentException("Token invalide ou déjà utilisé."));
 
+        // 2. Vérification de l'expiration
         if (user.getVerificationTokenExpiry().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("Le token de vérification a expiré");
+            throw new IllegalArgumentException("Le token de vérification a expiré.");
         }
 
+        // 3. Si tout est bon, on valide
         user.setChecked(true);
         user.setVerificationToken(null);
         user.setVerificationTokenExpiry(null);
@@ -86,13 +88,16 @@ public class AuthService {
             throw new IllegalStateException("Veuillez vérifier votre email avant de vous connecter");
         }
 
-        String token = jwtUtil.generateToken(user.getIdUsers(), user.getEmail());
+        // On génère le token en incluant le rôle
+        String token = jwtUtil.generateToken(user.getIdUsers(), user.getEmail(), user.getRole());
 
+        // La parenthèse de fermeture est tout à la fin !
         return new AuthResponseDTO(
                 token,
                 user.getIdUsers(),
                 user.getUsername(),
-                user.getEmail()
+                user.getEmail(),
+                user.getRole()
         );
     }
 }

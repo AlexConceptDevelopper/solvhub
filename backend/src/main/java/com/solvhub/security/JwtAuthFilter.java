@@ -1,8 +1,11 @@
 package com.solvhub.security;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -43,12 +46,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (jwtUtil.isTokenValid(token)) {
             String email = jwtUtil.extractEmail(token);
-
+            
+            // C'est ici qu'il manquait la recherche de l'utilisateur !
             User user = userRepository.findByEmail(email).orElse(null);
 
             if (user != null) {
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(user, null, java.util.List.of());
+                // 1. Extraire le rôle du token
+                String role = jwtUtil.extractRole(token);
+
+                // 2. Créer l'autorité avec le préfixe "ROLE_"
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role);
+
+                // 3. Créer le token d'authentification avec l'autorité
+                UsernamePasswordAuthenticationToken authToken = 
+                        new UsernamePasswordAuthenticationToken(user, null, List.of(authority));
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

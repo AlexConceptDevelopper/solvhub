@@ -9,7 +9,5 @@ import lombok.*;
 public class UserDTO {
 
     private Integer idUsers;
-
     private String username;
-
 }

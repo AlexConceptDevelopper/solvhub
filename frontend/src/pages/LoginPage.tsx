@@ -25,8 +25,14 @@ export default function LoginPage() {
     );
 
     if (data) {
-      const { token, idUsers, username, email } = data;
-      setAuth({ token, user: { idUsers, username, email } });
+      // 1. On extrait le rôle depuis la réponse 'data'
+      const { token, idUsers, username, email, role } = data;
+      // 2. On l'inclut dans l'objet user envoyé au contexte
+      setAuth({
+        token,
+        user: { idUsers, username, email, role },
+      });
+
       navigate("/");
     }
   };
@@ -48,7 +54,7 @@ export default function LoginPage() {
           <div>
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5 ml-1">
+              <label className="block text-sm font-bold text-white mb-1.5 ml-1">
                 Email
               </label>
               <input
@@ -67,7 +73,7 @@ export default function LoginPage() {
           <div>
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-400 mb-1.5 ml-1">
+              <label className="block text-sm font-bold text-white mb-1.5 ml-1">
                 Mot de passe
               </label>
               <input
@@ -86,11 +92,20 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50 cursor-pointer"
           >
             {loading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
+        <p className="text-center text-slate-200 text-sm mt-6">
+          Pas encore de compte ?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-blue-400 hover:text-blue-300 cursor-pointer font-bold underline decoration-blue-500/50 underline-offset-4 transition-all"
+          >
+            Inscris-toi ici
+          </span>
+        </p>
       </div>
     </div>
   );

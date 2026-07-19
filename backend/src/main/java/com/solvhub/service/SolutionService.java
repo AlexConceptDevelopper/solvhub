@@ -95,4 +95,19 @@ public class SolutionService {
 
         return mapper.toDTO(saved);
     }
+
+    @Transactional
+    public void delete(Integer id) {
+        // 1. Vérifier si la solution existe
+        Solution solution = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour suppression"));
+
+        // 2. Supprimer d'abord les statistiques associées (obligatoire à cause de la clé étrangère)
+        // Si tu as une relation OneToOne dans l'entité Solution, 
+        // tu peux aussi configurer cascade = CascadeType.REMOVE dans l'entité.
+        solutionStatsRepository.deleteBySolution(solution);
+
+        // 3. Supprimer la solution
+        repo.delete(solution);
+    }
 }
