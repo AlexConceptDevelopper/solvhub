@@ -18,6 +18,7 @@ export default function ProblemDetailPage() {
 
   const [problem, setProblem] = useState<Problem | null>(null);
   const [solutions, setSolutions] = useState<Solution[]>([]);
+
   const {
     loading: loadingProblem,
     error: errorProblem,
@@ -34,12 +35,10 @@ export default function ProblemDetailPage() {
     if (!id) return;
 
     const problemId = Number(id);
-
     if (Number.isNaN(problemId)) return;
 
     const load = async () => {
       const problemData = await executeProblem(() => getProblemById(problemId));
-
       if (problemData) {
         setProblem(problemData);
       }
@@ -47,7 +46,6 @@ export default function ProblemDetailPage() {
       const solutionsData = await executeSolutions(() =>
         getSolutionsByProblem(problemId),
       );
-
       if (solutionsData) {
         setSolutions(solutionsData);
       }
@@ -58,14 +56,7 @@ export default function ProblemDetailPage() {
 
   if (loadingProblem) {
     return (
-      <div
-        className="
-        max-w-4xl
-        mx-auto
-        text-center
-        text-slate-500
-      "
-      >
+      <div className="max-w-5xl mx-auto text-center py-20 text-slate-650 font-medium tracking-wide animate-pulse">
         Chargement du problème...
       </div>
     );
@@ -73,179 +64,173 @@ export default function ProblemDetailPage() {
 
   if (errorProblem) {
     return (
-      <ErrorMessage
-        message={errorProblem}
-        onRetry={() => window.location.reload()}
-      />
+      <div className="max-w-5xl mx-auto px-4 mt-6">
+        <ErrorMessage
+          message={errorProblem}
+          onRetry={() => window.location.reload()}
+        />
+      </div>
     );
   }
 
   if (!problem) {
-    return null;
-  }
+    return (
+      <div className="max-w-5xl mx-auto text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-xs px-6 mt-6">
+        <span className="text-3xl block mb-3">🔍</span>
 
-  return (
-    <div
-      className="
-        max-w-4xl
-        mx-auto
-        space-y-10
-      "
-    >
-      <button
-        onClick={() => navigate("/problems")}
-        className="
-          mb-6
-          flex
-          items-center
-          gap-2
-          text-blue-600
-          font-semibold
-          hover:underline
-          cursor-pointer
-        "
-      >
-        ← Retour aux problèmes
-      </button>
-      {/* PROBLEME */}
-
-      <section
-        className="
-          bg-white/80
-          backdrop-blur
-          rounded-3xl
-          border
-          border-slate-200
-          shadow-md
-          p-8
-        "
-      >
-        <span
-          className="
-            inline-block
-            text-sm
-            font-semibold
-            text-blue-600
-            bg-blue-50
-            px-3
-            py-1
-            rounded-full
-          "
-        >
-          <span>{problem.category.icon}</span>
-          <span>{problem.category.name}</span>
-        </span>
-
-        <h1
-          className="
-            mt-5
-            text-3xl
-            md:text-4xl
-            font-bold
-            text-slate-800
-          "
-        >
-          {problem.title}
-        </h1>
-
-        <p
-          className="
-            mt-5
-            text-slate-600
-            text-lg
-            leading-relaxed
-          "
-        >
-          {problem.description}
+        <p className="text-slate-700 font-semibold text-lg">
+          Le problème demandé est introuvable ou n'existe pas.
         </p>
 
-        {problem.createdAt && (
-          <p
-            className="
-              mt-6
-              text-sm
-              text-slate-400
-            "
-          >
-            Créé le {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
-          </p>
-        )}
+        <p className="text-slate-500 text-sm mt-1">
+          L'identifiant dans l'URL est peut-être incorrect ou la fiche a été
+          supprimée.
+        </p>
 
         <button
-          onClick={() =>
-            navigate(`/problem/${problem.idProblem}/create-solution`)
-          }
+          onClick={() => navigate("/problems")}
           className="
-            mt-8
-            bg-blue-600
-            text-white
-            px-5
-            py-3
-            rounded-xl
-            font-semibold
-            hover:bg-blue-700
-            transition
+            mt-6 
+            inline-flex 
+            bg-slate-900 
+            text-white 
+            hover:bg-slate-800 
+            px-5 
+            py-2.5 
+            rounded-xl 
+            font-bold 
+            text-sm 
+            shadow-sm
+            hover:-translate-y-0.5
+            transition-all 
             cursor-pointer
           "
         >
-          Proposer une solution
+          Retourner à la liste des problèmes
         </button>
-      </section>
+      </div>
+    );
+  }
 
-      {/* SOLUTIONS */}
-      <section>
-        <div
+  return (
+    <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-12">
+      {/* BOUTON RETOUR DISCRET MAIS SOMBRE */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => navigate("/problems")}
           className="
-            flex
-            justify-between
+            group
+            inline-flex
             items-center
-            mb-6
+            gap-2
+            text-xs
+            font-bold
+            uppercase
+            tracking-wider
+            text-slate-500
+            hover:text-slate-800
+            transition-colors
+            cursor-pointer
           "
         >
-          <div>
-            <h2
-              className="
-                text-2xl
-                font-bold
-                text-slate-800
-              "
-            >
-              Solutions
-            </h2>
+          <span className="transform group-hover:-translate-x-1 transition-transform">
+            ←
+          </span>
+          Retour aux problèmes
+        </button>
+      </div>
 
-            <p
-              className="
-              text-slate-500
-              mt-1
+      {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
+      <article className="relative z-10 space-y-6">
+        {/* En-tête : Catégorie & Date */}
+        <div className="flex items-center gap-4 text-xs font-semibold">
+          <span className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
+            <span>{problem.category?.icon || "❓"}</span>
+            <span>{problem.category?.name || "Sans catégorie"}</span>
+          </span>
+          {problem.createdAt && (
+            <span className="text-slate-500">
+              Publié le{" "}
+              {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+            </span>
+          )}
+        </div>
+
+        {/* Titre : Anthracite très profond (text-slate-900) */}
+        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+          {problem.title}
+        </h1>
+
+        {/* Ligne de séparation fine pour le mode clair */}
+        <div className="h-px bg-linear-to-r from-slate-200 via-slate-300 to-transparent w-full" />
+
+        {/* Description : Gris foncé très lisible (text-slate-700) */}
+        <div
+          className="
+            text-slate-700 
+            text-base 
+            md:text-lg 
+            leading-relaxed 
+            space-y-4 
+            whitespace-pre-wrap 
+            wrap-break-word
+            pt-2
+            font-normal
+          "
+        >
+          {problem.description}
+        </div>
+
+        {/* Action principale */}
+        <div className="pt-6 flex justify-start">
+          <button
+            onClick={() =>
+              navigate(`/problem/${problem.idProblem}/create-solution`)
+            }
+            className="
+              bg-blue-600
+              text-white
+              px-6
+              py-3
+              rounded-xl
+              font-bold
+              text-sm
+              shadow-lg
+              shadow-blue-600/10
+              hover:bg-blue-700
+              hover:-translate-y-0.5
+              transition-all
+              duration-200
+              cursor-pointer
             "
-            >
-              Les solutions proposées par la communauté.
+          >
+            Proposer une solution
+          </button>
+        </div>
+      </article>
+
+      {/* BLOC DES SOLUTIONS DE LA COMMUNAUTÉ */}
+      <section className="space-y-6 pt-10 border-t border-slate-200">
+        <div className="flex justify-between items-baseline gap-4">
+          <div>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight text-slate-900">
+              Solutions proposées
+            </h2>
+            <p className="text-slate-500 text-xs md:text-sm mt-1">
+              Consultez ou comparez les correctifs apportés par les autres
+              développeurs.
             </p>
           </div>
 
-          <span
-            className="
-              text-sm
-              text-slate-400
-            "
-          >
-            {solutions.length} solution(s)
+          <span className="text-xs font-mono font-bold text-slate-650 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-xs">
+            {solutions.length} {solutions.length > 1 ? "solutions" : "solution"}
           </span>
         </div>
 
+        {/* LOADING & ERRORS */}
         {loadingSolutions && (
-          <div
-            className="
-            bg-white/70
-            rounded-2xl
-            border
-            border-slate-200
-            p-6
-            text-center
-            text-slate-500
-          "
-          >
-            Chargement des solutions...
+          <div className="py-12 text-center text-slate-500 font-medium animate-pulse">
+            Chargement des pistes de résolution...
           </div>
         )}
 
@@ -256,28 +241,21 @@ export default function ProblemDetailPage() {
           />
         )}
 
+        {/* ETAT VIDE CLAIR */}
         {!loadingSolutions && solutions.length === 0 && (
-          <div
-            className="
-              bg-white/70
-              rounded-2xl
-              border
-              border-slate-200
-              p-6
-              text-center
-              text-slate-500
-            "
-          >
-            Aucune solution disponible pour le moment.
+          <div className="bg-white rounded-xl border border-dashed border-slate-300 py-16 text-center shadow-xs">
+            <span className="text-2xl block mb-2">💡</span>
+            <p className="text-slate-700 text-sm font-medium">
+              Aucune solution n'a encore été indexée.
+            </p>
+            <p className="text-slate-500 text-xs mt-1">
+              Votre expérience sur ce problème peut aider quelqu'un.
+            </p>
           </div>
         )}
 
-        <div
-          className="
-            space-y-5
-            mt-5
-          "
-        >
+        {/* LISTING */}
+        <div className="space-y-4">
           {solutions.map((solution) => (
             <SolutionCard key={solution.idSolution} solution={solution} />
           ))}

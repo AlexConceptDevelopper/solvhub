@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "../components/ProblemCard";
@@ -8,7 +8,6 @@ import ErrorMessage from "../components/ErrorMessage";
 
 export default function CategoryProblemsPage() {
   const { idCategory } = useParams();
-  const navigate = useNavigate();
 
   const [problems, setProblems] = useState<Problem[]>([]);
   const { loading, error, execute } = useAsync<Problem[]>();
@@ -33,9 +32,16 @@ export default function CategoryProblemsPage() {
     );
   }
 
-  const categoryProblems = problems.filter(
-    (problem) => problem.category.idCategory === Number(idCategory)
-  );
+  const categoryProblems = problems.filter((problem) => {
+    if (!problem.category) {
+      console.warn(
+        `Problème #${problem.idProblem} sans catégorie détecté`,
+        problem,
+      );
+      return false;
+    }
+    return problem.category?.idCategory === Number(idCategory);
+  });
 
   const category = categoryProblems[0]?.category;
 

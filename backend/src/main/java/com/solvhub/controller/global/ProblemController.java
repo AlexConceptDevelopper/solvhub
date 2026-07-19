@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import com.solvhub.controller.GenericController;
+import com.solvhub.dto.CreateProblemDTO;
 import com.solvhub.dto.ProblemDTO;
 import com.solvhub.dto.SolutionDTO;
 import com.solvhub.model.Problem;
@@ -31,17 +32,30 @@ public class ProblemController extends GenericController<Problem, Integer> {
         return problemService.getSolutionsByProblem(id);
     }
 
-    //findall DTO
+    // findall DTO
     @GetMapping("/dto")
     public List<ProblemDTO> getAllDTO() {
         return problemService.findAllDTO();
     }
 
-    //finbyid DTO
+    // finbyid DTO
     @GetMapping("/dto/{id}")
     public ProblemDTO getByIdDTO(
             @PathVariable Integer id) {
         return problemService.findByIdDTO(id);
     }
 
+    @PostMapping
+    public ProblemDTO create(
+            @RequestBody CreateProblemDTO dto) {
+
+        return problemService.create(dto);
+    }
+
+    @Override
+    @PostMapping("/legacy")
+    public Problem save(Problem entity) {
+        throw new UnsupportedOperationException(
+                "Utilisez POST /api/problems avec { title, description, idCategory }");
+    }
 }

@@ -70,13 +70,15 @@ public class DataSeeder implements CommandLineRunner {
         if (userRepository.count() > 0)
             return;
 
-        List<Map<String, String>> data = readJson("seed/users.json");
+        List<Map<String, Object>> data = readJson("seed/users.json");
 
-        for (Map<String, String> entry : data) {
+        for (Map<String, Object> entry : data) {
             User user = new User();
-            user.setUsername(entry.get("username"));
-            user.setEmail(entry.get("email"));
-            user.setPasswordHash(null);
+            user.setUsername((String) entry.get("username"));
+            user.setEmail((String) entry.get("email"));
+            user.setPasswordHash((String) entry.get("passwordHash"));
+            user.setChecked((Boolean) entry.get("checked"));
+            user.setRole((String) entry.get("role"));
             userRepository.save(user);
         }
 

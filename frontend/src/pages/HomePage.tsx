@@ -25,80 +25,110 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="max-w-6xl px-4 md:px-6 mx-auto">
-      {/* HERO */}
+    <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-12 mt-6 mb-16">
+      {/* HERO SECTION */}
       <section
         className="
+          relative
+          overflow-hidden
           rounded-3xl
-          bg-linear-to-r
-          from-blue-600
-          to-indigo-600
+          bg-radial
+          from-slate-900
+          via-slate-950
+          to-black
           text-white
           p-8
-          md:p-12
-          shadow-xl
+          md:p-16
+          shadow-2xl
+          border
+          border-slate-800/60
         "
       >
-        <div className="max-w-3xl">
-          <p
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative max-w-3xl z-10">
+          <span
             className="
-              uppercase
-              tracking-widest
-              text-blue-100
-              text-sm
+              inline-flex
+              items-center
+              gap-2
+              px-3
+              py-1
+              rounded-full
+              bg-blue-500/10
+              border
+              border-blue-500/20
+              text-blue-400
+              text-xs
               font-semibold
-              mb-4
+              uppercase
+              tracking-wider
+              mb-6
+              backdrop-blur-xs
             "
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
             Plateforme communautaire
-          </p>
+          </span>
 
           <h1
             className="
-              text-3xl
-              md:text-5xl
-              font-bold
+              text-4xl
+              md:text-6xl
+              font-black
+              tracking-tight
               leading-tight
+              bg-linear-to-b
+              from-white
+              to-slate-300
+              bg-clip-text
+              text-transparent
             "
           >
-            Des solutions pour
-            <br />
-            chaque problème.
+            Des solutions pour <br />
+            chaque{" "}
+            <span className="bg-linear-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+              problème
+            </span>
+            .
           </h1>
 
           <p
             className="
-              mt-5
-              text-blue-100
+              mt-6
+              text-slate-400
               text-base
               md:text-lg
+              leading-relaxed
               max-w-xl
             "
           >
             Trouvez de l'aide, partagez vos expériences et améliorez les
-            solutions ensemble avec la communauté SolvHub.
+            solutions ensemble avec la communauté{" "}
+            <span className="text-white font-medium">SolvHub</span>.
           </p>
 
-          <div
-            className="
-              flex
-              flex-wrap
-              gap-4
-              mt-8
-            "
-          >
+          <div className="flex flex-wrap items-center gap-4 mt-10">
             <Link
               to="/problems"
               className="
-              bg-white
-              text-blue-600
-              px-5
-              py-2.5
-              rounded-xl
-              font-semibold
-              hover:bg-blue-50
-              transition
-            "
+                bg-blue-600
+                text-white
+                px-6
+                py-3
+                rounded-xl
+                font-semibold
+                text-sm
+                shadow-lg
+                shadow-blue-600/20
+                hover:bg-blue-500
+                hover:shadow-blue-500/30
+                hover:-translate-y-0.5
+                transition-all
+                duration-200
+                cursor-pointer
+              "
             >
               Trouver une solution
             </Link>
@@ -106,13 +136,22 @@ export default function HomePage() {
             <button
               onClick={() => navigate("/problem/create")}
               className="
+                bg-slate-900/80
                 border
-                border-white/70
-                px-5
-                py-2.5
+                border-slate-800
+                text-slate-200
+                px-6
+                py-3
                 rounded-xl
-                hover:bg-white/10
-                transition
+                font-semibold
+                text-sm
+                hover:bg-slate-800
+                hover:text-white
+                hover:border-slate-700
+                hover:-translate-y-0.5
+                transition-all
+                duration-200
+                cursor-pointer
               "
             >
               Poser un problème
@@ -121,94 +160,177 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-      <section className="mt-12">
-        <div className="flex justify-between items-end mb-6">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
-              Catégories populaires
-            </h2>
-
-            <p className="text-slate-500 mt-1">
-              Explorez les problèmes les plus fréquents.
-            </p>
-          </div>
+      {/* CATEGORIES - AJOUT D'UN BLOC DE FOND COHÉRENT ET ASSORTI */}
+      <section 
+        className="
+          bg-slate-50/80 
+          border 
+          border-slate-100 
+          rounded-3xl 
+          p-6 
+          md:p-10 
+          shadow-xs
+        "
+      >
+        <div className="max-w-xl mb-10">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-150">
+            Exploration
+          </span>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mt-3">
+            Catégories populaires
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base mt-2">
+            Naviguez par thématique pour cibler les solutions de la communauté.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {categories.slice(0, 6).map((category) => (
             <div
               key={category.idCategory}
               onClick={() => navigate(`/categories/${category.idCategory}`)}
               className="
-              bg-white/80
-              backdrop-blur
-              rounded-2xl
-              p-6
-              shadow-md
-              border
-              border-slate-200
-              hover:-translate-y-1
-              hover:shadow-lg
-              transition
-              cursor-pointer
-              text-center
-            "
+                group
+                relative
+                bg-radial
+                from-slate-900/95
+                via-slate-950/98
+                to-black
+                rounded-2xl
+                p-8
+                border
+                border-slate-850
+                hover:border-blue-500/40
+                hover:-translate-y-1.5
+                transition-all
+                duration-300
+                cursor-pointer
+                flex
+                flex-col
+                items-center
+                justify-center
+                text-center
+                overflow-hidden
+                shadow-xl
+              "
             >
-              <div className="text-4xl">{category.icon}</div>
+              <div className="absolute inset-0 bg-linear-to-b from-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-              <h3 className="text-xl font-bold mt-4 text-slate-800">
+              <div
+                className="
+                  text-3xl
+                  w-16
+                  h-16
+                  rounded-2xl
+                  bg-slate-900
+                  border
+                  border-slate-800
+                  shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]
+                  group-hover:border-blue-500/40
+                  group-hover:bg-slate-950
+                  group-hover:scale-110
+                  group-hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]
+                  flex
+                  items-center
+                  justify-center
+                  transition-all
+                  duration-300
+                "
+              >
+                {category.icon}
+              </div>
+
+              <h3 className="text-lg font-bold tracking-tight mt-5 bg-linear-to-b from-white to-slate-300 bg-clip-text text-transparent group-hover:from-white group-hover:to-blue-200 transition-all">
                 {category.name}
               </h3>
 
-              <p className="text-slate-500 mt-2">
+              <span
+                className="
+                  mt-4
+                  inline-flex
+                  items-center
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-slate-900
+                  border
+                  border-slate-800
+                  text-slate-400
+                  text-xs
+                  font-bold
+                  group-hover:bg-blue-500/10
+                  group-hover:text-blue-400
+                  group-hover:border-blue-500/20
+                  transition-all
+                  duration-300
+                "
+              >
                 {category.problemCount} problème
                 {category.problemCount > 1 ? "s" : ""}
-              </p>
+              </span>
             </div>
           ))}
         </div>
 
         {categories.length > 6 && (
-          <button
-            onClick={() => navigate("/categories")}
-            className="
-            mt-6
-            flex
-            items-center
-            gap-2
-            text-blue-600
-            font-semibold
-            hover:underline
-            cursor-pointer
-          "
-          >
-            Voir toutes les catégories →
-          </button>
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={() => navigate("/categories")}
+              className="
+                text-sm
+                font-bold
+                text-slate-700
+                hover:text-blue-600
+                flex
+                items-center
+                gap-1.5
+                group
+                cursor-pointer
+                bg-white
+                border
+                border-slate-200
+                px-5
+                py-2.5
+                rounded-xl
+                shadow-xs
+                hover:border-blue-200
+                hover:bg-blue-50/20
+                transition-all
+              "
+            >
+              Toutes les catégories{" "}
+              <span className="transform group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </button>
+          </div>
         )}
       </section>
 
+      {/* SECTION DES DERNIERS PROBLÈMES */}
       <RecentProblems />
-      <div
-        className="
-          mt-8
-          flex
-          justify-center
-        "
-      >
+
+      {/* BOUTON FINAL VOIR TOUT */}
+      <div className="flex justify-center pt-4">
         <button
           onClick={() => navigate("/problems")}
           className="
             rounded-xl
             border
-            border-blue-600
+            border-slate-200
+            bg-white
             px-6
             py-3
-            font-semibold
-            text-blue-600
-            hover:bg-blue-600
-            hover:text-white
-            transition
+            font-bold
+            text-sm
+            text-slate-800
+            hover:text-blue-600
+            hover:border-blue-200
+            hover:bg-blue-50/20
+            shadow-xs
+            hover:shadow-md
+            transition-all
+            duration-200
             cursor-pointer
           "
         >

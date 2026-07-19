@@ -7,9 +7,11 @@ import com.solvhub.mapper.SolutionMapper;
 import com.solvhub.model.Problem;
 import com.solvhub.model.Solution;
 import com.solvhub.model.SolutionStats;
+import com.solvhub.model.User;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionStatsRepository;
+import com.solvhub.repository.global.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -24,17 +26,20 @@ public class SolutionService {
     private final SolutionMapper mapper;
     private final ProblemRepository problemRepository;
     private final SolutionStatsRepository solutionStatsRepository;
+    private final UserRepository userRepository;
 
     public SolutionService(
             SolutionRepository repo,
             SolutionMapper mapper,
             ProblemRepository problemRepository,
-            SolutionStatsRepository solutionStatsRepository) {
+            SolutionStatsRepository solutionStatsRepository,
+            UserRepository userRepository) {
 
         this.repo = repo;
         this.mapper = mapper;
         this.problemRepository = problemRepository;
         this.solutionStatsRepository = solutionStatsRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Solution> findAll() {
@@ -47,7 +52,6 @@ public class SolutionService {
 
     @Transactional
     public List<SolutionDTO> findAllDTO() {
-
         return repo.findAll()
                 .stream()
                 .map(mapper::toDTO)
@@ -56,7 +60,6 @@ public class SolutionService {
 
     @Transactional
     public SolutionDTO findByIdDTO(Integer id) {
-
         Solution solution = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Solution introuvable"));
@@ -70,6 +73,9 @@ public class SolutionService {
         Problem problem = problemRepository.findById(dto.getProblemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
 
+        User user = userRepository.findById(1)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
         Solution solution = new Solution();
 
         solution.setTitle(dto.getTitle());
@@ -78,6 +84,7 @@ public class SolutionService {
         solution.setTimeMinutes(dto.getTimeMinutes());
         solution.setRiskLevel(dto.getRiskLevel());
         solution.setProblem(problem);
+        solution.setUser(user);
 
         Solution saved = repo.save(solution);
 
