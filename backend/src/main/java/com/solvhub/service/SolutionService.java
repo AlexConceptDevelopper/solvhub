@@ -2,6 +2,7 @@ package com.solvhub.service;
 
 import com.solvhub.dto.SolutionCreateDTO;
 import com.solvhub.dto.SolutionDTO;
+import com.solvhub.exception.InvalidDataException;
 import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.mapper.SolutionMapper;
 import com.solvhub.model.Problem;
@@ -12,6 +13,7 @@ import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionStatsRepository;
 import com.solvhub.repository.global.UserRepository;
+import com.solvhub.security.SecurityUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -27,19 +29,22 @@ public class SolutionService {
     private final ProblemRepository problemRepository;
     private final SolutionStatsRepository solutionStatsRepository;
     private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     public SolutionService(
             SolutionRepository repo,
             SolutionMapper mapper,
             ProblemRepository problemRepository,
             SolutionStatsRepository solutionStatsRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            SecurityUtils securityUtils) {
 
         this.repo = repo;
         this.mapper = mapper;
         this.problemRepository = problemRepository;
         this.solutionStatsRepository = solutionStatsRepository;
         this.userRepository = userRepository;
+        this.securityUtils = securityUtils; // <--- Oubli réparé ici !
     }
 
     public List<Solution> findAll() {
@@ -102,12 +107,36 @@ public class SolutionService {
         Solution solution = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour suppression"));
 
-        // 2. Supprimer d'abord les statistiques associées (obligatoire à cause de la clé étrangère)
-        // Si tu as une relation OneToOne dans l'entité Solution, 
+        // 2. Supprimer d'abord les statistiques associées (obligatoire à cause de la
+        // clé étrangère)
+        // Si tu as une relation OneToOne dans l'entité Solution,
         // tu peux aussi configurer cascade = CascadeType.REMOVE dans l'entité.
         solutionStatsRepository.deleteBySolution(solution);
 
         // 3. Supprimer la solution
         repo.delete(solution);
+    }
+
+    @Transactional
+    public SolutionDTO updateSolution(Integer id, SolutionDTO dto) {
+        Solution solution = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour mise à jour"));
+
+        // Récupérer proprement l'email et le username du créateur de la solution (s'ils existent)
+        String ownerEmail = solution.getUser() != null ? solution.getUser().getEmail() : null;
+        String ownerUsername = solution.getUser() != null ? solution.getUser().getUsername() : null;
+
+        // Utilisation propre et factorisée de SecurityUtils (principe DRY respecté)
+        if (!securityUtils.isOwnerOrAdmin(ownerEmail, ownerUsername)) {
+            throw new InvalidDataException("Action non autorisée : vous ne pouvez modifier que vos propres solutions.");
+        }
+
+        // Mise à jour des champs modifiables
+        solution.setTitle(dto.getTitle());
+        solution.setDifficulty(dto.getDifficulty());
+        solution.setTimeMinutes(dto.getTimeMinutes());
+
+        Solution updated = repo.save(solution);
+        return mapper.toDTO(updated);
     }
 }

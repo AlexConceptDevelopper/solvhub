@@ -6,77 +6,87 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntimeException(
-            RuntimeException ex) {
+        @ExceptionHandler(RuntimeException.class)
+        public ResponseEntity<ApiError> handleRuntimeException(
+                        RuntimeException ex) {
 
-        ApiError error = new ApiError(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage());
+                ApiError error = new ApiError(
+                                Instant.now(),
+                                HttpStatus.BAD_REQUEST.value(),
+                                ex.getMessage());
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(error);
-    }
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(error);
+        }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(
-            Exception ex) {
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<ApiError> handleException(
+                        Exception ex) {
 
-        ApiError error = new ApiError(
-                Instant.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Une erreur interne est survenue");
+                ApiError error = new ApiError(
+                                Instant.now(),
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                "Une erreur interne est survenue");
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(error);
-    }
+                return ResponseEntity
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(error);
+        }
 
-    @ExceptionHandler(DuplicateVoteException.class)
-    public ResponseEntity<ApiError> handleDuplicateVote(
-            DuplicateVoteException ex) {
+        @ExceptionHandler(DuplicateVoteException.class)
+        public ResponseEntity<ApiError> handleDuplicateVote(
+                        DuplicateVoteException ex) {
 
-        ApiError error = new ApiError(
-                Instant.now(),
-                HttpStatus.CONFLICT.value(),
-                ex.getMessage());
+                ApiError error = new ApiError(
+                                Instant.now(),
+                                HttpStatus.CONFLICT.value(),
+                                ex.getMessage());
 
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(error);
-    }
+                return ResponseEntity
+                                .status(HttpStatus.CONFLICT)
+                                .body(error);
+        }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFound(
-            ResourceNotFoundException ex) {
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<ApiError> handleNotFound(
+                        ResourceNotFoundException ex) {
 
-        ApiError error = new ApiError(
-                Instant.now(),
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage());
+                ApiError error = new ApiError(
+                                Instant.now(),
+                                HttpStatus.NOT_FOUND.value(),
+                                ex.getMessage());
 
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(error);
-    }
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(error);
+        }
 
-    @ExceptionHandler(InvalidDataException.class)
-    public ResponseEntity<ApiError> handleInvalidData(
-            InvalidDataException ex) {
+        @ExceptionHandler(InvalidDataException.class)
+        public ResponseEntity<ApiError> handleInvalidData(
+                        InvalidDataException ex) {
 
-        ApiError error = new ApiError(
-                Instant.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage());
+                ApiError error = new ApiError(
+                                Instant.now(),
+                                HttpStatus.BAD_REQUEST.value(),
+                                ex.getMessage());
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(error);
-    }
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(error);
+        }
+
+        @ExceptionHandler(ForbiddenException.class)
+        public ResponseEntity<Map<String, String>> handleForbiddenException(ForbiddenException ex) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "Accès refusé");
+                error.put("message", ex.getMessage());
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        }
 }

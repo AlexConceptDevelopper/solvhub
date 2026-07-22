@@ -8,13 +8,13 @@ import com.solvhub.controller.GenericController;
 import com.solvhub.dto.CreateProblemDTO;
 import com.solvhub.dto.ProblemDTO;
 import com.solvhub.dto.SolutionDTO;
+import com.solvhub.exception.InvalidDataException;
 import com.solvhub.model.Problem;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.service.ProblemService;
 
 @RestController
 @RequestMapping("/api/problems")
-@CrossOrigin(origins = "*")
 public class ProblemController extends GenericController<Problem, Integer> {
 
     private final ProblemService problemService;
@@ -55,7 +55,14 @@ public class ProblemController extends GenericController<Problem, Integer> {
     @Override
     @PostMapping("/legacy")
     public Problem save(Problem entity) {
-        throw new UnsupportedOperationException(
+        throw new InvalidDataException(
                 "Utilisez POST /api/problems avec { title, description, idCategory }");
+    }
+
+    @PutMapping("/{id}")
+    public ProblemDTO update(
+            @PathVariable Integer id,
+            @RequestBody ProblemDTO dto) {
+        return problemService.update(id, dto);
     }
 }

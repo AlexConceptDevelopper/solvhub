@@ -1,7 +1,6 @@
 package com.solvhub.security;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,7 +46,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (jwtUtil.isTokenValid(token)) {
             String email = jwtUtil.extractEmail(token);
             
-            // C'est ici qu'il manquait la recherche de l'utilisateur !
             User user = userRepository.findByEmail(email).orElse(null);
 
             if (user != null) {

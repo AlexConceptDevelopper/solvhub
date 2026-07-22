@@ -11,7 +11,6 @@ import com.solvhub.service.VoteService;
 
 @RestController
 @RequestMapping("/api/votes")
-@CrossOrigin(origins = "*")
 public class VoteController {
 
     private final VoteService voteService;

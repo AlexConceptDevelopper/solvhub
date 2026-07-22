@@ -15,7 +15,6 @@ import com.solvhub.dto.SolutionCreateDTO;
 
 @RestController
 @RequestMapping("/api/solutions")
-@CrossOrigin(origins = "*")
 public class SolutionController {
 
     private final SolutionService solutionService;
@@ -58,5 +57,12 @@ public class SolutionController {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         solutionService.delete(id); // Assure-toi que ton service gère la suppression
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public SolutionDTO update(
+            @PathVariable Integer id,
+            @RequestBody SolutionDTO dto) {
+        return solutionService.updateSolution(id, dto);
     }
 }

@@ -9,16 +9,13 @@ import com.solvhub.service.RankingService;
 
 @RestController
 @RequestMapping("/api/ranking")
-@CrossOrigin(origins = "*")
 public class RankingController {
 
     private final RankingService rankingService;
 
-
     public RankingController(RankingService rankingService) {
         this.rankingService = rankingService;
     }
-
 
     @GetMapping
     public List<SolutionDTO> getRanking() {

@@ -2,8 +2,11 @@ package com.solvhub.controller.global;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +19,6 @@ import com.solvhub.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "*")
 public class CategoryController extends GenericController<Category, Integer> {
 
     private final CategoryMapper categoryMapper;
@@ -43,5 +45,13 @@ public class CategoryController extends GenericController<Category, Integer> {
     @GetMapping("/with-count")
     public List<CategoryDTO> getCategoriesWithCount() {
         return categoryService.getAllCategoriesWithCount();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(
+            @PathVariable Integer id,
+            @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updated = categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok(updated);
     }
 }

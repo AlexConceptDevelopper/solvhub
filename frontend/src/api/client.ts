@@ -26,8 +26,7 @@ export async function apiFetch<T>(
     throw new Error(message);
   }
 
-  // CORRECTION : On vérifie si la réponse est vide (204) 
-  // ou si le contenu est vide pour éviter le crash de .json()
+  //si le contenu est vide pour éviter le crash de .json()
   const text = await response.text();
   if (!text) {
     return null as T | null;
