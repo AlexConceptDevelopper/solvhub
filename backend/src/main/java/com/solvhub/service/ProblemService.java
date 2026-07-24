@@ -2,6 +2,7 @@ package com.solvhub.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import com.solvhub.repository.global.CategoryRepository;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.UserRepository;
+import com.solvhub.repository.global.VoteRepository;
 import com.solvhub.security.SecurityUtils;
 
 import jakarta.transaction.Transactional;
@@ -32,6 +34,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final ProblemMapper problemMapper;
     private final CategoryRepository categoryRepository;
+    private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
 
     public ProblemService(
@@ -41,12 +44,14 @@ public class ProblemService {
             ProblemMapper problemMapper,
             CategoryRepository categoryRepository,
             UserRepository userRepository,
-            SecurityUtils securityUtils) {
+            SecurityUtils securityUtils,
+            VoteRepository voteRepository) {
         this.solutionRepository = solutionRepository;
         this.solutionMapper = solutionMapper;
         this.problemRepository = problemRepository;
         this.problemMapper = problemMapper;
         this.categoryRepository = categoryRepository;
+        this.voteRepository = voteRepository;
         this.securityUtils = securityUtils;
     }
 
@@ -121,5 +126,57 @@ public class ProblemService {
 
         problemRepository.save(problem);
         return problemMapper.toDTO(problem);
+    }
+
+    public List<ProblemDTO> getPopularProblemsByVotes() {
+        List<ProblemDTO> problems = problemRepository.findAll()
+                .stream()
+                .map(problemMapper::toDTO)
+                .toList();
+
+        for (ProblemDTO dto : problems) {
+            List<Solution> solutions = solutionRepository.findByProblemIdProblem(dto.getIdProblem());
+
+            long totalVotes = 0;
+            for (Solution s : solutions) {
+
+                long votesForSolution = voteRepository.countBySolutionIdSolution(s.getIdSolution());
+
+                totalVotes += votesForSolution;
+            }
+
+            dto.setVoteCount(totalVotes);
+        }
+
+        return problems.stream()
+                .sorted((p1, p2) -> {
+                    Long v1 = p1.getVoteCount() == null ? 0L : p1.getVoteCount();
+                    Long v2 = p2.getVoteCount() == null ? 0L : p2.getVoteCount();
+                    int voteCompare = Long.compare(v2, v1);
+                    if (voteCompare != 0) {
+                        return voteCompare; // D'abord par votes décroissants
+                    }
+                    // En cas d'égalité de votes, les plus récents en premier
+                    return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+                })
+                .toList();
+    }
+
+    public List<ProblemDTO> getTop3PopularProblems() {
+        // La base de données ne ramène que les 3 meilleurs directement !
+        List<Problem> topProblems = problemRepository.findPopularProblems(PageRequest.of(0, 3));
+
+        return topProblems.stream()
+                .map(problem -> {
+                    ProblemDTO dto = problemMapper.toDTO(problem);
+                    // On calcule les votes pour ces 3-là spécifiquement
+                    List<Solution> solutions = solutionRepository.findByProblemIdProblem(dto.getIdProblem());
+                    long totalVotes = solutions.stream()
+                            .mapToLong(s -> voteRepository.countBySolutionIdSolution(s.getIdSolution()))
+                            .sum();
+                    dto.setVoteCount(totalVotes);
+                    return dto;
+                })
+                .toList();
     }
 }

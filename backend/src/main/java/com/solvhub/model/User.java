@@ -38,6 +38,9 @@ public class User {
     @Column(nullable = false, length = 20)
     private String role = "USER";
 
+    @Column(name = "badge")
+    private String badge;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
 

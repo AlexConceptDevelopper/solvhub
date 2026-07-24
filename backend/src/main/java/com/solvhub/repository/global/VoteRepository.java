@@ -11,4 +11,6 @@ public interface VoteRepository extends GenericRepository<Vote, Integer> {
             Integer solutionId);
 
     List<Vote> findBySolutionIdSolution(Integer idSolution);
+
+    long countBySolutionIdSolution(Integer idSolution);
 }

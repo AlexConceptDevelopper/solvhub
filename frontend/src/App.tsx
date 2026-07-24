@@ -18,6 +18,12 @@ import RegisterPage from "./pages/RegisterPage";
 import VerifyPage from "./pages/VerifyPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminDashboard from "./pages/AdminDashboard";
+import CategoriesPage from "./pages/CategoriesPage";
+import RankingHubPage from "./pages/RankingHubPage";
+import RankingSolutionsPage from "./pages/RankingSolutionsPage";
+import RankingContributorPage from "./pages/RankingContributorPage";
+import UserProfilePage from "./pages/UserProfilePage";
+import RankingProblemPage from "./pages/RankingProblemPage";
 
 function AppRoutes() {
   return (
@@ -34,6 +40,12 @@ function AppRoutes() {
           <Route path="/problem/:id" element={<ProblemDetailPage />} />
           <Route path="/solution/:id" element={<SolutionDetailPage />} />
           <Route path="/categories/:idCategory" element={<CategoryProblemsPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/ranking" element={<RankingHubPage />} />
+          <Route path="/ranking/solutions" element={<RankingSolutionsPage />} />
+          <Route path="/ranking/contributors" element={<RankingContributorPage />} />
+          <Route path="/user/:id" element={<UserProfilePage />} />
+          <Route path="/ranking/problems" element={<RankingProblemPage />} />
 
           {/* Routes Authentifiées (nécessitent d'être connecté) */}
           <Route path="/profile" element={

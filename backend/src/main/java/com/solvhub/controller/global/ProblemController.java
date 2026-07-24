@@ -45,6 +45,18 @@ public class ProblemController extends GenericController<Problem, Integer> {
         return problemService.findByIdDTO(id);
     }
 
+    // findall by popular problems
+    @GetMapping("/dto/popular")
+    public List<ProblemDTO> getAllPopularProblems() {
+        return problemService.getPopularProblemsByVotes();
+    }
+
+    // Top 3 des problèmes populaires pour le hub
+    @GetMapping("/dto/popular/top3")
+    public List<ProblemDTO> getTop3PopularProblems() {
+        return problemService.getTop3PopularProblems();
+    }
+
     @PostMapping
     public ProblemDTO create(
             @RequestBody CreateProblemDTO dto) {

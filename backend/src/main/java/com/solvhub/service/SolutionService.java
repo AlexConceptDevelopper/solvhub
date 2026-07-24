@@ -95,8 +95,26 @@ public class SolutionService {
 
         SolutionStats stats = new SolutionStats();
         stats.setSolution(saved);
-
         solutionStatsRepository.save(stats);
+
+        // --- MISE À JOUR AUTOMATIQUE DU BADGE UTILISATEUR ---
+        long totalSolutions = repo.countByUser(user);
+
+        String newBadge;
+        if (totalSolutions >= 100) {
+            newBadge = "🏆 Maître SolvHub";
+        } else if (totalSolutions >= 50) {
+            newBadge = "🧠 Expert";
+        } else if (totalSolutions >= 10) {
+            newBadge = "💡 Résolveur";
+        } else {
+            newBadge = "⚡ Actif";
+        }
+
+        if (!newBadge.equals(user.getBadge())) {
+            user.setBadge(newBadge);
+            userRepository.save(user);
+        }
 
         return mapper.toDTO(saved);
     }
@@ -107,13 +125,8 @@ public class SolutionService {
         Solution solution = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour suppression"));
 
-        // 2. Supprimer d'abord les statistiques associées (obligatoire à cause de la
-        // clé étrangère)
-        // Si tu as une relation OneToOne dans l'entité Solution,
-        // tu peux aussi configurer cascade = CascadeType.REMOVE dans l'entité.
         solutionStatsRepository.deleteBySolution(solution);
 
-        // 3. Supprimer la solution
         repo.delete(solution);
     }
 
@@ -122,7 +135,8 @@ public class SolutionService {
         Solution solution = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour mise à jour"));
 
-        // Récupérer proprement l'email et le username du créateur de la solution (s'ils existent)
+        // Récupérer proprement l'email et le username du créateur de la solution (s'ils
+        // existent)
         String ownerEmail = solution.getUser() != null ? solution.getUser().getEmail() : null;
         String ownerUsername = solution.getUser() != null ? solution.getUser().getUsername() : null;
 

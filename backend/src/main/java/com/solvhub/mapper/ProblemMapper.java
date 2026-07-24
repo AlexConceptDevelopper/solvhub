@@ -16,20 +16,19 @@ public class ProblemMapper {
         this.categoryMapper = categoryMapper;
     }
 
-
     public ProblemDTO toDTO(Problem problem) {
-
         if (problem == null) {
             return null;
         }
 
-        return new ProblemDTO(
-                problem.getIdProblem(),
-                problem.getTitle(),
-                problem.getDescription(),
-                categoryMapper.toDTO(problem.getCategory()),
-                problem.getCreatedAt(),
-                userMapper.toDTO(problem.getUser())
-        );
+        ProblemDTO dto = new ProblemDTO();
+        dto.setIdProblem(problem.getIdProblem());
+        dto.setTitle(problem.getTitle());
+        dto.setDescription(problem.getDescription());
+        dto.setCategory(categoryMapper.toDTO(problem.getCategory()));
+        dto.setCreatedAt(problem.getCreatedAt());
+        dto.setUser(userMapper.toDTO(problem.getUser()));
+
+        return dto;
     }
 }

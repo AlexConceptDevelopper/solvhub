@@ -11,10 +11,12 @@ import type { Vote } from "../types/vote";
 import VoteList from "../components/VoteList";
 import ErrorMessage from "../components/ErrorMessage";
 import useAsync from "../hooks/useAsync";
+import { useAuth } from "../context/AuthContext";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [solution, setSolution] = useState<Solution | null>(null);
   const [stats, setStats] = useState<SolutionStats | null>(null);
@@ -74,23 +76,25 @@ export default function SolutionDetailPage() {
       setVotes(votesData);
     }
 
-    const voted = await hasUserVoted(solutionId,0);
-
-    setAlreadyVoted(voted);
+    // On utilise le vrai idUser s'il est connecté, sinon 0 par défaut
+    if (user && user.idUsers) {
+      const voted = await hasUserVoted(solutionId, user.idUsers);
+      setAlreadyVoted(voted);
+    }
   };
 
   useEffect(() => {
     loadSolution();
-  }, [id]);
+  }, [id, user]);
 
   const handleVote = async (status: "SUCCESS" | "PARTIAL" | "FAILURE") => {
-    if (!solution || alreadyVoted) return;
+    if (!solution || alreadyVoted || !user || !user.idUsers) return;
 
     const result = await executeVote(() =>
       createVote({
         status,
         comment: "",
-        userId: 0,
+        userId: user.idUsers, // 👈 Utilisation du vrai ID utilisateur
         solutionId: solution.idSolution,
       }),
     );
@@ -244,6 +248,12 @@ export default function SolutionDetailPage() {
           Votre avis
         </h2>
 
+        {!user && (
+          <p className="mb-4 text-sm text-amber-600">
+            Vous devez être connecté pour voter.
+          </p>
+        )}
+
         {alreadyVoted && (
           <p
             className="
@@ -265,7 +275,7 @@ export default function SolutionDetailPage() {
         "
         >
           <button
-            disabled={alreadyVoted || voting}
+            disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("SUCCESS")}
             className="
             flex-1
@@ -277,6 +287,7 @@ export default function SolutionDetailPage() {
             font-semibold
             hover:bg-green-600
             transition
+            cursor-pointer
             disabled:opacity-50
             disabled:cursor-not-allowed
           "
@@ -285,7 +296,7 @@ export default function SolutionDetailPage() {
           </button>
 
           <button
-            disabled={alreadyVoted || voting}
+            disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("PARTIAL")}
             className="
             flex-1
@@ -297,6 +308,7 @@ export default function SolutionDetailPage() {
             font-semibold
             hover:bg-amber-600
             transition
+            cursor-pointer
             disabled:opacity-50
             disabled:cursor-not-allowed
           "
@@ -305,7 +317,7 @@ export default function SolutionDetailPage() {
           </button>
 
           <button
-            disabled={alreadyVoted || voting}
+            disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("FAILURE")}
             className="
             flex-1
@@ -317,6 +329,7 @@ export default function SolutionDetailPage() {
             font-semibold
             hover:bg-red-600
             transition
+            cursor-pointer
             disabled:opacity-50
             disabled:cursor-not-allowed
           "

@@ -18,7 +18,24 @@ public class UserMapper {
         return new UserDTO(
                 user.getIdUsers(),
                 user.getUsername(),
-                user.getEmail()
+                user.getEmail(),
+                null,
+                user.getBadge()
+        );
+    }
+
+    // Surcharge pour mapper avec le nombre de solutions (pratique pour le classement)
+   public UserDTO toDTOWithSolutionsCount(User user, Long solutionsCount) {
+        if (user == null) {
+            return null;
+        }
+
+        return new UserDTO(
+                user.getIdUsers(),
+                user.getUsername(),
+                user.getEmail(),
+                solutionsCount, 
+                user.getBadge()  
         );
     }
 }

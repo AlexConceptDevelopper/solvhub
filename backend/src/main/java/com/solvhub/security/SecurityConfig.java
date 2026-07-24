@@ -43,7 +43,8 @@ public class SecurityConfig {
                         // 1. PUBLIC : Auth et Lectures générales
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/**", "/api/problems/**", "/api/solutions/**",
-                                "/api/votes/**")
+                                "/api/votes/**", "/api/ranking/**", "/api/users/top-contributors",
+                                "/api/users/top-contributors/top3", "/api/problems/dto/popular")
                         .permitAll()
 
                         // 2. ADMIN : Routes critiques

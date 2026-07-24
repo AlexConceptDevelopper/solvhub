@@ -4,6 +4,8 @@ export interface Vote {
   comment?: string;
   createdAt: string;
   userId: number;
+  username?: string; 
+  badge?: string;
   solutionId: number;
 }
 

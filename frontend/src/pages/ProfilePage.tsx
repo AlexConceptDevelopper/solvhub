@@ -6,10 +6,10 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-slate-950 p-6 md:p-12 text-slate-200 rounded-2xl">
+    <div className="min-h-screen bg-slate-900/50 p-6 md:p-12 text-slate-200 rounded-2xl">
       <button
         onClick={() => navigate("/")}
-        className="flex items-center text-slate-400 hover:text-white transition-colors mb-6 group cursor-pointer"
+        className="flex items-center mx-auto px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl transition-all cursor-pointer"
       >
         {/* L'icône */}
         <svg

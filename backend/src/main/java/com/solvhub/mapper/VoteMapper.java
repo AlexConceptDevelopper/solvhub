@@ -17,11 +17,15 @@ public class VoteMapper {
 
 
         Integer userId = null;
+        String username = null;
+        String badge = null;
         Integer solutionId = null;
 
 
         if (vote.getUser() != null) {
             userId = vote.getUser().getIdUsers();
+            username = vote.getUser().getUsername();
+            badge = vote.getUser().getBadge();
         }
 
 
@@ -36,6 +40,8 @@ public class VoteMapper {
                 vote.getComment(),
                 vote.getCreatedAt(),
                 userId,
+                username,
+                badge,
                 solutionId
         );
     }

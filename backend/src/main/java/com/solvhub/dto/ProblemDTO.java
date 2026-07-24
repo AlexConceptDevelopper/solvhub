@@ -22,4 +22,5 @@ public class ProblemDTO {
 
     private UserDTO user;
 
+    private Long voteCount;
 }

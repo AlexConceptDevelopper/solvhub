@@ -1,12 +1,13 @@
 [
-  { "username": "admin", "email": "admin@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Lucas", "email": "lucas@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Emma", "email": "emma@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Thomas", "email": "thomas@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Julie", "email": "julie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Nathan", "email": "nathan@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Sophie", "email": "sophie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Alex", "email": "alex@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Marie", "email": "marie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" },
-  { "username": "Antoine", "email": "antoine@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER" }
+  { "username": "admin", "email": "admin@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "ADMIN", "badge": "🏆 Maître SolvHub" },
+  { "username": "Lucas", "email": "lucas@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "🧠 Expert" },
+  { "username": "Emma", "email": "emma@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "💡 Résolveur" },
+  { "username": "Thomas", "email": "thomas@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Julie", "email": "julie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Nathan", "email": "nathan@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Sophie", "email": "sophie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Alex", "email": "alex@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Marie", "email": "marie@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Antoine", "email": "antoine@solvhub.fr", "passwordHash": "$2b$10$ZeosKJqPmVGEJRjjXZ.emOCN29Jb8LCZEjnKsUgBdSMwrq1SbAInq", "checked": true, "role": "USER", "badge": "⚡ Actif" },
+  { "username": "Alexandre", "email": "alexandre.cubizolle@hotmail.fr", "passwordHash": "$2a$12$MLOXMFUiOCX/kCswScaYge9sUGtKziyly3UowrTULFUfPeDHDKg76", "checked": true, "role": "ADMIN", "badge": "🏆 Maître SolvHub" }
 ]

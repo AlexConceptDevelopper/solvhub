@@ -92,6 +92,7 @@ export default function CreateSolutionPage() {
             text-blue-600
             font-semibold
             hover:underline
+            cursor-pointer
         "
         >
           ← Retour au problème
@@ -217,6 +218,7 @@ export default function CreateSolutionPage() {
               font-semibold
               hover:bg-blue-700
               transition
+              cursor-pointer
               disabled:opacity-50
             "
           >

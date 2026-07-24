@@ -5,7 +5,6 @@ interface Props {
 }
 
 export default function VoteList({ votes }: Props) {
-
   if (votes.length === 0) {
     return (
       <section
@@ -34,7 +33,6 @@ export default function VoteList({ votes }: Props) {
         p-6
       "
     >
-
       <h2
         className="
           text-xl
@@ -51,9 +49,7 @@ export default function VoteList({ votes }: Props) {
           space-y-4
         "
       >
-
         {votes.map((vote) => (
-
           <article
             key={vote.idVotes}
             className="
@@ -64,7 +60,6 @@ export default function VoteList({ votes }: Props) {
               bg-white
             "
           >
-
             <div
               className="
                 flex
@@ -72,16 +67,35 @@ export default function VoteList({ votes }: Props) {
                 items-center
               "
             >
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <span
+                  className="
+                    font-semibold
+                    text-slate-700
+                  "
+                >
+                  {vote.username || `Utilisateur #${vote.userId}`}
+                </span>
 
-              <span
-                className="
-                  font-semibold
-                  text-slate-700
-                "
-              >
-                Utilisateur #{vote.userId}
-              </span>
-
+                {/* Affichage du badge de crédibilité */}
+                {vote.badge && (
+                  <span
+                    className="
+                      text-xs
+                      px-2.5
+                      py-0.5
+                      rounded-full
+                      font-medium
+                      bg-blue-50
+                      text-blue-600
+                      border
+                      border-blue-100
+                    "
+                  >
+                    {vote.badge}
+                  </span>
+                )}
+              </div>
 
               <span
                 className={`
@@ -97,9 +111,7 @@ export default function VoteList({ votes }: Props) {
               >
                 {vote.status}
               </span>
-
             </div>
-
 
             {vote.comment && (
               <p
@@ -112,7 +124,6 @@ export default function VoteList({ votes }: Props) {
               </p>
             )}
 
-
             <p
               className="
                 mt-3
@@ -122,13 +133,9 @@ export default function VoteList({ votes }: Props) {
             >
               {new Date(vote.createdAt).toLocaleDateString("fr-FR")}
             </p>
-
           </article>
-
         ))}
-
       </div>
-
     </section>
   );
 }

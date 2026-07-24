@@ -9,17 +9,21 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { loading, error, execute, data } = useAsync<{ message: string }>();
+  // On autorise null dans le type de useAsync pour matcher apiFetch
+  const { loading, error, execute, data } = useAsync<{
+    message: string;
+  } | null>();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    await execute(() =>
-      apiFetch("/auth/register", {
+    await execute(async () => {
+      const res = await apiFetch<{ message: string }>("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, email, password }),
-      }),
-    );
+      });
+      return res;
+    });
   };
 
   // État de succès
@@ -49,7 +53,6 @@ export default function RegisterPage() {
           <p className="text-slate-300 mb-6 text-sm">{data.message}</p>
 
           <div className="space-y-3">
-            {/* On ne propose plus le login, on propose de retourner à l'accueil ou simplement d'attendre */}
             <button
               onClick={() => navigate("/")}
               className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 rounded-xl transition-all cursor-pointer"
@@ -61,6 +64,7 @@ export default function RegisterPage() {
       </div>
     );
   }
+
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-slate-900/50 border border-slate-800 p-8 rounded-2xl backdrop-blur-sm shadow-2xl">
@@ -124,7 +128,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50"
+            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50 cursor-pointer"
           >
             {loading ? "Inscription en cours..." : "S'inscrire"}
           </button>

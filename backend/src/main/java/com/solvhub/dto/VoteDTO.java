@@ -11,15 +11,11 @@ import java.time.Instant;
 public class VoteDTO {
 
     private Integer idVotes;
-
     private String status;
-
     private String comment;
-
     private Instant createdAt;
-
     private Integer userId;
-
+    private String username;
+    private String badge;
     private Integer solutionId;
-
 }

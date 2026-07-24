@@ -24,6 +24,7 @@ public class DataSeeder implements CommandLineRunner {
     private final ProblemRepository problemRepository;
     private final SolutionRepository solutionRepository;
     private final VoteRepository voteRepository;
+    private final SolutionStatsRepository solutionStatsRepository; // <-- Ton repository de stats
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final Random random = new Random();
@@ -33,12 +34,14 @@ public class DataSeeder implements CommandLineRunner {
             UserRepository userRepository,
             ProblemRepository problemRepository,
             SolutionRepository solutionRepository,
-            VoteRepository voteRepository) {
+            VoteRepository voteRepository,
+            SolutionStatsRepository solutionStatsRepository) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.problemRepository = problemRepository;
         this.solutionRepository = solutionRepository;
         this.voteRepository = voteRepository;
+        this.solutionStatsRepository = solutionStatsRepository;
     }
 
     @Override
@@ -48,6 +51,7 @@ public class DataSeeder implements CommandLineRunner {
         seedProblems();
         seedSolutions();
         seedVotes();
+        seedSolutionStats(); // <-- Actif et prêt
     }
 
     private void seedCategories() throws Exception {
@@ -79,6 +83,7 @@ public class DataSeeder implements CommandLineRunner {
             user.setPasswordHash((String) entry.get("passwordHash"));
             user.setChecked((Boolean) entry.get("checked"));
             user.setRole((String) entry.get("role"));
+            user.setBadge((String) entry.get("badge"));
             userRepository.save(user);
         }
 
@@ -169,6 +174,31 @@ public class DataSeeder implements CommandLineRunner {
         }
 
         System.out.println("✅ Votes seedés : " + totalVotes);
+    }
+
+    private void seedSolutionStats() throws Exception {
+        if (solutionStatsRepository.count() > 0)
+            return;
+
+        List<Map<String, Object>> data = readJson("seed/solutions_stats.json");
+
+        for (Map<String, Object> entry : data) {
+            Integer solutionId = ((Number) entry.get("solutionId")).intValue();
+            Integer likes = ((Number) entry.get("likes")).intValue(); 
+
+            Solution solution = solutionRepository.findById(solutionId).orElse(null);
+
+            if (solution != null) {
+                SolutionStats stats = new SolutionStats();
+                stats.setSolution(solution);
+                stats.setSuccessCount(likes); 
+                stats.setPartialCount(random.nextInt(10));
+                stats.setFailureCount(random.nextInt(5));
+                solutionStatsRepository.save(stats);
+            }
+        }
+
+        System.out.println("✅ Stats des solutions seedées : " + data.size());
     }
 
     private <T> List<T> readJson(String path) throws Exception {

@@ -21,4 +21,9 @@ public class RankingController {
     public List<SolutionDTO> getRanking() {
         return rankingService.getBestSolutions();
     }
+
+    @GetMapping("/top3")
+    public List<SolutionDTO> getTop3Ranking() {
+        return rankingService.getTop3BestSolutions();
+    }
 }
