@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Importation des "portiers" de sécurité
 import { PrivateRoute, AdminRoute } from "./components/ProtectedRoute";
@@ -28,6 +29,7 @@ import RankingProblemPage from "./pages/RankingProblemPage";
 function AppRoutes() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Navbar />
       <main className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100 px-4 md:px-8 py-8">
         <Routes>

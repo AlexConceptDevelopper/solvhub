@@ -47,6 +47,8 @@ public class SecurityConfig {
                                 "/api/users/top-contributors/top3", "/api/problems/dto/popular")
                         .permitAll()
 
+                        .requestMatchers("/api/equipments/brands", "/api/equipments/models").hasAnyRole("USER", "ADMIN")
+
                         // 2. ADMIN : Routes critiques
                         .requestMatchers(HttpMethod.DELETE, "/api/solutions/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")

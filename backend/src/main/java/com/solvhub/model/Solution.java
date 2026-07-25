@@ -17,10 +17,10 @@ public class Solution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idSolution;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false, length = 2000)
     private String steps;
 
     @Column(nullable = false)

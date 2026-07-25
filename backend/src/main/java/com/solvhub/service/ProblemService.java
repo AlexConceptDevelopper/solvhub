@@ -14,10 +14,12 @@ import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.mapper.ProblemMapper;
 import com.solvhub.mapper.SolutionMapper;
 import com.solvhub.model.Category;
+import com.solvhub.model.Equipment; // ➕ Import de l'équipement
 import com.solvhub.model.Problem;
 import com.solvhub.model.Solution;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.CategoryRepository;
+import com.solvhub.repository.global.EquipmentRepository; // ➕ Import du repository d'équipement
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.UserRepository;
@@ -34,6 +36,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final ProblemMapper problemMapper;
     private final CategoryRepository categoryRepository;
+    private final EquipmentRepository equipmentRepository; // ➕ Déclaration
     private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
 
@@ -43,6 +46,7 @@ public class ProblemService {
             ProblemRepository problemRepository,
             ProblemMapper problemMapper,
             CategoryRepository categoryRepository,
+            EquipmentRepository equipmentRepository, // ➕ Injection dans le constructeur
             UserRepository userRepository,
             SecurityUtils securityUtils,
             VoteRepository voteRepository) {
@@ -51,6 +55,7 @@ public class ProblemService {
         this.problemRepository = problemRepository;
         this.problemMapper = problemMapper;
         this.categoryRepository = categoryRepository;
+        this.equipmentRepository = equipmentRepository; // ➕ Initialisation
         this.voteRepository = voteRepository;
         this.securityUtils = securityUtils;
     }
@@ -91,6 +96,13 @@ public class ProblemService {
         problem.setDescription(dto.getDescription());
         problem.setCategory(category);
         problem.setUser(currentUser);
+
+        // ➕ Gestion de l'équipement si l'ID est fourni (ex: Catégorie 3)
+        if (dto.getIdEquipment() != null) {
+            Equipment equipment = equipmentRepository.findById(dto.getIdEquipment())
+                    .orElseThrow(() -> new ResourceNotFoundException("Équipement introuvable"));
+            problem.setEquipment(equipment);
+        }
 
         problemRepository.save(problem);
 

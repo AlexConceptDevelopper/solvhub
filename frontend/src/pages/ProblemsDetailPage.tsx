@@ -23,7 +23,7 @@ export default function ProblemDetailPage() {
     loading: loadingProblem,
     error: errorProblem,
     execute: executeProblem,
-  } = useAsync<Problem>();
+  } = useAsync<Problem | null>();
 
   const {
     loading: loadingSolutions,
@@ -141,7 +141,7 @@ export default function ProblemDetailPage() {
       </div>
 
       {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
-      <article className="relative z-10 space-y-6">
+      <article className="relative bg-white rounded-xl p-5 z-10 space-y-6">
         {/* En-tête : Catégorie & Date */}
         <div className="flex items-center gap-4 text-xs font-semibold">
           <span className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
@@ -211,7 +211,7 @@ export default function ProblemDetailPage() {
 
       {/* BLOC DES SOLUTIONS DE LA COMMUNAUTÉ */}
       <section className="space-y-6 pt-10 border-t border-slate-200">
-        <div className="flex justify-between items-baseline gap-4">
+        <div className="flex bg-white rounded-xl p-5 justify-between items-baseline gap-4">
           <div>
             <h2 className="text-xl md:text-2xl font-black tracking-tight text-slate-900">
               Solutions proposées
@@ -222,7 +222,7 @@ export default function ProblemDetailPage() {
             </p>
           </div>
 
-          <span className="text-xs font-mono font-bold text-slate-650 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-xs">
+          <span className="text-xs font-mono font-bold text-slate-650 bg-green-300 px-2.5 py-1 rounded-md border border-slate-200 shadow-xs">
             {solutions.length} {solutions.length > 1 ? "solutions" : "solution"}
           </span>
         </div>

@@ -6,6 +6,7 @@ interface AuthContextType {
   token: string | null;
   isAdmin: boolean; // Ajouté ici
   setAuth: (data: { token: string; user: User }) => void;
+  updateUser: (updatedUser: Partial<User>) => void;
   logout: () => void;
   loading: boolean;
   apiCall: (url: string, options?: RequestInit) => Promise<Response>;
@@ -21,6 +22,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   const isAdmin = useMemo(() => user?.role === 'ADMIN', [user]);
+
+  const updateUser = (updatedUser: Partial<User>) => {
+    setUser((prevUser) => {
+      if (!prevUser) return null;
+      const newValues = { ...prevUser, ...updatedUser };
+      localStorage.setItem("user", JSON.stringify(newValues));
+      return newValues;
+    });
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -73,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <AuthContext.Provider
       // On passe bien isAdmin ici pour qu'il soit accessible partout
-      value={{ user, token, isAdmin, setAuth, logout, loading, apiCall }}
+      value={{ user, token, isAdmin, setAuth, updateUser, logout, loading, apiCall }}
     >
       {children}
     </AuthContext.Provider>

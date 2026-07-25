@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateProblemDTO {
-
-    private String title;
-    private String description;
-    private Integer idCategory;
-    private Integer idEquipment;
+public class ChangePasswordDTO {
+    private String oldPassword;
+    private String newPassword;
 }

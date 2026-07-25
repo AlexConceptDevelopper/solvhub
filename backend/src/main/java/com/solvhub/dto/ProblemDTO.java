@@ -11,16 +11,11 @@ import java.time.Instant;
 public class ProblemDTO {
 
     private Integer idProblem;
-
     private String title;
-
     private String description;
-
     private CategoryDTO category;
-
     private Instant createdAt;
-
     private UserDTO user;
-
     private Long voteCount;
+    private EquipmentDTO equipment;
 }

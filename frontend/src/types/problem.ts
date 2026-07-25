@@ -21,4 +21,5 @@ export interface ProblemCreate {
   title: string;
   description: string;
   idCategory: number;
+  idEquipment?: number;
 }

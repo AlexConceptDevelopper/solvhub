@@ -18,10 +18,10 @@ public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idProblem;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000)
     private String description;
 
     @ManyToOne
@@ -40,4 +40,8 @@ public class Problem {
     @ManyToOne
     @JoinColumn(name = "id_users", nullable = true)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "id_equipment", nullable = true)
+    private Equipment equipment;
 }

@@ -54,6 +54,43 @@ public class GlobalExceptionHandler {
                                 .body(error);
         }
 
+        // Gestion unifiée de toutes les violations SQL (Doublons = 409, Taille trop longue = 400)
+        @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+        public ResponseEntity<ApiError> handleDataIntegrityViolation(
+                        org.springframework.dao.DataIntegrityViolationException ex) {
+
+                String message = "Une erreur est survenue lors de l'enregistrement des données.";
+                HttpStatus status = HttpStatus.BAD_REQUEST;
+
+                if (ex.getMessage() != null) {
+                        if (ex.getMessage().contains("Unique index") || ex.getMessage().contains("duplicate key")) {
+                                message = "Cette valeur existe déjà (doublon détecté).";
+                                status = HttpStatus.CONFLICT; // 409
+                        } else if (ex.getMessage().contains("character varying")) {
+                                message = "L'un des champs saisis dépasse la taille maximale autorisée.";
+                                status = HttpStatus.BAD_REQUEST; // 400
+                        }
+                }
+
+                ApiError error = new ApiError(Instant.now(), status.value(), message);
+                return ResponseEntity.status(status).body(error);
+        }
+
+        // Données invalides (400) via @Valid
+        @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiError> handleValidationExceptions(
+                        org.springframework.web.bind.MethodArgumentNotValidException ex) {
+
+                // Récupère le premier message d'erreur du champ en échec
+                String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                                .map(error -> error.getField() + " : " + error.getDefaultMessage())
+                                .findFirst()
+                                .orElse("Données de validation invalides");
+
+                ApiError error = new ApiError(Instant.now(), HttpStatus.BAD_REQUEST.value(), errorMessage);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
         @ExceptionHandler(ResourceNotFoundException.class)
         public ResponseEntity<ApiError> handleNotFound(
                         ResourceNotFoundException ex) {

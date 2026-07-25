@@ -1,0 +1,3002 @@
+[
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Clio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Megane"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Captur"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Kadjar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Scenic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Espace"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Talisman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Twingo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Zoe"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Austral"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Arkana"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Kangoo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Trafic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Master"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Laguna"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Vel Satis"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Modus"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Twizy"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Koleos"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Latitude"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Fluence"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Wind"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Symbol"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "Safrane"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "19"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "21"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "25"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Renault",
+    "model": "18"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "208"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "308"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "2008"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "3008"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "5008"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "508"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "108"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "107"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "206"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "207"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "306"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "307"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "406"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "407"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "408"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "605"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "607"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "806"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "807"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "Partner"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "Rifter"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "Traveller"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "Expert"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "iOn"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "e-208"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "RCZ"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "106"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "205"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "405"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Peugeot",
+    "model": "301"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C3 Aircross"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C4 Cactus"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C4 Picasso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C5 Aircross"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C5 X"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Berlingo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Jumpy"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Jumper"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "DS3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "DS4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "DS5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Xsara"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Xsara Picasso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Saxo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "ZX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Xantia"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Evasion"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "BX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "CX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "AX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Nemo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "Ami"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Citroën",
+    "model": "C3 Picasso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Golf"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Passat"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Tiguan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Touran"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Touareg"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Up!"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "T-Roc"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "T-Cross"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Taigo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "ID.3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "ID.4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "ID.5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Arteon"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Scirocco"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Beetle"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Sharan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Caddy"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Transporter"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Multivan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Jetta"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Bora"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Lupo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Fox"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Phaeton"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "CC"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Amarok"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Crafter"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "California"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volkswagen",
+    "model": "Vento"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Lodgy"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Dokker"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Spring"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Jogger"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero Stepway"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan MCV"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Solenza"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster II"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster III"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero II"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero III"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan II"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan III"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Dokker Stepway"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster Extreme"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster Prestige"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero Expression"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero Confort"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan Laureate"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan Ambiance"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster 4x4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Jogger Extreme"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Spring Confort"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Spring Extreme"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Sandero Stepway Extreme"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Duster Journey"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Dacia",
+    "model": "Logan Prestige"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Yaris"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Yaris Cross"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Corolla"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Corolla Cross"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "C-HR"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "RAV4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Aygo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Aygo X"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Avensis"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Auris"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Camry"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Prius"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Land Cruiser"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Hilux"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Proace"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Proace City"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Verso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Highlander"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "GT86"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Supra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "bZ4X"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Celica"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "MR2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Previa"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Picnic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Urban Cruiser"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Yaris Verso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Corolla Verso"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Sienna"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Toyota",
+    "model": "Starlet"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Fiesta"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Focus"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Puma"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Kuga"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "EcoSport"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Mondeo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Ka"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Ka+"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "S-Max"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Galaxy"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "C-Max"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Grand C-Max"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Edge"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Explorer"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Mustang"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Mustang Mach-E"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Transit"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Transit Connect"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Transit Custom"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Ranger"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Tourneo Connect"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Tourneo Custom"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "B-Max"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Escort"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Sierra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Scorpio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Streetka"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Cougar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Maverick"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Ford",
+    "model": "Fusion"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Corsa"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Astra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Insignia"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Mokka"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Crossland"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Grandland"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Zafira"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Meriva"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Adam"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Karl"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Agila"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Vectra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Vivaro"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Combo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Movano"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Antara"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Signum"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Tigra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Speedster"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Frontera"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Omega"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Ampera"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Cascada"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Kadett"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Manta"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Calibra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Corsa-e"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Astra Sports Tourer"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "GT"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Opel",
+    "model": "Rocks-e"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Panda"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "500"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "500X"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "500L"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Tipo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Punto"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Grande Punto"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Bravo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Doblo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Fiorino"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Qubo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Ducato"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Talento"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Croma"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Multipla"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Idea"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Marea"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Stilo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Sedici"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Freemont"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "500e"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Ulysse"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Scudo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Uno"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Ritmo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Barchetta"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Seicento"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Palio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Fiat",
+    "model": "Linea"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Micra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Note"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Juke"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Qashqai"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "X-Trail"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Leaf"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Ariya"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "370Z"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "GT-R"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Navara"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "NV200"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "NV300"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "NV400"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Primastar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Pathfinder"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Murano"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Almera"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Primera"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Pulsar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Cube"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Terrano"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Patrol"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Interstar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Kubistar"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "350Z"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Sunny"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Sentra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Maxima"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Serena"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Nissan",
+    "model": "Note e-Power"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 7"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X7"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Z3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Z4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "i3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "i4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "iX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "iX3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "M2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "M3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "M4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "M5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "M8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 2 Gran Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "Série 2 Active Tourer"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X5 M"
+  },
+  {
+    "idCategory": 3,
+    "brand": "BMW",
+    "model": "X6 M"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe A"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe B"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe C"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe E"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe S"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "CLA"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "CLS"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLA"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLB"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLC"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLE"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLS"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe G"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Vito"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Sprinter"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Citan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "SLK"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "SL"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "AMG GT"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "EQA"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "EQB"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "EQC"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "EQE"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "EQS"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Vaneo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Viano"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe V"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe M"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "Classe R"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mercedes-Benz",
+    "model": "GLC Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A7"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q4 e-tron"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q7"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "TT"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "R8"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "e-tron GT"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "e-tron"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "RS3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "RS4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "RS6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "S3"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "S4"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "S5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A2"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "A6 Allroad"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q3 Sportback"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Q8 e-tron"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "80"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "100"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Audi",
+    "model": "Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Picanto"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Rio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Ceed"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Proceed"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "XCeed"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Stonic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Sportage"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Sorento"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Niro"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Soul"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Optima"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Carnival"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Venga"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Carens"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Cerato"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Magentis"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Picanto X-Line"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "EV6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "EV9"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Stinger"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Pride"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Shuma"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Sedona"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Opirus"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Mohave"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Rondo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Cadenza"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "K900"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Telluride"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Kia",
+    "model": "Seltos"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "i10"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "i20"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "i30"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "i40"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "ix20"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "ix35"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Tucson"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Santa Fe"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Kona"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Bayon"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Accent"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Elantra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Sonata"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Getz"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Atos"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Matrix"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Trajet"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Terracan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Genesis"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Ioniq"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Ioniq 5"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Ioniq 6"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Veloster"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "H1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Grandeur"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Palisade"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Venue"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Staria"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Hyundai",
+    "model": "Nexo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Fabia"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Octavia"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Superb"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Kodiaq"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Karoq"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Kamiq"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Scala"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Rapid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Yeti"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Roomster"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Citigo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Felicia"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Favorit"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Enyaq"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Enyaq Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Octavia RS"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Superb Combi"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Fabia Combi"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Praktik"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Forman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Pick-up"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "105"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "120"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Estelle"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Rapid Spaceback"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Yeti Outdoor"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Kodiaq RS"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Scala Monte Carlo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Karoq Sportline"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Skoda",
+    "model": "Superb L&K"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ibiza"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Leon"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Arona"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ateca"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Tarraco"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Alhambra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Toledo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Cordoba"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Altea"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Altea XL"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Exeo"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Mii"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Marbella"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Malaga"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ronda"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Fura"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Panda"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Inca"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Arosa"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Leon Cupra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ibiza Cupra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Tarraco Cupra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Formentor"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Leon ST"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ibiza ST"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Alhambra 4Drive"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Toledo FR"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Ateca FR"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Leon e-Hybrid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Seat",
+    "model": "Arona FR"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V40"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V50"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V60"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V70"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V90"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "S40"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "S60"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "S80"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "S90"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "XC40"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "XC60"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "XC90"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "C30"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "C70"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "240"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "850"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "940"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "960"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "480"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "740"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "760"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "340"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "360"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "XC70"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "EX30"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "EX90"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "C40"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V40 Cross Country"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V60 Cross Country"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Volvo",
+    "model": "V90 Cross Country"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper S"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "One"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Clubman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Countryman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Paceman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Coupé"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Roadster"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cabrio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "John Cooper Works"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper D"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper SD"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper Electric"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper 5 portes"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper 3 portes"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper S Clubman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper S Countryman"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "One D"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "One First"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Clubvan"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper Convertible"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Countryman JCW"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper S Cabrio"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper Works GP"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "One 5 portes"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper S 5 portes"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper SE"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Countryman Hybrid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper Classic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Mini",
+    "model": "Cooper Sport"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Civic"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Jazz"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "CR-V"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "HR-V"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Accord"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "City"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "e"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "NSX"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "S2000"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Integra"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Legend"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Prelude"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "FR-V"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Insight"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "CR-Z"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Stream"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Odyssey"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Shuttle"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Concerto"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Ballade"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Civic Type R"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "CR-V Hybrid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "e:Ny1"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "ZR-V"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Civic Tourer"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Accord Tourer"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Jazz Hybrid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "HR-V Hybrid"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Civic Aerodeck"
+  },
+  {
+    "idCategory": 3,
+    "brand": "Honda",
+    "model": "Logo"
+  }
+]

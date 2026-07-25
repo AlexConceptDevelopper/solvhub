@@ -126,9 +126,10 @@ export default function CreateSolutionPage() {
 
           <textarea
             name="steps"
+            maxLength={2000}
             value={form.steps}
             onChange={handleChange}
-            placeholder="Décrivez les étapes..."
+            placeholder="Décrivez les étapes...(max 2000 caractères)"
             className="
               w-full
               rounded-xl

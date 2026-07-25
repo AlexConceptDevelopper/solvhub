@@ -13,7 +13,7 @@ export default function SearchFilterBar({
   category,
   setCategory,
   uniqueCategories,
-  placeholder = "Rechercher...",
+  placeholder = "Rechercher (3 lettres min)...",
 }: SearchFilterBarProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-6">

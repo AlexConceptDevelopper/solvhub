@@ -15,10 +15,20 @@ public class CategoryMapper {
         }
 
         return new CategoryDTO(
-            category.getIdCategory(),
-            category.getName(),
-            category.getIcon(),
-            null
-        );
+                category.getIdCategory(),
+                category.getName(),
+                category.getIcon(),
+                null);
+    }
+
+    public Category toEntity(CategoryDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        Category category = new Category();
+        category.setIdCategory(dto.getIdCategory());
+        category.setName(dto.getName());
+        category.setIcon(dto.getIcon());
+        return category;
     }
 }

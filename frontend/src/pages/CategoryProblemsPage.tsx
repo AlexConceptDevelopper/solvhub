@@ -47,21 +47,36 @@ export default function CategoryProblemsPage() {
 
   return (
     <div>
-      <Link
-        to="/"
-        className="
-          mb-6
-          flex
-          items-center
-          gap-2
-          text-blue-600
-          font-semibold
-          hover:underline
-          w-fit
-        "
-      >
-        ← Retour à l'accueil
-      </Link>
+      <div className="flex items-center justify-between mb-6">
+        <Link
+          to="/"
+          className="
+            flex
+            items-center
+            gap-2
+            text-blue-600
+            font-semibold
+            hover:underline
+            w-fit
+          "
+        >
+          ← Retour à l'accueil
+        </Link>
+        <Link
+          to="/categories"
+          className="
+            flex
+            items-center
+            gap-2
+            text-slate-600
+            font-semibold
+            hover:underline
+            w-fit
+          "
+        >
+          ← Retour aux catégories
+        </Link>
+      </div>
 
       <h1
         className="

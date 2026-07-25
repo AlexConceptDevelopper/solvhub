@@ -3,11 +3,14 @@ package com.solvhub.controller.global;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.solvhub.controller.GenericController;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.UserRepository;
 import com.solvhub.service.UserService;
+import com.solvhub.dto.ChangePasswordDTO;
+import com.solvhub.dto.MessageResponse;
 import com.solvhub.dto.UserDTO;
 
 @RestController
@@ -37,5 +40,15 @@ public class UserController extends GenericController<User, Integer> {
     @GetMapping("/top-contributors/top3")
     public List<UserDTO> getTop3Contributors() {
         return userService.getTop3Contributors();
+    }
+
+    //change password
+    @PostMapping("/password")
+    public MessageResponse changePassword(
+            @RequestBody ChangePasswordDTO dto, 
+            @AuthenticationPrincipal User currentUser) { // Récupère l'utilisateur connecté via le JWT
+        
+        userService.changePassword(currentUser, dto);
+        return new MessageResponse("Mot de passe mis à jour avec succès.");
     }
 }

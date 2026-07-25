@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
-import ProblemCard from "../components/ProblemCard";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
+import SearchFilterBar from "../components/SearchFilterBar";
+import { matchesSearchQuery } from "../utils/searchUtils";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -36,8 +37,6 @@ export default function ProblemsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Extraction DYNAMIQUE des catégories existantes directement depuis les problèmes reçus
-  // Cela évite de faire un appel API supplémentaire qui pourrait crasher
   const uniqueCategories = Array.from(
     new Set(
       problems
@@ -46,15 +45,12 @@ export default function ProblemsPage() {
     )
   );
 
-  // Filtrage ultra-sécurisé contre les valeurs nulles ou undefined
   const filteredProblems = problems.filter((problem) => {
     if (!problem) return false;
 
-    const title = problem.title?.toLowerCase() || "";
-    const description = problem.description?.toLowerCase() || "";
-    const searchLower = search.toLowerCase();
-
-    const matchesSearch = title.includes(searchLower) || description.includes(searchLower);
+    const matchesSearch =
+      matchesSearchQuery(problem.title, search) ||
+      matchesSearchQuery(problem.description, search);
 
     const matchesCategory =
       category === "Toutes" || 
@@ -63,7 +59,6 @@ export default function ProblemsPage() {
     return matchesSearch && matchesCategory;
   });
 
-  // Gestion des états de chargement et d'erreur intégrée au flux (sans casser la Navbar globale si elle est gérée par un Layout)
   if (loading) {
     return <div className="text-center text-slate-500 py-12">Chargement des problèmes...</div>;
   }
@@ -77,64 +72,49 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-slate-800 mb-8">
-        Tous les problèmes
-      </h1>
-
-      <div className="mb-8 bg-white/70 rounded-2xl border border-slate-200 p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="max-w-5xl mx-auto space-y-8">
+      {/* En-tête de la page */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-slate-800">
-            Vous ne trouvez pas votre problème ?
-          </h2>
-          <p className="text-slate-500 mt-1">
-            Créez une nouvelle question et obtenez de l'aide de la communauté.
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Tous les problèmes
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Consultez les difficultés rencontrées par la communauté ou proposez vos solutions.
           </p>
         </div>
 
         <button
           onClick={() => navigate("/problem/create")}
-          className="bg-blue-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-blue-700 transition cursor-pointer"
+          className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-700 transition shadow-sm hover:shadow cursor-pointer w-fit"
         >
           + Poser un problème
         </button>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 mb-8">
-        <input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Rechercher un problème..."
-          className="flex-1 rounded-xl border border-slate-300 px-4 py-3 bg-white shadow-sm focus:outline-blue-500"
-        />
+      {/* Barre de recherche et filtres */}
+      <SearchFilterBar
+        search={search}
+        setSearch={setSearch}
+        category={category}
+        setCategory={setCategory}
+        uniqueCategories={uniqueCategories}
+      />
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="rounded-xl border border-slate-300 px-4 py-3 bg-white cursor-pointer shadow-sm focus:outline-blue-500"
-        >
-          <option value="Toutes">Toutes les catégories</option>
-          {uniqueCategories.map((catName) => (
-            <option key={catName} value={catName}>
-              {catName}
-            </option>
-          ))}
-        </select>
+      <div className="flex justify-between items-center text-sm text-slate-500 px-1">
+        <span>{filteredProblems.length} problème(s) trouvé(s)</span>
       </div>
 
-      <p className="mb-6 text-slate-500">
-        {filteredProblems.length} problème(s) trouvé(s)
-      </p>
-
+      {/* Liste flux moderne */}
       {filteredProblems.length === 0 ? (
-        <div className="bg-white/70 rounded-2xl border border-slate-200 p-8 text-center">
+        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-xs">
           {problems.length === 0 ? (
             <p className="text-slate-500">
               Aucun problème disponible pour le moment.
             </p>
           ) : (
             <>
-              <p className="text-slate-600 font-semibold">
+              <p className="text-slate-700 font-semibold">
                 Aucun problème ne correspond à votre recherche.
               </p>
               <button
@@ -142,7 +122,7 @@ export default function ProblemsPage() {
                   setSearch("");
                   setCategory("Toutes");
                 }}
-                className="mt-4 text-blue-600 font-semibold hover:underline cursor-pointer"
+                className="mt-4 text-blue-600 font-semibold hover:underline cursor-pointer text-sm"
               >
                 Réinitialiser les filtres
               </button>
@@ -150,10 +130,43 @@ export default function ProblemsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
           {filteredProblems.map((problem) => (
-            // On vérifie qu'on a bien un id avant de l'attribuer à la clé
-            <ProblemCard key={problem.idProblem || Math.random()} problem={problem} />
+            <div
+              key={problem.idProblem || Math.random()}
+              onClick={() => navigate(`/problem/${problem.idProblem}`)}
+              className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+            >
+              <div className="space-y-2 flex-1">
+                <div className="flex items-center gap-3 text-xs">
+                  {problem.category && (
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-medium">
+                      <span>{problem.category.icon || "🏷️"}</span>
+                      <span>{problem.category.name}</span>
+                    </span>
+                  )}
+                  {problem.createdAt && (
+                    <span className="text-slate-400">
+                      {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+                    </span>
+                  )}
+                </div>
+
+                <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
+                  {problem.title}
+                </h2>
+
+                <p className="text-sm text-slate-600 line-clamp-2">
+                  {problem.description}
+                </p>
+              </div>
+
+              <div className="flex items-center self-end md:self-center">
+                <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
+                  Voir les solutions →
+                </span>
+              </div>
+            </div>
           ))}
         </div>
       )}

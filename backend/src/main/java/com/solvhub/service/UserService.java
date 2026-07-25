@@ -2,7 +2,7 @@ package com.solvhub.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.solvhub.exception.InvalidDataException;
 import com.solvhub.exception.ResourceNotFoundException;
@@ -10,6 +10,7 @@ import com.solvhub.model.User;
 import com.solvhub.repository.global.UserRepository;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.security.SecurityUtils;
+import com.solvhub.dto.ChangePasswordDTO;
 import com.solvhub.dto.UserDTO;
 import com.solvhub.mapper.UserMapper;
 
@@ -20,13 +21,15 @@ public class UserService {
     private final SolutionRepository solutionRepository;
     private final UserMapper userMapper;
     private final SecurityUtils securityUtils;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, SolutionRepository solutionRepository, UserMapper userMapper,
-            SecurityUtils securityUtils) {
+            SecurityUtils securityUtils, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.solutionRepository = solutionRepository;
         this.userMapper = userMapper;
         this.securityUtils = securityUtils;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDTO update(Integer id, UserDTO dto) {
@@ -41,7 +44,10 @@ public class UserService {
 
         // 3. Si c'est bon, on met à jour et on sauvegarde
         userToModify.setUsername(dto.getUsername());
-        userToModify.setEmail(dto.getEmail());
+        userToModify.setUsername(dto.getUsername());
+        if (dto.getEmail() != null) {
+            userToModify.setEmail(dto.getEmail());
+        }
 
         User savedUser = userRepository.save(userToModify);
         return userMapper.toDTO(savedUser);
@@ -92,6 +98,18 @@ public class UserService {
         return getTopContributors().stream()
                 .limit(3)
                 .toList();
+    }
+
+    // Change passwordHash
+    public void changePassword(User currentUser, ChangePasswordDTO dto) {
+
+        if (!passwordEncoder.matches(dto.getOldPassword(), currentUser.getPasswordHash())) {
+            throw new InvalidDataException("L'ancien mot de passe est incorrect.");
+        }
+
+        // 2. Encoder le nouveau mot de passe et sauvegarder
+        currentUser.setPasswordHash(passwordEncoder.encode(dto.getNewPassword()));
+        userRepository.save(currentUser);
     }
 
 }
