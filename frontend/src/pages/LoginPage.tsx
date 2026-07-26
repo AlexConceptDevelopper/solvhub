@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
 import { apiFetch } from "../api/client";
 import type { LoginResponse } from "../types/LoginResponse";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -12,9 +13,9 @@ export default function LoginPage() {
   const { setAuth } = useAuth();
   const navigate = useNavigate();
 
-  const { loading, error, execute } = useAsync<LoginResponse>();
+  const { loading, error, execute } = useAsync<LoginResponse | null>();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = await execute(() =>
       apiFetch("/auth/login", {
@@ -25,9 +26,7 @@ export default function LoginPage() {
     );
 
     if (data) {
-      // 1. On extrait le rôle depuis la réponse 'data'
       const { token, idUsers, username, email, role } = data;
-      // 2. On l'inclut dans l'objet user envoyé au contexte
       setAuth({
         token,
         user: { idUsers, username, email, role },
@@ -50,9 +49,8 @@ export default function LoginPage() {
           </div>
         )}
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
           <div>
-            {/* Email */}
             <div>
               <label className="block text-sm font-bold text-white mb-1.5 ml-1">
                 Email
@@ -63,15 +61,12 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                 required
-                autoComplete="off"
-                onFocus={(e) => e.target.removeAttribute("readOnly")}
-                readOnly
+                autoComplete="email"
               />
             </div>
           </div>
 
           <div>
-            {/* Password */}
             <div>
               <label className="block text-sm font-bold text-white mb-1.5 ml-1">
                 Mot de passe
@@ -82,20 +77,19 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500 transition-colors"
                 required
-                autoComplete="off"
-                onFocus={(e) => e.target.removeAttribute("readOnly")}
-                readOnly
+                autoComplete="current-password"
               />
             </div>
           </div>
 
-          <button
+          <PrimaryButton
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50 cursor-pointer"
+            loading={loading}
+            loadingLabel="Connexion en cours..."
+            className="w-full mt-4"
           >
-            {loading ? "Connexion en cours..." : "Se connecter"}
-          </button>
+            Se connecter
+          </PrimaryButton>
         </form>
         <p className="text-center text-slate-200 text-sm mt-6">
           Pas encore de compte ?{" "}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { getSolutionById } from "../api/solution.api";
 import { getSolutionStats } from "../api/solutionStats.api";
@@ -12,10 +12,10 @@ import VoteList from "../components/VoteList";
 import ErrorMessage from "../components/ErrorMessage";
 import useAsync from "../hooks/useAsync";
 import { useAuth } from "../context/AuthContext";
+import BackButton from "../components/BackButton";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { user } = useAuth();
 
   const [solution, setSolution] = useState<Solution | null>(null);
@@ -185,18 +185,10 @@ export default function SolutionDetailPage() {
           {solution.title}
         </h1>
 
-        <button
-          onClick={() => navigate(`/problem/${solution.problemId}`)}
-          className="
-            mt-6
-            text-blue-600
-            font-semibold
-            hover:underline
-            cursor-pointer
-          "
-        >
-          ← Retour au problème
-        </button>
+        <BackButton
+          to={`/problem/${solution.problemId}`}
+          label="Retour au problème"
+        />
 
         <p
           className="

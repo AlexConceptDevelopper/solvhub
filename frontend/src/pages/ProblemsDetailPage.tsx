@@ -11,6 +11,8 @@ import type { Solution } from "../types/solution";
 
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
+import BackButton from "../components/BackButton";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -56,7 +58,7 @@ export default function ProblemDetailPage() {
 
   if (loadingProblem) {
     return (
-      <div className="max-w-5xl mx-auto text-center py-20 text-slate-650 font-medium tracking-wide animate-pulse">
+      <div className="max-w-5xl mx-auto text-center py-20 text-slate-600 font-medium tracking-wide animate-pulse">
         Chargement du problème...
       </div>
     );
@@ -116,28 +118,7 @@ export default function ProblemDetailPage() {
     <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-12">
       {/* BOUTON RETOUR*/}
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => navigate("/problems")}
-          className="
-            group
-            inline-flex
-            items-center
-            gap-2
-            text-xs
-            font-bold
-            uppercase
-            tracking-wider
-            text-slate-500
-            hover:text-slate-800
-            transition-colors
-            cursor-pointer
-          "
-        >
-          <span className="transform group-hover:-translate-x-1 transition-transform">
-            ←
-          </span>
-          Retour aux problèmes
-        </button>
+        <BackButton to="/problems" label="Retour aux problèmes" />
       </div>
 
       {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
@@ -200,29 +181,13 @@ export default function ProblemDetailPage() {
 
         {/* Action principale */}
         <div className="pt-6 flex justify-start">
-          <button
+          <PrimaryButton
             onClick={() =>
               navigate(`/problem/${problem.idProblem}/create-solution`)
             }
-            className="
-              bg-blue-600
-              text-white
-              px-6
-              py-3
-              rounded-xl
-              font-bold
-              text-sm
-              shadow-lg
-              shadow-blue-600/10
-              hover:bg-blue-700
-              hover:-translate-y-0.5
-              transition-all
-              duration-200
-              cursor-pointer
-            "
           >
             Proposer une solution
-          </button>
+          </PrimaryButton>
         </div>
       </article>
 
@@ -239,7 +204,7 @@ export default function ProblemDetailPage() {
             </p>
           </div>
 
-          <span className="text-xs font-mono font-bold text-slate-650 bg-green-300 px-2.5 py-1 rounded-md border border-slate-200 shadow-xs">
+          <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 shadow-xs">
             {solutions.length} {solutions.length > 1 ? "solutions" : "solution"}
           </span>
         </div>

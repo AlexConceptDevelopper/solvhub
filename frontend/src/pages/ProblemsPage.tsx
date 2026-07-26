@@ -7,15 +7,17 @@ import type { Category } from "../types/category";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import SearchFilterBar from "../components/SearchFilterBar";
+import PrimaryButton from "../components/PrimaryButton";
 import { matchesSearchQuery } from "../utils/searchUtils";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<Problem[]>([]);
-  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>([]);
+  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>(
+    [],
+  );
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Toutes");
-  
-  // Nouveaux états pour l'automobile (Marque et Modèle)
+
   const [selectedBrand, setSelectedBrand] = useState("Toutes");
   const [selectedModel, setSelectedModel] = useState("Toutes");
 
@@ -29,7 +31,7 @@ export default function ProblemsPage() {
       try {
         const [problemsData, categoriesData] = await Promise.all([
           execute(() => getProblems()),
-          execute(() => getCategoriesWithCount())
+          execute(() => getCategoriesWithCount()),
         ]);
 
         if (isMounted) {
@@ -49,34 +51,35 @@ export default function ProblemsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Récupération des catégories avec leur compteur pour le select
   const uniqueCategories = categoriesWithCount.map((c) => ({
     name: c.name,
     count: c.problemCount || 0,
   }));
 
-  // Extraction dynamique des marques pour la catégorie Automobile
-  const automobileProblems = problems.filter((p) => p.category?.name === "Automobile" && p.equipment);
-  
+  const automobileProblems = problems.filter(
+    (p) => p.category?.name === "Automobile" && p.equipment,
+  );
+
   const uniqueBrands = Array.from(
     new Set(
       automobileProblems
         .map((p) => p.equipment?.brand)
-        .filter((brand): brand is string => Boolean(brand))
-    )
+        .filter((brand): brand is string => Boolean(brand)),
+    ),
   );
 
-  // Extraction dynamique des modèles en fonction de la marque sélectionnée
   const uniqueModels = Array.from(
     new Set(
       automobileProblems
-        .filter((p) => selectedBrand === "Toutes" || p.equipment?.brand === selectedBrand)
+        .filter(
+          (p) =>
+            selectedBrand === "Toutes" || p.equipment?.brand === selectedBrand,
+        )
         .map((p) => p.equipment?.model)
-        .filter((model): model is string => Boolean(model))
-    )
+        .filter((model): model is string => Boolean(model)),
+    ),
   );
 
-  // Réinitialisation des sous-filtres si on change de catégorie
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     if (newCategory !== "Automobile") {
@@ -93,14 +96,17 @@ export default function ProblemsPage() {
       matchesSearchQuery(problem.description, search);
 
     const matchesCategory =
-      category === "Toutes" || 
+      category === "Toutes" ||
       (problem.category && problem.category.name === category);
 
-    // Filtres spécifiques si Automobile est sélectionné
     let matchesEquipment = true;
     if (category === "Automobile") {
-      const matchesBrand = selectedBrand === "Toutes" || problem.equipment?.brand === selectedBrand;
-      const matchesModel = selectedModel === "Toutes" || problem.equipment?.model === selectedModel;
+      const matchesBrand =
+        selectedBrand === "Toutes" ||
+        problem.equipment?.brand === selectedBrand;
+      const matchesModel =
+        selectedModel === "Toutes" ||
+        problem.equipment?.model === selectedModel;
       matchesEquipment = matchesBrand && matchesModel;
     }
 
@@ -108,39 +114,45 @@ export default function ProblemsPage() {
   });
 
   if (loading && problems.length === 0) {
-    return <div className="text-center text-slate-500 py-12">Chargement des problèmes...</div>;
+    return (
+      <div className="text-center text-slate-500 py-12">
+        Chargement des problèmes...
+      </div>
+    );
   }
 
   if (error && problems.length === 0) {
     return (
       <div className="p-6">
-        <ErrorMessage message={error} onRetry={() => window.location.reload()} />
+        <ErrorMessage
+          message={error}
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
-      {/* En-tête de la page */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
             Tous les problèmes
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Consultez les difficultés rencontrées par la communauté ou proposez vos solutions.
+            Consultez les difficultés rencontrées par la communauté ou proposez
+            vos solutions.
           </p>
         </div>
 
-        <button
+        <PrimaryButton
           onClick={() => navigate("/problem/create")}
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-700 transition shadow-sm hover:shadow cursor-pointer w-fit"
+          className="w-fit"
         >
           + Poser un problème
-        </button>
+        </PrimaryButton>
       </div>
 
-      {/* Barre de recherche et filtres de base */}
       <SearchFilterBar
         search={search}
         setSearch={setSearch}
@@ -149,16 +161,17 @@ export default function ProblemsPage() {
         uniqueCategories={uniqueCategories}
       />
 
-      {/* Selects dynamiques additionnels si la catégorie "Automobile" est active */}
       {category === "Automobile" && (
         <div className="flex flex-col sm:flex-row gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Marque</label>
+            <label className="block text-xs font-semibold text-slate-600 mb-1">
+              Marque
+            </label>
             <select
               value={selectedBrand}
               onChange={(e) => {
                 setSelectedBrand(e.target.value);
-                setSelectedModel("Toutes"); // Reset du modèle au changement de marque
+                setSelectedModel("Toutes");
               }}
               className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -172,7 +185,9 @@ export default function ProblemsPage() {
           </div>
 
           <div className="flex-1">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">Modèle</label>
+            <label className="block text-xs font-semibold text-slate-600 mb-1">
+              Modèle
+            </label>
             <select
               value={selectedModel}
               onChange={(e) => setSelectedModel(e.target.value)}
@@ -193,7 +208,6 @@ export default function ProblemsPage() {
         <span>{filteredProblems.length} problème(s) trouvé(s)</span>
       </div>
 
-      {/* Liste flux moderne */}
       {filteredProblems.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-xs">
           {problems.length === 0 ? (
@@ -230,7 +244,7 @@ export default function ProblemsPage() {
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3 text-xs">
                   {problem.category && (
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 font-medium">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
                       <span>{problem.category.icon || "🏷️"}</span>
                       <span>{problem.category.name}</span>
                     </span>
@@ -238,7 +252,9 @@ export default function ProblemsPage() {
                   {problem.equipment && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-100">
                       <span>🚗</span>
-                      <span>{problem.equipment.brand} {problem.equipment.model}</span>
+                      <span>
+                        {problem.equipment.brand} {problem.equipment.model}
+                      </span>
                     </span>
                   )}
                   {problem.createdAt && (

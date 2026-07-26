@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -9,7 +10,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // On autorise null dans le type de useAsync pour matcher apiFetch
   const { loading, error, execute, data } = useAsync<{
     message: string;
   } | null>();
@@ -26,7 +26,6 @@ export default function RegisterPage() {
     });
   };
 
-  // État de succès
   if (data) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4">
@@ -125,13 +124,14 @@ export default function RegisterPage() {
             />
           </div>
 
-          <button
+          <PrimaryButton
             type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 mt-4 disabled:opacity-50 cursor-pointer"
+            loading={loading}
+            loadingLabel="Inscription en cours..."
+            className="w-full mt-4"
           >
-            {loading ? "Inscription en cours..." : "S'inscrire"}
-          </button>
+            S'inscrire
+          </PrimaryButton>
         </form>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCategoriesWithCount } from "../api/category.api"; 
 import type { Category } from "../types/category";
+import BackButton from "../components/BackButton";
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -18,47 +19,49 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <div className="min-h-full text-white p-8 space-y-8">
-      <div className="max-w-6xl mx-auto bg-slate-800 border border-slate-900/80 p-6 rounded-2xl flex justify-between items-center shadow-sm">
+    <div className="p-8 space-y-8">
+      <div className="max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Toutes les Catégories</h1>
-          <p className="text-sm mt-1">
+          <h1 className="text-3xl font-bold text-slate-900">Toutes les Catégories</h1>
+          <p className="text-sm mt-1 text-slate-500">
             Explore les différents sujets et trouve des solutions adaptées.
           </p>
         </div>
-        <button
-          onClick={() => navigate("/")}
-          className="px-4 py-2 bg-blue-500 hover:bg-slate-500 border border-slate-800 font-semibold rounded-xl shadow transition cursor-pointer text-sm"
-        >
-          ← Retour à l'accueil
-        </button>
+        <BackButton to="/" label="Retour à l'accueil" />
       </div>
 
-      {/* Contenu (grille des catégories) */}
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto">
         {loading ? (
-          <p className="text-center py-12">Chargement des catégories...</p>
+          <p className="text-center py-12 text-slate-500">Chargement des catégories...</p>
         ) : categories.length === 0 ? (
-          <p className="text-center py-12">Aucune catégorie trouvée.</p>
+          <p className="text-center py-12 text-slate-500">Aucune catégorie trouvée.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="rounded-xl bg-slate-900 divide-y divide-slate-800 overflow-hidden">
             {categories.map((cat) => (
               <div
                 key={cat.idCategory}
                 onClick={() => navigate(`/categories/${cat.idCategory}`)}
-                className="bg-slate-800 border border-slate-900 p-5 rounded-2xl hover:bg-slate-900/40 hover:border-slate-800 transition flex items-center justify-between shadow-sm cursor-pointer"
+                className="
+                  px-5
+                  py-4
+                  hover:bg-slate-800
+                  transition-colors
+                  duration-150
+                  flex
+                  items-center
+                  justify-between
+                  cursor-pointer
+                "
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl p-2.5 bg-slate-800 border border-slate-800/60 rounded-xl">
+                  <span className="text-xl">
                     {cat.icon || "🏷️"}
                   </span>
-                  <div>
-                    <h3 className="font-semibold text-base text-white">{cat.name}</h3>
-                    <p className="text-xs mt-0.5">
-                      {cat.problemCount ?? 0} problème(s) associé(s)
-                    </p>
-                  </div>
+                  <h3 className="font-semibold text-sm text-white">{cat.name}</h3>
                 </div>
+                <span className="text-xs text-slate-400">
+                  {cat.problemCount ?? 0} problème(s)
+                </span>
               </div>
             ))}
           </div>

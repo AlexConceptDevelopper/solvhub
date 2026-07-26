@@ -2,13 +2,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { createProblem, checkDuplicates } from "../api/problem.api";
-import { getCategories } from "../api/category.api"; 
-import { getBrandsByCategory, getModelsByCategoryAndBrand, findEquipmentByCriteria } from "../api/equipment.api"; 
+import { getCategories } from "../api/category.api";
+import {
+  getBrandsByCategory,
+  getModelsByCategoryAndBrand,
+  findEquipmentByCriteria,
+} from "../api/equipment.api";
 
 import type { ProblemCreate, Problem } from "../types/problem";
 import type { Category } from "../types/category";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
+import BackButton from "../components/BackButton";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function CreateProblemPage() {
   const navigate = useNavigate();
@@ -29,16 +35,25 @@ export default function CreateProblemPage() {
     idEquipment: undefined,
   });
 
-  const { loading: submitting, error: submitError, execute: submitExecute } = useAsync<Problem>();
-  const { loading: loadingCats, error: catError, execute: fetchCatsExecute } = useAsync<Category[]>();
-  const { loading: checkingAI, execute: checkDuplicatesExecute } = useAsync<Problem[]>();
+  const {
+    loading: submitting,
+    error: submitError,
+    execute: submitExecute,
+  } = useAsync<Problem>();
+  const {
+    loading: loadingCats,
+    error: catError,
+    execute: fetchCatsExecute,
+  } = useAsync<Category[]>();
+  const { loading: checkingAI, execute: checkDuplicatesExecute } =
+    useAsync<Problem[]>();
 
   useEffect(() => {
     const loadCategories = async () => {
       const data = await fetchCatsExecute(() => getCategories());
       if (data && data.length > 0) {
         setCategories(data);
-        setForm(prev => ({ ...prev, idCategory: data[0].idCategory }));
+        setForm((prev) => ({ ...prev, idCategory: data[0].idCategory }));
       }
     };
     loadCategories();
@@ -88,21 +103,22 @@ export default function CreateProblemPage() {
     >,
   ) => {
     const { name, value } = e.target;
-    
+
     setForm({
       ...form,
       [name]: name === "idCategory" ? parseInt(value, 10) : value,
     });
-    
+
     if (name === "title" || name === "description") {
       setAiChecked(false);
     }
   };
 
-  // Vérification dynamique des doublons via le backend et useAsync
   const handleCheckDuplicates = async () => {
     if (!form.title || form.title.length < 3) {
-      alert("Veuillez saisir un titre (3 caractères min.) avant de lancer la vérification.");
+      alert(
+        "Veuillez saisir un titre (3 caractères min.) avant de lancer la vérification.",
+      );
       return;
     }
 
@@ -110,7 +126,11 @@ export default function CreateProblemPage() {
 
     let equipmentId = undefined;
     if (form.idCategory === 3 && selectedBrand && selectedModel) {
-      const equipment = await findEquipmentByCriteria(3, selectedBrand, selectedModel);
+      const equipment = await findEquipmentByCriteria(
+        3,
+        selectedBrand,
+        selectedModel,
+      );
       if (equipment?.idEquipment) {
         equipmentId = equipment.idEquipment;
       }
@@ -122,7 +142,7 @@ export default function CreateProblemPage() {
         description: form.description,
         categoryId: form.idCategory,
         equipmentId: equipmentId,
-      })
+      }),
     );
 
     if (duplicates) {
@@ -139,13 +159,17 @@ export default function CreateProblemPage() {
     let equipmentId = undefined;
 
     if (form.idCategory === 3) {
-      if (!selectedBrand || !selectedModel) return; 
-      
-      const equipment = await findEquipmentByCriteria(3, selectedBrand, selectedModel);
+      if (!selectedBrand || !selectedModel) return;
+
+      const equipment = await findEquipmentByCriteria(
+        3,
+        selectedBrand,
+        selectedModel,
+      );
       if (equipment && equipment.idEquipment) {
         equipmentId = equipment.idEquipment;
       } else {
-        return; 
+        return;
       }
     }
 
@@ -164,19 +188,23 @@ export default function CreateProblemPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
-        <h1 className="text-3xl font-bold text-slate-800">
-          Poser un problème
-        </h1>
-
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-slate-800">
+            Poser un problème
+          </h1>
+          <BackButton to="/" label="Retour à l'accueil" />
+        </div>
         {(submitError || catError) && (
-          <ErrorMessage message={submitError || catError || "Une erreur est survenue"} />
+          <ErrorMessage
+            message={submitError || catError || "Une erreur est survenue"}
+          />
         )}
 
         <p className="mt-2 text-slate-500">
           Décrivez votre problème pour obtenir de l'aide de la communauté.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6" autoComplete="off">
           <div>
             <label className="block font-semibold text-slate-700 mb-2">
               Titre
@@ -186,8 +214,9 @@ export default function CreateProblemPage() {
               value={form.title}
               onChange={handleChange}
               placeholder="Ex : Mon PC ne démarre plus"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
               required
+              autoComplete="off"
             />
           </div>
 
@@ -200,7 +229,7 @@ export default function CreateProblemPage() {
               value={form.idCategory}
               onChange={handleChange}
               disabled={loadingCats}
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white disabled:opacity-50"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
             >
               {loadingCats ? (
                 <option>Chargement des catégories...</option>
@@ -223,7 +252,7 @@ export default function CreateProblemPage() {
                 <select
                   value={selectedBrand}
                   onChange={(e) => setSelectedBrand(e.target.value)}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white"
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
                   required
                 >
                   <option value="">-- Choisir une marque --</option>
@@ -243,7 +272,7 @@ export default function CreateProblemPage() {
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
                   disabled={!selectedBrand}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white disabled:opacity-50"
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
                   required
                 >
                   <option value="">-- Choisir un modèle --</option>
@@ -268,8 +297,9 @@ export default function CreateProblemPage() {
               onChange={handleChange}
               rows={6}
               placeholder="Expliquez votre problème...(max 1000 caractères)"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
               required
+              autoComplete="off"
             />
           </div>
 
@@ -298,12 +328,21 @@ export default function CreateProblemPage() {
               <div className="mt-3 pt-3 border-t border-slate-200 space-y-2">
                 {aiSuggestions.length > 0 ? (
                   <div>
-                    <p className="text-xs font-bold text-amber-800 mb-2">⚠️ Problèmes similaires détectés :</p>
+                    <p className="text-xs font-bold text-amber-800 mb-2">
+                      ⚠️ Problèmes similaires détectés :
+                    </p>
                     {aiSuggestions.map((item) => (
-                      <div key={item.idProblem} className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2 shadow-xs mb-2">
+                      <div
+                        key={item.idProblem}
+                        className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2 shadow-xs mb-2"
+                      >
                         <div>
-                          <p className="text-xs font-semibold text-slate-800">{item.title}</p>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">{item.description}</p>
+                          <p className="text-xs font-semibold text-slate-800">
+                            {item.title}
+                          </p>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">
+                            {item.description}
+                          </p>
                         </div>
                         <button
                           type="button"
@@ -324,12 +363,14 @@ export default function CreateProblemPage() {
             )}
           </div>
 
-          <button
-            disabled={submitting || loadingCats}
-            className="w-full rounded-xl bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer shadow-sm"
+          <PrimaryButton
+            type="submit"
+            loading={submitting || loadingCats}
+            loadingLabel="Création..."
+            className="w-full"
           >
-            {submitting ? "Création..." : "Créer le problème"}
-          </button>
+                Créer le problème
+          </PrimaryButton>
         </form>
       </div>
     </div>

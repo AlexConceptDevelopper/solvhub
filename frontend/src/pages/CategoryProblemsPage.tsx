@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "../components/ProblemCard";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
+import BackButton from "../components/BackButton";
 
 export default function CategoryProblemsPage() {
   const { idCategory } = useParams();
@@ -23,12 +24,18 @@ export default function CategoryProblemsPage() {
   }, []);
 
   if (loading) {
-    return <div className="text-center text-slate-500">Chargement...</div>;
+    return (
+      <div className="max-w-5xl mx-auto text-center py-20 text-slate-500 font-medium">
+        Chargement...
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <ErrorMessage message={error} onRetry={() => window.location.reload()} />
+      <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6">
+        <ErrorMessage message={error} onRetry={() => window.location.reload()} />
+      </div>
     );
   }
 
@@ -46,82 +53,28 @@ export default function CategoryProblemsPage() {
   const category = categoryProblems[0]?.category;
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <Link
-          to="/"
-          className="
-            flex
-            items-center
-            gap-2
-            text-blue-600
-            font-semibold
-            hover:underline
-            w-fit
-          "
-        >
-          ← Retour à l'accueil
-        </Link>
-        <Link
-          to="/categories"
-          className="
-            flex
-            items-center
-            gap-2
-            text-slate-600
-            font-semibold
-            hover:underline
-            w-fit
-          "
-        >
-          ← Retour aux catégories
-        </Link>
+    <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-8">
+      <div className="flex items-center justify-between">
+        <BackButton to="/categories" label="Retour aux catégories" />
       </div>
 
-      <h1
-        className="
-          text-3xl
-          font-bold
-          text-slate-800
-          mb-8
-          flex
-          items-center
-          gap-3
-        "
-      >
+      <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
         {category && <span>{category.icon}</span>}
         <span>{category ? category.name : "Catégorie"}</span>
       </h1>
 
-      <p className="mb-6 text-slate-500">
+      <p className="text-slate-500 -mt-4">
         {categoryProblems.length} problème(s) trouvé(s)
       </p>
 
       {categoryProblems.length === 0 ? (
-        <div
-          className="
-            bg-white/70
-            rounded-2xl
-            border
-            border-slate-200
-            p-8
-            text-center
-          "
-        >
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-8 text-center">
           <p className="text-slate-500">
             Aucun problème disponible pour cette catégorie pour le moment.
           </p>
         </div>
       ) : (
-        <div
-          className="
-            grid
-            grid-cols-1
-            md:grid-cols-2
-            lg:grid-cols-3
-            gap-6
-          "
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categoryProblems.map((problem) => (
             <ProblemCard key={problem.idProblem} problem={problem} />
           ))}

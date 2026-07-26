@@ -2,20 +2,20 @@ import { useEffect, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function VerifyPage() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const navigate = useNavigate();
-  
-  // Utilisation de useRef pour bloquer l'exécution multiple en dev
+
   const isMounted = useRef(false);
 
-  const { loading, error, execute, data } = useAsync<{ message: string }>();
+  const { loading, error, execute, data } = useAsync<{ message: string } | null>();
 
   useEffect(() => {
     if (token && !isMounted.current) {
-      isMounted.current = true; // On verrouille l'appel
+      isMounted.current = true;
       execute(() => apiFetch(`/auth/verify?token=${token}`, { method: "GET" }));
     }
   }, [token, execute]);
@@ -31,11 +31,10 @@ export default function VerifyPage() {
 
         {error && (
           <div className="text-red-400">
-            {/* Si c'est l'erreur "déjà utilisé", c'est qu'on a déjà réussi ! */}
             <p className="mb-4 font-semibold">{error}</p>
             <button
               onClick={() => navigate("/login")}
-              className="text-blue-400 hover:underline font-bold"
+              className="text-blue-400 hover:underline font-bold cursor-pointer"
             >
               Se connecter
             </button>
@@ -45,12 +44,9 @@ export default function VerifyPage() {
         {data && (
           <div>
             <p className="text-green-400 mb-6">{data.message}</p>
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-xl transition-all cursor-pointer"
-            >
+            <PrimaryButton onClick={() => navigate("/login")} className="px-6 py-2">
               Aller à la connexion
-            </button>
+            </PrimaryButton>
           </div>
         )}
       </div>

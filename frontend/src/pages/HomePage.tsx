@@ -4,14 +4,12 @@ import type { Category } from "../types/category";
 import { getCategoriesWithCount } from "../api/category.api";
 import { useEffect, useState } from "react";
 import useAsync from "../hooks/useAsync";
-import { useAuth } from "../context/AuthContext";
 
 export default function HomePage() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const { execute } = useAsync<Category[]>();
-
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -34,16 +32,15 @@ export default function HomePage() {
           relative
           overflow-hidden
           rounded-3xl
-          bg-radial
-          from-slate-900
-          via-slate-950
-          to-black
-          text-white
+          bg-linear-to-b
+          from-slate-50
+          to-white
+          text-slate-900
           p-8
           md:p-16
-          shadow-2xl
+          shadow-sm
           border
-          border-slate-800/60
+          border-slate-200
         "
       >
         <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -58,19 +55,18 @@ export default function HomePage() {
               px-3
               py-1
               rounded-full
-              bg-blue-500/10
+              bg-blue-50
               border
-              border-blue-500/20
-              text-blue-400
+              border-blue-200
+              text-blue-700
               text-xs
               font-semibold
               uppercase
               tracking-wider
               mb-6
-              backdrop-blur-xs
             "
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
             Plateforme communautaire
           </span>
 
@@ -81,16 +77,12 @@ export default function HomePage() {
               font-black
               tracking-tight
               leading-tight
-              bg-linear-to-b
-              from-white
-              to-slate-300
-              bg-clip-text
-              text-transparent
+              text-slate-900
             "
           >
             Des solutions pour <br />
             chaque{" "}
-            <span className="bg-linear-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               problème
             </span>
             .
@@ -99,7 +91,7 @@ export default function HomePage() {
           <p
             className="
               mt-6
-              text-slate-400
+              text-slate-600
               text-base
               md:text-lg
               leading-relaxed
@@ -108,7 +100,7 @@ export default function HomePage() {
           >
             Trouvez de l'aide, partagez vos expériences et améliorez les
             solutions ensemble avec la communauté{" "}
-            <span className="text-white font-medium">SolvHub</span>.
+            <span className="text-slate-900 font-semibold">SolvHub</span>.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mt-10">
@@ -124,8 +116,8 @@ export default function HomePage() {
                 text-sm
                 shadow-lg
                 shadow-blue-600/20
-                hover:bg-blue-500
-                hover:shadow-blue-500/30
+                hover:bg-blue-700
+                hover:shadow-blue-600/30
                 hover:-translate-y-0.5
                 transition-all
                 duration-200
@@ -138,19 +130,20 @@ export default function HomePage() {
             <button
               onClick={() => navigate("/problem/create")}
               className="
-                bg-slate-900/80
+                bg-white
                 border
-                border-slate-800
-                text-slate-200
+                border-slate-200
+                text-slate-700
                 px-6
                 py-3
                 rounded-xl
                 font-semibold
                 text-sm
-                hover:bg-slate-800
-                hover:text-white
-                hover:border-slate-700
+                hover:border-blue-300
+                hover:text-blue-600
                 hover:-translate-y-0.5
+                shadow-xs
+                hover:shadow-sm
                 transition-all
                 duration-200
                 cursor-pointer
@@ -162,20 +155,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CATEGORIES - AJOUT D'UN BLOC DE FOND COHÉRENT ET ASSORTI */}
-      <section 
+      {/* CATEGORIES */}
+      <section
         className="
-          bg-slate-50/80 
-          border 
-          border-slate-100 
-          rounded-3xl 
-          p-6 
-          md:p-10 
-          shadow-xs
+          bg-slate-50/80
+          border
+          border-slate-100
+          rounded-3xl
+          p-6
+          md:p-10
+          shadow-sm
         "
       >
         <div className="max-w-xl mb-10">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-150">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
             Exploration
           </span>
           <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mt-3">
@@ -194,15 +187,12 @@ export default function HomePage() {
               className="
                 group
                 relative
-                bg-radial
-                from-slate-900/95
-                via-slate-950/98
-                to-black
+                bg-white
                 rounded-2xl
                 p-8
                 border
-                border-slate-850
-                hover:border-blue-500/40
+                border-slate-200
+                hover:border-blue-300
                 hover:-translate-y-1.5
                 transition-all
                 duration-300
@@ -213,7 +203,8 @@ export default function HomePage() {
                 justify-center
                 text-center
                 overflow-hidden
-                shadow-xl
+                shadow-sm
+                hover:shadow-[0_0_25px_rgba(59,130,246,0.12)]
               "
             >
               <div className="absolute inset-0 bg-linear-to-b from-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -224,14 +215,11 @@ export default function HomePage() {
                   w-16
                   h-16
                   rounded-2xl
-                  bg-slate-900
+                  bg-blue-50
                   border
-                  border-slate-800
-                  shadow-[inset_0_1px_2px_rgba(255,255,255,0.05)]
-                  group-hover:border-blue-500/40
-                  group-hover:bg-slate-950
+                  border-blue-100
+                  group-hover:border-blue-300
                   group-hover:scale-110
-                  group-hover:shadow-[0_0_20px_rgba(59,130,246,0.15)]
                   flex
                   items-center
                   justify-center
@@ -242,7 +230,7 @@ export default function HomePage() {
                 {category.icon}
               </div>
 
-              <h3 className="text-lg font-bold tracking-tight mt-5 bg-linear-to-b from-white to-slate-300 bg-clip-text text-transparent group-hover:from-white group-hover:to-blue-200 transition-all">
+              <h3 className="text-lg font-bold tracking-tight mt-5 text-slate-900 group-hover:text-blue-600 transition-colors">
                 {category.name}
               </h3>
 
@@ -254,15 +242,15 @@ export default function HomePage() {
                   px-3
                   py-1
                   rounded-full
-                  bg-slate-900
+                  bg-slate-100
                   border
-                  border-slate-800
-                  text-slate-400
+                  border-slate-200
+                  text-slate-500
                   text-xs
                   font-bold
-                  group-hover:bg-blue-500/10
-                  group-hover:text-blue-400
-                  group-hover:border-blue-500/20
+                  group-hover:bg-blue-50
+                  group-hover:text-blue-600
+                  group-hover:border-blue-200
                   transition-all
                   duration-300
                 "
@@ -297,6 +285,7 @@ export default function HomePage() {
                 shadow-xs
                 hover:border-blue-200
                 hover:bg-blue-50/20
+                hover:shadow-sm
                 transition-all
               "
             >
@@ -330,7 +319,7 @@ export default function HomePage() {
             hover:border-blue-200
             hover:bg-blue-50/20
             shadow-xs
-            hover:shadow-md
+            hover:shadow-sm
             transition-all
             duration-200
             cursor-pointer

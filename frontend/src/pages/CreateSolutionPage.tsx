@@ -5,6 +5,8 @@ import { createSolution } from "../api/solution.api";
 
 import type { SolutionCreate } from "../types/solutionCreate";
 import ErrorMessage from "../components/ErrorMessage";
+import BackButton from "../components/BackButton";
+import PrimaryButton from "../components/PrimaryButton";
 
 export default function CreateSolutionPage() {
   const navigate = useNavigate();
@@ -75,28 +77,12 @@ export default function CreateSolutionPage() {
           p-8
         "
       >
-        <h1
-          className="
-            text-3xl
-            font-bold
-            text-slate-800
-          "
-        >
-          Proposer une solution
-        </h1>
-
-        <button
-          onClick={() => navigate(`/problem/${problemId}`)}
-          className="
-            mt-6
-            text-blue-600
-            font-semibold
-            hover:underline
-            cursor-pointer
-        "
-        >
-          ← Retour au problème
-        </button>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-slate-800">
+            Proposer une solution
+          </h1>
+          <BackButton to={`/problem/${problemId}`} label="Retour au problème" />
+        </div>
 
         {error && (
           <ErrorMessage message={error} onRetry={() => setError(null)} />
@@ -208,23 +194,14 @@ export default function CreateSolutionPage() {
             <option value={5}>5 - Danger élevé</option>
           </select>
 
-          <button
-            disabled={loading}
-            className="
-              w-full
-              bg-blue-600
-              text-white
-              rounded-xl
-              py-3
-              font-semibold
-              hover:bg-blue-700
-              transition
-              cursor-pointer
-              disabled:opacity-50
-            "
+          <PrimaryButton
+            type="submit"
+            loading={loading}
+            loadingLabel="Création..."
+            className="w-full"
           >
-            {loading ? "Création..." : "Créer la solution"}
-          </button>
+            Créer la solution
+          </PrimaryButton>
         </form>
       </div>
     </div>

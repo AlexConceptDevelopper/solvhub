@@ -1,18 +1,20 @@
 import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
 import type { User } from "../types/user";
+import BackButton from "../components/BackButton";
 
 export default function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   // On récupère toute la liste des top contributeurs
   const { data: users, loading, execute: fetchUsers } = useAsync<User[]>();
 
   useEffect(() => {
     fetchUsers(() =>
-      apiFetch<User[] | null>("/users/top-contributors").then((res) => res ?? [])
+      apiFetch<User[] | null>("/users/top-contributors").then(
+        (res) => res ?? [],
+      ),
     );
   }, []);
 
@@ -21,17 +23,15 @@ export default function UserProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 space-y-8 text-slate-200">
-      <button
-        onClick={() => navigate(-1)}
-        className="text-sm font-medium text-blue-400 hover:text-blue-300 transition cursor-pointer"
-      >
-        ← Retour
-      </button>
-
+      <BackButton to={-1} label="Retour" />
       {loading ? (
-        <p className="text-center text-slate-500 py-12">Chargement du profil...</p>
+        <p className="text-center text-slate-500 py-12">
+          Chargement du profil...
+        </p>
       ) : !user ? (
-        <p className="text-center text-slate-500 py-12">Utilisateur introuvable dans le classement.</p>
+        <p className="text-center text-slate-500 py-12">
+          Utilisateur introuvable dans le classement.
+        </p>
       ) : (
         <div className="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-xl space-y-6">
           <div className="flex items-center gap-4">
@@ -46,7 +46,9 @@ export default function UserProfilePage() {
 
           <div className="border-t border-slate-800 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-              <span className="text-xs text-slate-400 block">Résolutions validées</span>
+              <span className="text-xs text-slate-400 block">
+                Résolutions validées
+              </span>
               <span className="text-xl font-bold text-blue-400 mt-1 block">
                 {user.solutionCount || 0}
               </span>
