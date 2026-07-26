@@ -51,4 +51,7 @@ public class User {
     public void preUpdate() {
         this.updatedAt = Instant.now();
     }
+
+    @Column(name = "email_notifications_enabled", nullable = false)
+    private Boolean emailNotificationsEnabled = true;
 }

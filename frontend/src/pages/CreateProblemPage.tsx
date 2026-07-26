@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { createProblem } from "../api/problem.api";
+import { createProblem, checkDuplicates } from "../api/problem.api";
 import { getCategories } from "../api/category.api"; 
 import { getBrandsByCategory, getModelsByCategoryAndBrand, findEquipmentByCriteria } from "../api/equipment.api"; 
 
@@ -19,15 +19,19 @@ export default function CreateProblemPage() {
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
 
+  const [aiChecked, setAiChecked] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<Problem[]>([]);
+
   const [form, setForm] = useState<ProblemCreate>({
     title: "",
     description: "",
     idCategory: 0,
-    idEquipment: undefined, // ➕ Ajouté dans le state initial
+    idEquipment: undefined,
   });
 
   const { loading: submitting, error: submitError, execute: submitExecute } = useAsync<Problem>();
   const { loading: loadingCats, error: catError, execute: fetchCatsExecute } = useAsync<Category[]>();
+  const { loading: checkingAI, execute: checkDuplicatesExecute } = useAsync<Problem[]>();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -89,6 +93,42 @@ export default function CreateProblemPage() {
       ...form,
       [name]: name === "idCategory" ? parseInt(value, 10) : value,
     });
+    
+    if (name === "title" || name === "description") {
+      setAiChecked(false);
+    }
+  };
+
+  // Vérification dynamique des doublons via le backend et useAsync
+  const handleCheckDuplicates = async () => {
+    if (!form.title || form.title.length < 3) {
+      alert("Veuillez saisir un titre (3 caractères min.) avant de lancer la vérification.");
+      return;
+    }
+
+    setAiChecked(false);
+
+    let equipmentId = undefined;
+    if (form.idCategory === 3 && selectedBrand && selectedModel) {
+      const equipment = await findEquipmentByCriteria(3, selectedBrand, selectedModel);
+      if (equipment?.idEquipment) {
+        equipmentId = equipment.idEquipment;
+      }
+    }
+
+    const duplicates = await checkDuplicatesExecute(() =>
+      checkDuplicates({
+        title: form.title,
+        description: form.description,
+        categoryId: form.idCategory,
+        equipmentId: equipmentId,
+      })
+    );
+
+    if (duplicates) {
+      setAiSuggestions(duplicates);
+      setAiChecked(true);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,19 +138,17 @@ export default function CreateProblemPage() {
 
     let equipmentId = undefined;
 
-    // Si c'est la catégorie 3, on va chercher l'ID de l'équipement correspondant
     if (form.idCategory === 3) {
-      if (!selectedBrand || !selectedModel) return; // Sécurité si champs vides
+      if (!selectedBrand || !selectedModel) return; 
       
       const equipment = await findEquipmentByCriteria(3, selectedBrand, selectedModel);
-      if (equipment && equipment.id) {
-        equipmentId = equipment.id;
+      if (equipment && equipment.idEquipment) {
+        equipmentId = equipment.idEquipment;
       } else {
-        return; // Stoppe l'envoi si l'équipement n'est pas trouvé
+        return; 
       }
     }
 
-    // On prépare le payload complet
     const payload: ProblemCreate = {
       ...form,
       idEquipment: equipmentId,
@@ -235,9 +273,60 @@ export default function CreateProblemPage() {
             />
           </div>
 
+          {/* Bloc Assistant de doublons connecté au back */}
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                  <span>🛡️ Détection de doublons</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Vérifiez si un problème similaire existe déjà dans la base.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleCheckDuplicates}
+                disabled={checkingAI}
+                className="bg-slate-700 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
+              >
+                {checkingAI ? "Vérification..." : "🔍 Vérifier les doublons"}
+              </button>
+            </div>
+
+            {aiChecked && (
+              <div className="mt-3 pt-3 border-t border-slate-200 space-y-2">
+                {aiSuggestions.length > 0 ? (
+                  <div>
+                    <p className="text-xs font-bold text-amber-800 mb-2">⚠️ Problèmes similaires détectés :</p>
+                    {aiSuggestions.map((item) => (
+                      <div key={item.idProblem} className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2 shadow-xs mb-2">
+                        <div>
+                          <p className="text-xs font-semibold text-slate-800">{item.title}</p>
+                          <p className="text-[11px] text-slate-500 line-clamp-1">{item.description}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/problem/${item.idProblem}`)}
+                          className="text-xs font-semibold text-blue-600 hover:underline whitespace-nowrap cursor-pointer"
+                        >
+                          Voir →
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-emerald-700 font-semibold">
+                    ✨ Aucun doublon détecté. Vous pouvez publier !
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
           <button
             disabled={submitting || loadingCats}
-            className="w-full rounded-xl bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
+            className="w-full rounded-xl bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer shadow-sm"
           >
             {submitting ? "Création..." : "Créer le problème"}
           </button>

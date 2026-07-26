@@ -191,4 +191,54 @@ public class ProblemService {
                 })
                 .toList();
     }
+
+    public List<ProblemDTO> findPossibleDuplicates(String newTitle, String newDescription, Integer categoryId,
+            Integer equipmentId) {
+        List<Problem> existingProblems = problemRepository.findAll();
+        String queryWords = cleanAndNormalize(newTitle + " " + newDescription);
+
+        return existingProblems.stream().filter(problem -> {
+            // Filtrage optionnel par catégorie si fournie
+            if (problem.getCategory() != null && categoryId != null
+                    && !problem.getCategory().getIdCategory().equals(categoryId)) {
+                return false;
+            }
+
+            String existingText = cleanAndNormalize(problem.getTitle() + " " + problem.getDescription());
+
+            // Calcul du score de similarité Jaccard
+            double similarityScore = calculateJaccardSimilarity(queryWords, existingText);
+
+            // Seuil de similarité (25% de mots communs)
+            return similarityScore > 0.25;
+        })
+                .map(problemMapper::toDTO)
+                .toList();
+    }
+
+    private String cleanAndNormalize(String text) {
+        if (text == null)
+            return "";
+        return text.toLowerCase()
+                .replaceAll("[^a-z0-9àâäéèêëîïôöùûüç\\s]", "")
+                .trim();
+    }
+
+    private double calculateJaccardSimilarity(String text1, String text2) {
+        String[] words1 = text1.split("\\s+");
+        String[] words2 = text2.split("\\s+");
+
+        java.util.Set<String> set1 = new java.util.HashSet<>(java.util.Arrays.asList(words1));
+        java.util.Set<String> set2 = new java.util.HashSet<>(java.util.Arrays.asList(words2));
+
+        java.util.Set<String> intersection = new java.util.HashSet<>(set1);
+        intersection.retainAll(set2);
+
+        java.util.Set<String> union = new java.util.HashSet<>(set1);
+        union.addAll(set2);
+
+        if (union.isEmpty())
+            return 0.0;
+        return (double) intersection.size() / union.size();
+    }
 }

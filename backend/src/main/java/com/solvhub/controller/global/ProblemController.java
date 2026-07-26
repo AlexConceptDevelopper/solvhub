@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.solvhub.controller.GenericController;
 import com.solvhub.dto.CreateProblemDTO;
+import com.solvhub.dto.ProblemCheckRequestDTO;
 import com.solvhub.dto.ProblemDTO;
 import com.solvhub.dto.SolutionDTO;
 import com.solvhub.exception.InvalidDataException;
@@ -76,5 +77,15 @@ public class ProblemController extends GenericController<Problem, Integer> {
             @PathVariable Integer id,
             @RequestBody ProblemDTO dto) {
         return problemService.update(id, dto);
+    }
+
+    @PostMapping("/check-duplicates")
+    public List<ProblemDTO> checkDuplicates(@RequestBody ProblemCheckRequestDTO dto) {
+        return problemService.findPossibleDuplicates(
+            dto.getTitle(), 
+            dto.getDescription(), 
+            dto.getCategoryId(), 
+            dto.getEquipmentId()
+        );
     }
 }

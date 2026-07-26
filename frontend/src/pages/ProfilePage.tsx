@@ -10,6 +10,7 @@ export default function ProfilePage() {
 
   // États pour la section informations personnelles
   const [username, setUsername] = useState("");
+  const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(true);
   const [profileSuccess, setProfileSuccess] = useState("");
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -33,10 +34,13 @@ export default function ProfilePage() {
     execute: executePassword,
   } = useAsync<any>();
 
-  // Synchroniser le username lorsque l'utilisateur est chargé
+  // Synchroniser le username et les préférences lorsque l'utilisateur est chargé
   useEffect(() => {
-    if (user?.username) {
-      setUsername(user.username);
+    if (user) {
+      if (user.username) setUsername(user.username);
+      if (user.emailNotificationsEnabled !== undefined) {
+        setEmailNotificationsEnabled(user.emailNotificationsEnabled);
+      }
     }
   }, [user]);
 
@@ -55,16 +59,16 @@ export default function ProfilePage() {
       return;
     }
 
-    // Utilisation de la fonction centralisée updateProfile
+    // Envoi du username et du statut des notifications au backend
     const result = await executeProfile(() =>
-      updateProfile(user.idUsers, { username }),
+      updateProfile(user.idUsers, { username, emailNotificationsEnabled }),
     );
 
     if (result) {
       setProfileSuccess("Profil mis à jour avec succès !");
 
       // Met à jour le contexte global et le localStorage instantanément
-      updateUser({ username });
+      updateUser({ username, emailNotificationsEnabled });
     }
   };
 
@@ -85,7 +89,6 @@ export default function ProfilePage() {
       return;
     }
 
-    // Utilisation de la fonction centralisée changePassword
     const result = await executePassword(() =>
       changePassword({ oldPassword, newPassword }),
     );
@@ -172,6 +175,24 @@ export default function ProfilePage() {
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-500 cursor-not-allowed"
                 />
               </div>
+
+              {/* Préférence de Notification par Email */}
+              <div className="flex items-center justify-between p-4 bg-slate-950 border border-slate-800 rounded-xl">
+                <div>
+                  <h4 className="font-semibold text-white text-sm">Notifications par e-mail</h4>
+                  <p className="text-xs text-slate-400">Recevoir une alerte lorsqu'une solution est proposée à l'un de mes problèmes.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={emailNotificationsEnabled} 
+                    onChange={(e) => setEmailNotificationsEnabled(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-700 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
               <button
                 type="submit"
                 disabled={profileLoading}

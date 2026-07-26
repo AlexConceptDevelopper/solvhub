@@ -2,12 +2,15 @@ import { apiFetch } from "./client"; // Ajuste le chemin selon où se trouve ta 
 import type { User } from "../types/user";
 
 // Mettre à jour le profil
-export async function updateProfile(idUsers: number, data: { username: string }): Promise<User> {
+export async function updateProfile(
+  idUsers: number, 
+  data: { username?: string; emailNotificationsEnabled?: boolean }
+): Promise<User> {
   const result = await apiFetch<User>(`/users/${idUsers}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
-  return result!; // result ne sera pas null ici
+  return result!;
 }
 
 // Changer le mot de passe

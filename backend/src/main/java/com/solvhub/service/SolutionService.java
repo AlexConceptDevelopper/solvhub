@@ -16,7 +16,7 @@ import com.solvhub.repository.global.UserRepository;
 import com.solvhub.security.SecurityUtils;
 
 import jakarta.transaction.Transactional;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +30,7 @@ public class SolutionService {
     private final SolutionStatsRepository solutionStatsRepository;
     private final UserRepository userRepository;
     private final SecurityUtils securityUtils;
+    private final EmailService emailService;
 
     public SolutionService(
             SolutionRepository repo,
@@ -37,14 +38,16 @@ public class SolutionService {
             ProblemRepository problemRepository,
             SolutionStatsRepository solutionStatsRepository,
             UserRepository userRepository,
-            SecurityUtils securityUtils) {
+            SecurityUtils securityUtils,
+            EmailService emailService) {
 
         this.repo = repo;
         this.mapper = mapper;
         this.problemRepository = problemRepository;
         this.solutionStatsRepository = solutionStatsRepository;
         this.userRepository = userRepository;
-        this.securityUtils = securityUtils; // <--- Oubli réparé ici !
+        this.securityUtils = securityUtils;
+        this.emailService = emailService;
     }
 
     public List<Solution> findAll() {
@@ -78,8 +81,14 @@ public class SolutionService {
         Problem problem = problemRepository.findById(dto.getProblemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
 
-        User user = userRepository.findById(1)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+       // --- RÉCUPÉRATION DIRECTE DE L'OBJET USER DEPUIS LA SÉCURITÉ ---
+        Authentication authentication = securityUtils.getCurrentAuthentication();
+        
+        if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
+            throw new ResourceNotFoundException("Utilisateur connecté introuvable");
+        }
+
+        User user = (User) authentication.getPrincipal();
 
         Solution solution = new Solution();
 
@@ -114,6 +123,21 @@ public class SolutionService {
         if (!newBadge.equals(user.getBadge())) {
             user.setBadge(newBadge);
             userRepository.save(user);
+        }
+
+        // --- ENVOI DE LA NOTIFICATION PAR E-MAIL ---
+        User problemOwner = problem.getUser();
+
+        if (problemOwner != null) {
+            boolean isNotSelf = !problemOwner.getIdUsers().equals(user.getIdUsers());
+
+            if (isNotSelf && Boolean.TRUE.equals(problemOwner.getEmailNotificationsEnabled())) {
+                emailService.sendNewSolutionNotification(
+                    problemOwner.getEmail(),
+                    problemOwner.getUsername(),
+                    problem.getTitle(),
+                    problem.getIdProblem());
+            }
         }
 
         return mapper.toDTO(saved);

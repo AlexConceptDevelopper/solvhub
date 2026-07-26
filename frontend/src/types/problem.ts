@@ -1,4 +1,5 @@
 import type { Category } from "./category";
+import type { Equipment } from "./equipment";
 
 export interface Problem {
   idProblem: number;
@@ -6,6 +7,7 @@ export interface Problem {
   description: string;
   voteCount?: number;
   category: Category;
+  equipment?: Equipment;
   createdAt?: string;
 
   user?: {

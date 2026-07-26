@@ -5,4 +5,5 @@ export interface User {
   role: string;
   solutionCount ?: number;
   badge?: string;
+  emailNotificationsEnabled?: boolean;
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.solvhub.controller.GenericController;
 import com.solvhub.dto.EquipmentDTO;
-import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.model.Equipment;
 import com.solvhub.repository.global.EquipmentRepository;
 import com.solvhub.service.EquipmentService;

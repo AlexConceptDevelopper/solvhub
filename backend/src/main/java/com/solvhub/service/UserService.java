@@ -43,10 +43,15 @@ public class UserService {
         }
 
         // 3. Si c'est bon, on met à jour et on sauvegarde
-        userToModify.setUsername(dto.getUsername());
-        userToModify.setUsername(dto.getUsername());
+        if (dto.getUsername() != null) {
+            userToModify.setUsername(dto.getUsername());
+        }
         if (dto.getEmail() != null) {
             userToModify.setEmail(dto.getEmail());
+        }
+        // Mise à jour de la préférence de notification si fournie
+        if (dto.getEmailNotificationsEnabled() != null) {
+            userToModify.setEmailNotificationsEnabled(dto.getEmailNotificationsEnabled());
         }
 
         User savedUser = userRepository.save(userToModify);

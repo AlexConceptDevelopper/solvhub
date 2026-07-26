@@ -8,11 +8,11 @@ import com.solvhub.repository.GenericRepository;
 public interface UserRepository extends GenericRepository<User, Integer> {
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByUsername(String username);
+
     Optional<User> findByVerificationToken(String verificationToken);
 
     boolean existsByEmail(String email);
 
     boolean existsByUsername(String username);
-
-
 }

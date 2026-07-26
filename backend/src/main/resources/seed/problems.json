@@ -1,132 +1,23 @@
 [
   {
     "category": "Informatique",
-    "title": "Mon PC ne démarre plus",
-    "description": "Lorsque j'appuie sur le bouton Power, rien ne se passe, aucun voyant ne s'allume."
+    "title": "L'ordinateur redémarre en boucle ou affiche un écran bleu (BSOD)",
+    "description": "Le PC s'allume, affiche le logo de la carte mère ou de Windows, puis plante subitement avec un écran bleu ou s'éteint et redémarre indéfiniment."
   },
   {
     "category": "Informatique",
-    "title": "Windows reste bloqué au démarrage",
-    "description": "L'écran de chargement Windows tourne en boucle sans jamais arriver sur le bureau."
+    "title": "Le PC est extrêmement lent au démarrage et à l'utilisation",
+    "description": "L'ordinateur met plus de 5 minutes à s'allumer, les applications rament et le gestionnaire des tâches montre un disque à 100% en permanence."
   },
   {
     "category": "Informatique",
-    "title": "Le Wi-Fi se déconnecte sans arrêt",
-    "description": "La connexion Wi-Fi coupe toutes les quelques minutes, même proche de la box."
-  },
-  {
-    "category": "Informatique",
-    "title": "Écran bleu au démarrage",
-    "description": "Un écran bleu avec un code d'erreur apparaît systématiquement après le logo Windows."
-  },
-  {
-    "category": "Maison",
-    "title": "Chauffage qui ne fonctionne plus",
-    "description": "Le radiateur reste froid alors que la chaudière semble en marche."
-  },
-  {
-    "category": "Maison",
-    "title": "Robinet qui fuit",
-    "description": "Une fuite goutte à goutte persiste sous l'évier de la cuisine."
+    "title": "Surchauffe du processeur et ventilateurs bruyants",
+    "description": "Les ventilateurs tournent à fond en permanence, le PC souffle de l'air brûlant et finit par s'éteindre tout seul en plein jeu ou en multitâche lourd."
   },
   {
     "category": "Automobile",
-    "title": "Batterie déchargée",
-    "description": "La voiture ne démarre plus, le tableau de bord reste éteint au contact."
-  },
-  {
-    "category": "Automobile",
-    "title": "Voyant moteur orange allumé",
-    "description": "Le voyant moteur reste allumé en continu depuis quelques jours."
-  },
-  {
-    "category": "Cuisine",
-    "title": "Four qui ne chauffe plus",
-    "description": "Le four s'allume mais la température ne monte jamais."
-  },
-  {
-    "category": "Cuisine",
-    "title": "Réfrigérateur trop chaud",
-    "description": "Les aliments ne restent plus frais, le compresseur semble tourner normalement."
-  },
-  {
-    "category": "Électronique",
-    "title": "Mon smartphone ne charge plus",
-    "description": "Le téléphone ne réagit plus quand il est branché au chargeur, même après plusieurs essais."
-  },
-  {
-    "category": "Électronique",
-    "title": "Enceinte Bluetooth qui ne s'appaire plus",
-    "description": "L'enceinte n'apparaît plus dans la liste des appareils Bluetooth disponibles."
-  },
-  {
-    "category": "Bricolage",
-    "title": "Perceuse qui ne tient plus la charge",
-    "description": "La batterie de la perceuse se décharge en quelques minutes d'utilisation seulement."
-  },
-  {
-    "category": "Bricolage",
-    "title": "Vis impossible à dévisser",
-    "description": "Une vis rouillée refuse de bouger malgré plusieurs tentatives au tournevis."
-  },
-  {
-    "category": "Jardin",
-    "title": "Tondeuse qui ne démarre plus",
-    "description": "Le moteur thermique de la tondeuse ne veut plus démarrer, même après plusieurs tirages."
-  },
-  {
-    "category": "Jardin",
-    "title": "Pelouse qui jaunit par endroits",
-    "description": "Des zones jaunes apparaissent sur la pelouse malgré un arrosage régulier."
-  },
-  {
-    "category": "Vélo",
-    "title": "Vélo qui fait un bruit de frottement",
-    "description": "Un bruit métallique régulier se fait entendre à chaque tour de pédale."
-  },
-  {
-    "category": "Vélo",
-    "title": "Pneu qui se dégonfle sans crevaison visible",
-    "description": "Le pneu perd de la pression chaque jour sans qu'aucun trou ne soit visible."
-  },
-  {
-    "category": "Photographie",
-    "title": "Photos floues malgré la mise au point",
-    "description": "Les photos ressortent floues même quand l'autofocus semble avoir accroché le sujet."
-  },
-  {
-    "category": "Photographie",
-    "title": "Objectif qui ne fait plus la mise au point",
-    "description": "L'objectif tourne dans le vide sans jamais réussir à faire le point automatiquement."
-  },
-  {
-    "category": "Jeux vidéo",
-    "title": "Manette qui se déconnecte en jeu",
-    "description": "La manette perd la connexion Bluetooth de façon aléatoire pendant les parties."
-  },
-  {
-    "category": "Jeux vidéo",
-    "title": "Jeu qui plante au chargement",
-    "description": "Le jeu se ferme brutalement à chaque tentative de chargement d'une partie sauvegardée."
-  },
-  {
-    "category": "Entretien",
-    "title": "Aspirateur qui perd en puissance",
-    "description": "L'aspiration devient de plus en plus faible malgré un sac ou bac vidé récemment."
-  },
-  {
-    "category": "Entretien",
-    "title": "Lave-linge qui laisse des traces sur le linge",
-    "description": "Des résidus blancs apparaissent sur les vêtements sombres après chaque lavage."
-  },
-  {
-    "category": "Divers",
-    "title": "Fermeture éclair bloquée",
-    "description": "La fermeture éclair d'un sac ou d'un vêtement reste coincée à mi-parcours."
-  },
-  {
-    "category": "Divers",
-    "title": "Montre connectée qui ne se synchronise plus",
-    "description": "La montre connectée n'arrive plus à synchroniser les données avec l'application mobile."
+    "title": "La Renault Clio refuse de démarrer et un voyant rouge clignote",
+    "description": "En tournant la clé, le démarreur se lance ou le tableau de bord s'allume, mais le moteur ne part pas et un voyant rouge clignote rapidement.",
+    "id_equipment": 35
   }
 ]

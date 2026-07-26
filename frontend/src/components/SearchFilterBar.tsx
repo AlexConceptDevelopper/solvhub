@@ -1,9 +1,14 @@
+export interface CategoryOption {
+  name: string;
+  count: number;
+}
+
 interface SearchFilterBarProps {
   search: string;
   setSearch: (value: string) => void;
   category: string;
   setCategory: (value: string) => void;
-  uniqueCategories: string[];
+  uniqueCategories: CategoryOption[];
   placeholder?: string;
 }
 
@@ -30,9 +35,9 @@ export default function SearchFilterBar({
         className="rounded-xl border border-slate-300 px-4 py-3 bg-white cursor-pointer shadow-sm focus:outline-blue-500"
       >
         <option value="Toutes">Toutes les catégories</option>
-        {uniqueCategories.map((catName) => (
-          <option key={catName} value={catName}>
-            {catName}
+        {uniqueCategories.map((cat) => (
+          <option key={cat.name} value={cat.name}>
+            {cat.name} ({cat.count})
           </option>
         ))}
       </select>

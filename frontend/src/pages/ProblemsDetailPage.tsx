@@ -114,7 +114,7 @@ export default function ProblemDetailPage() {
 
   return (
     <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-12">
-      {/* BOUTON RETOUR DISCRET MAIS SOMBRE */}
+      {/* BOUTON RETOUR*/}
       <div className="flex items-center justify-between">
         <button
           onClick={() => navigate("/problems")}
@@ -141,13 +141,14 @@ export default function ProblemDetailPage() {
       </div>
 
       {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
-      <article className="relative bg-white rounded-xl p-5 z-10 space-y-6">
+      <article className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-6 shadow-sm border border-slate-100">
         {/* En-tête : Catégorie & Date */}
-        <div className="flex items-center gap-4 text-xs font-semibold">
+        <div className="flex items-center justify-between text-xs font-semibold">
           <span className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
             <span>{problem.category?.icon || "❓"}</span>
             <span>{problem.category?.name || "Sans catégorie"}</span>
           </span>
+
           {problem.createdAt && (
             <span className="text-slate-500">
               Publié le{" "}
@@ -161,10 +162,26 @@ export default function ProblemDetailPage() {
           {problem.title}
         </h1>
 
+        {/* 🚗 BLOC VÉHICULE / ÉQUIPEMENT MIS EN VALEUR */}
+        {problem.equipment && (
+          <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-md">
+            <span className="text-2xl bg-slate-800 p-2.5 rounded-lg">🚗</span>
+            <div>
+              <div className="text-xs uppercase tracking-wider text-slate-400 font-bold">
+                Équipement concerné
+              </div>
+              <div className="text-lg md:text-xl font-extrabold tracking-wide">
+                {problem.equipment.brand}{" "}
+                <span className="text-blue-400">{problem.equipment.model}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Ligne de séparation fine pour le mode clair */}
         <div className="h-px bg-linear-to-r from-slate-200 via-slate-300 to-transparent w-full" />
 
-        {/* Description : Gris foncé très lisible (text-slate-700) */}
+        {/* Description */}
         <div
           className="
             text-slate-700 

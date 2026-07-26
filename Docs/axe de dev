@@ -1,0 +1,20 @@
+
+
+Axe 2 : Le système de notifications avec option de profil
+C'est une fonctionnalité très classique mais redoutable pour l'engagement de la communauté.
+
+Le design de la base de données :
+
+Dans la table User (ou ton profil utilisateur), tu ajoutes un champ booléen : emailNotificationsEnabled (par défaut à true).
+
+Dans la page Profil :
+
+Tu ajoutes un simple switch ou une case à cocher : "Être notifié par email/notification lorsqu'une solution est proposée à l'un de mes problèmes", relié à une mise à jour de ce champ en base via ton API.
+
+Le déclenchement (Côté Backend) :
+
+Lorsqu'un autre utilisateur poste une solution sur un problème, ton backend récupère l'ID du créateur du problème.
+
+Le backend vérifie en base si l'option de notification de cet utilisateur est activée (true).
+
+Si c'est validé, le système déclenche l'envoi de la notification (via un service d'email gratuit comme Resend, Brevo ou SendGrid qui proposent des quotas gratuits mensuels très larges).

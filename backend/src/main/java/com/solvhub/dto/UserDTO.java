@@ -13,4 +13,5 @@ public class UserDTO {
     private String email;
     private Long solutionCount;
     private String badge;
+    private Boolean emailNotificationsEnabled;
 }
