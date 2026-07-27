@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import du hook de navigation
 import UsersList from "../components/dashboard/UserList";
 import ProblemsList from "../components/dashboard/ProblemsList";
 import SolutionsList from "../components/dashboard/SolutionsList";
 import CategoriesList from "../components/dashboard/CategoriesList";
+import BackButton from "../components/BackButton";
 import { apiFetch } from "../api/client";
 import type { Problem } from "../types/problem";
 import type { Solution } from "../types/solution";
@@ -11,23 +11,19 @@ import type { Solution } from "../types/solution";
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("users");
   const [search, setSearch] = useState("");
-  const navigate = useNavigate(); // Initialisation de navigate
 
-  // États pour stocker les données globales et alimenter la recherche globale
   const [problems, setProblems] = useState<Problem[]>([]);
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
-    // Charger toutes les données en arrière-plan pour la recherche globale
     apiFetch<Problem[]>("/problems").then((data) => data && setProblems(data));
     apiFetch<Solution[]>("/solutions/dto").then((data) => data && setSolutions(data));
     apiFetch<any[]>("/users").then((data) => data && setUsers(data));
     apiFetch<any[]>("/categories").then((data) => data && setCategories(data));
   }, []);
 
-  // Recherche globale multi-tableaux si l'utilisateur tape quelque chose
   const isSearching = search.trim().length > 0;
 
   const filteredProblems = problems.filter((p) => {
@@ -47,120 +43,120 @@ export default function AdminDashboard() {
   );
 
   return (
-    <div className="p-8 space-y-6">
-      {/* En-tête avec titre et bouton de retour vers l'accueil */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-black">Dashboard Administrateur</h1>
-        <button
-          onClick={() => navigate("/")} // Redirection vers la page d'accueil
-          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl shadow transition cursor-pointer flex items-center gap-2 text-sm"
-        >
-          ← Retour à l'accueil
-        </button>
+    <div className="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
+      {/* Bouton de retour en haut */}
+      <div className="flex justify-start">
+        <BackButton to="/" label="Retour à l'accueil" />
+      </div>
+
+      {/* En-tête avec titre */}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">Dashboard Administrateur</h1>
+        <p className="text-slate-500 text-sm mt-1">Gestion globale de la plateforme SolvHub</p>
       </div>
       
-      {/* Barre de recherche globale épurée (sans select) */}
-      <div className="bg-slate-900/40 p-4 rounded-2xl border border-slate-800">
+      {/* Barre de recherche globale */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Recherche globale (utilisateurs, problèmes, solutions, catégories)..."
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white shadow-sm focus:outline-blue-500"
+          className="w-full rounded-xl border border-slate-300 px-4 py-2.5 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm transition-all"
         />
       </div>
 
-      {/* Si l'utilisateur recherche activement, on affiche une vue globale combinée */}
+      {/* Vue globale combinée si recherche active */}
       {isSearching ? (
-        <div className="space-y-8">
+        <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold text-slate-800">Résultats de la recherche globale</h2>
+            <h2 className="text-xl font-bold text-slate-900">Résultats de la recherche globale</h2>
             <button
               onClick={() => setSearch("")}
-              className="text-sm text-blue-600 hover:underline cursor-pointer"
+              className="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
             >
               Effacer la recherche
             </button>
           </div>
 
-          {/* Section Catégories trouvées */}
-          <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-800 space-y-4">
-            <h3 className="text-lg font-semibold text-white flex items-center justify-between">
-              <span>🏷️ Catégories</span>
-              <span className="text-xs bg-amber-600 px-2 py-1 rounded-full">{filteredCategories.length}</span>
+          {/* Catégories */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center justify-between">
+              <span className="flex items-center gap-2">🏷️ Catégories</span>
+              <span className="text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-semibold">{filteredCategories.length}</span>
             </h3>
             {filteredCategories.length === 0 ? (
               <p className="text-slate-400 text-sm">Aucune catégorie trouvée.</p>
             ) : (
-              <div className="text-slate-300 text-sm space-y-2">
+              <div className="text-slate-700 text-sm space-y-2">
                 {filteredCategories.map((c) => (
-                  <div key={c.idCategory} className="p-3 bg-slate-800/80 rounded-lg flex justify-between items-center">
-                    <span className="font-bold text-white">#{c.idCategory} - {c.name}</span>
+                  <div key={c.idCategory} className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center">
+                    <span className="font-semibold text-slate-900">#{c.idCategory} - {c.name}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Section Problèmes trouvés */}
-          <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-800 space-y-4">
-            <h3 className="text-lg font-semibold text-white flex items-center justify-between">
-              <span>📂 Problèmes</span>
-              <span className="text-xs bg-blue-600 px-2 py-1 rounded-full">{filteredProblems.length}</span>
+          {/* Problèmes */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center justify-between">
+              <span className="flex items-center gap-2">📂 Problèmes</span>
+              <span className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-full font-semibold">{filteredProblems.length}</span>
             </h3>
             {filteredProblems.length === 0 ? (
               <p className="text-slate-400 text-sm">Aucun problème trouvé.</p>
             ) : (
-              <div className="text-slate-300 text-sm space-y-2">
+              <div className="text-slate-700 text-sm space-y-2">
                 {filteredProblems.map((p) => (
-                  <div key={p.idProblem} className="p-3 bg-slate-800/80 rounded-lg flex justify-between items-center">
+                  <div key={p.idProblem} className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center">
                     <div>
-                      <span className="font-bold text-white">#{p.idProblem}</span> - {p.title}
+                      <span className="font-semibold text-slate-900">#{p.idProblem}</span> - {p.title}
                     </div>
-                    <span className="text-xs px-2 py-1 bg-slate-700 rounded">{p.category?.name || "Sans catégorie"}</span>
+                    <span className="text-xs px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg border border-slate-200 font-medium">{p.category?.name || "Sans catégorie"}</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Section Solutions trouvées */}
-          <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-800 space-y-4">
-            <h3 className="text-lg font-semibold text-white flex items-center justify-between">
-              <span>💡 Solutions</span>
-              <span className="text-xs bg-emerald-600 px-2 py-1 rounded-full">{filteredSolutions.length}</span>
+          {/* Solutions */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center justify-between">
+              <span className="flex items-center gap-2">💡 Solutions</span>
+              <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">{filteredSolutions.length}</span>
             </h3>
             {filteredSolutions.length === 0 ? (
               <p className="text-slate-400 text-sm">Aucune solution trouvée.</p>
             ) : (
-              <div className="text-slate-300 text-sm space-y-2">
+              <div className="text-slate-700 text-sm space-y-2">
                 {filteredSolutions.map((s) => (
-                  <div key={s.idSolution} className="p-3 bg-slate-800/80 rounded-lg flex justify-between items-center">
+                  <div key={s.idSolution} className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center">
                     <div>
-                      <span className="font-bold text-white">#{s.idSolution}</span> - {s.title}
+                      <span className="font-semibold text-slate-900">#{s.idSolution}</span> - {s.title}
                     </div>
-                    <span className="text-xs text-slate-400">Difficulté: {s.difficulty} | {s.timeMinutes} min</span>
+                    <span className="text-xs text-slate-500 font-medium">Difficulté: {s.difficulty} | {s.timeMinutes} min</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Section Utilisateurs trouvés */}
-          <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-800 space-y-4">
-            <h3 className="text-lg font-semibold text-white flex items-center justify-between">
-              <span>👤 Utilisateurs</span>
-              <span className="text-xs bg-purple-600 px-2 py-1 rounded-full">{filteredUsers.length}</span>
+          {/* Utilisateurs */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 flex items-center justify-between">
+              <span className="flex items-center gap-2">👤 Utilisateurs</span>
+              <span className="text-xs bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-1 rounded-full font-semibold">{filteredUsers.length}</span>
             </h3>
             {filteredUsers.length === 0 ? (
               <p className="text-slate-400 text-sm">Aucun utilisateur trouvé.</p>
             ) : (
-              <div className="text-slate-300 text-sm space-y-2">
+              <div className="text-slate-700 text-sm space-y-2">
                 {filteredUsers.map((u) => (
-                  <div key={u.id || u.idUser} className="p-3 bg-slate-800/80 rounded-lg flex justify-between items-center">
+                  <div key={u.id || u.idUser} className="p-3 bg-slate-50 border border-slate-100 rounded-xl flex justify-between items-center">
                     <div>
-                      <span className="font-bold text-white">{u.username}</span> ({u.email})
+                      <span className="font-semibold text-slate-900">{u.username}</span> <span className="text-slate-400">({u.email})</span>
                     </div>
-                    <span className="text-xs px-2 py-1 bg-slate-700 rounded">{u.role || "USER"}</span>
+                    <span className="text-xs px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg border border-purple-100 font-medium">{u.role || "USER"}</span>
                   </div>
                 ))}
               </div>
@@ -169,21 +165,25 @@ export default function AdminDashboard() {
         </div>
       ) : (
         <>
-          {/* Navigation classique par onglets si pas de recherche */}
-          <div className="flex space-x-4 mb-6 border-b border-slate-800 pb-4">
+          {/* Navigation par onglets */}
+          <div className="flex space-x-2 border-b border-slate-200 pb-4 overflow-x-auto">
             {['users', 'problems', 'solutions', 'categories'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 cursor-pointer rounded-lg capitalize font-semibold transition ${activeTab === tab ? 'bg-blue-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+                className={`px-5 py-2.5 cursor-pointer rounded-xl capitalize font-semibold text-sm transition-all ${
+                  activeTab === tab 
+                    ? 'bg-blue-600 text-white shadow-xs' 
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
               >
                 {tab}
               </button>
             ))}
           </div>
 
-          {/* Contenu dynamique standard par onglet */}
-          <div className="bg-slate-900/50 p-6 rounded-xl border border-slate-800">
+          {/* Contenu dynamique par onglet */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             {activeTab === 'users' && <UsersList />}
             {activeTab === 'problems' && <ProblemsList />}
             {activeTab === 'solutions' && <SolutionsList />}

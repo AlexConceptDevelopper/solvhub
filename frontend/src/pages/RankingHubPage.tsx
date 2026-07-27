@@ -4,7 +4,7 @@ import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
 import type { Solution } from "../types/solution";
 import type { User } from "../types/user";
-import type { Problem } from "../types/problem"; // 👈 Import du type Problem
+import type { Problem } from "../types/problem";
 
 export default function RankingHubPage() {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ export default function RankingHubPage() {
     execute: fetchUsers,
   } = useAsync<User[]>();
 
-  // 💡 Hook pour récupérer les problèmes populaires
   const {
     data: problems,
     loading: loadingProblems,
@@ -37,7 +36,6 @@ export default function RankingHubPage() {
         (res) => res ?? [],
       ),
     );
-    // 💡 Appel vers la nouvelle route backend des problèmes populaires
     fetchProblems(() =>
       apiFetch<Problem[] | null>("/problems/dto/popular/top3").then(
         (res) => res ?? [],
@@ -47,7 +45,7 @@ export default function RankingHubPage() {
 
   const topSolutions = solutions?.slice(0, 3) || [];
   const top3Users = topUsers?.slice(0, 3) || [];
-  const top3Problems = problems?.slice(0, 3) || []; // 👈 On prend le top 3 des plus populaires
+  const top3Problems = problems?.slice(0, 3) || [];
   
   const loading = loadingSolutions || loadingUsers || loadingProblems;
 
@@ -65,9 +63,9 @@ export default function RankingHubPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* SECTION SOLUTIONS */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <span>💡</span> Meilleures Solutions
             </h2>
             {loading ? (
@@ -81,7 +79,6 @@ export default function RankingHubPage() {
             ) : (
               <div className="space-y-3">
                 {topSolutions.map((sol, index) => {
-                  // Calcul propre du pourcentage de score (ex: 0.9724 -> 97%)
                   const scorePercentage = sol.score !== null && sol.score !== undefined 
                     ? Math.round(sol.score * 100) 
                     : null;
@@ -90,25 +87,24 @@ export default function RankingHubPage() {
                     <div
                       key={sol.idSolution}
                       onClick={() => navigate(`/solution/${sol.idSolution}`)}
-                      className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-700 transition"
+                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-300 transition"
                     >
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <span className="font-bold text-sm text-amber-400 w-4 text-center shrink-0">
+                        <span className="font-bold text-sm text-amber-500 w-4 text-center shrink-0">
                           {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                         </span>
                         <div className="overflow-hidden">
-                          <h4 className="font-semibold text-white text-xs truncate">
+                          <h4 className="font-semibold text-slate-800 text-xs truncate">
                             {sol.title}
                           </h4>
-                          <p className="text-[10px] text-slate-400">
+                          <p className="text-[10px] text-slate-500">
                             Par {sol.user?.username || "Anonyme"}
                           </p>
                         </div>
                       </div>
 
-                      {/* Affichage propre du score en pourcentage */}
                       {scorePercentage !== null && (
-                        <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-950/50 border border-emerald-800/50 px-2 py-0.5 rounded-full shrink-0">
+                        <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shrink-0">
                           {scorePercentage}%
                         </span>
                       )}
@@ -121,16 +117,16 @@ export default function RankingHubPage() {
 
           <button
             onClick={() => navigate("/ranking/solutions")}
-            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl transition cursor-pointer"
+            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
           >
             Voir tout le classement →
           </button>
         </div>
 
         {/* SECTION UTILISATEURS */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-xl">
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <span>👥</span> Top Contributeurs
             </h2>
             {loading ? (
@@ -147,17 +143,17 @@ export default function RankingHubPage() {
                   <div
                     key={user.idUsers}
                     onClick={() => navigate(`/user/${user.idUsers}`)} 
-                    className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-700 transition"
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-300 transition"
                   >
                     <div className="flex items-center gap-3">
                       <span className="font-bold text-sm">
                         {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                       </span>
-                      <span className="font-semibold text-white text-xs">
+                      <span className="font-semibold text-slate-800 text-xs">
                         {user.username}
                       </span>
                     </div>
-                    <span className="text-[10px] text-blue-400 font-medium">
+                    <span className="text-[10px] text-blue-600 font-medium">
                       {user.solutionCount || 0} résolutions
                     </span>
                   </div>
@@ -168,16 +164,16 @@ export default function RankingHubPage() {
 
           <button
             onClick={() => navigate("/ranking/contributors")}
-            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl transition cursor-pointer"
+            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
           >
             Voir tout le classement →
           </button>
         </div>
 
-        {/* 3. SECTION PROBLÈMES POPULAIRES (Dynamique) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-xl">
+        {/* SECTION PROBLÈMES POPULAIRES */}
+        <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+            <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
               <span>🔥</span> Problèmes Populaires
             </h2>
             {loading ? (
@@ -194,16 +190,16 @@ export default function RankingHubPage() {
                   <div
                     key={prob.idProblem}
                     onClick={() => navigate(`/problem/${prob.idProblem}`)}
-                    className="p-3 bg-slate-950 border border-slate-800 rounded-xl flex items-center gap-3 cursor-pointer hover:border-slate-700 transition"
+                    className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer hover:border-slate-300 transition"
                   >
-                    <span className="font-bold text-sm text-amber-400 w-4 text-center">
+                    <span className="font-bold text-sm text-amber-500 w-4 text-center">
                       {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
                     </span>
                     <div className="overflow-hidden">
-                      <h4 className="font-semibold text-white text-xs truncate">
+                      <h4 className="font-semibold text-slate-800 text-xs truncate">
                         {prob.title}
                       </h4>
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-slate-500">
                         Par {prob.user?.username || "Anonyme"} • {prob.category?.name || "Général"}
                       </p>
                     </div>
@@ -215,7 +211,7 @@ export default function RankingHubPage() {
 
           <button
             onClick={() => navigate("/ranking/problems")}
-            className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-xl transition cursor-pointer"
+            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
           >
             Voir tous les problèmes →
           </button>

@@ -15,13 +15,19 @@ import com.solvhub.dto.UserDTO;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController extends GenericController<User, Integer> {
+public class UserController {
 
     private final UserService userService;
 
     public UserController(UserRepository repository, UserService userService) {
-        super(repository);
         this.userService = userService;
+    }
+
+// Remplace la route principale /api/users pour qu'elle renvoie le DTO sécurisé
+
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsersDto());
     }
 
     @PutMapping("/{id}")
@@ -42,12 +48,12 @@ public class UserController extends GenericController<User, Integer> {
         return userService.getTop3Contributors();
     }
 
-    //change password
+    // change password
     @PostMapping("/password")
     public MessageResponse changePassword(
-            @RequestBody ChangePasswordDTO dto, 
+            @RequestBody ChangePasswordDTO dto,
             @AuthenticationPrincipal User currentUser) { // Récupère l'utilisateur connecté via le JWT
-        
+
         userService.changePassword(currentUser, dto);
         return new MessageResponse("Mot de passe mis à jour avec succès.");
     }

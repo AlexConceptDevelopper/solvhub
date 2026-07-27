@@ -32,6 +32,15 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public List<UserDTO> getAllUsersDto() {
+        return userRepository.findAll().stream()
+                .map(user -> {
+                    Long solutionCount = solutionRepository.countByUser_IdUsers(user.getIdUsers());
+                    return getUserWithBadge(user, solutionCount);
+                })
+                .toList();
+    }
+
     public UserDTO update(Integer id, UserDTO dto) {
         // 1. On cherche l'utilisateur à modifier en base
         User userToModify = userRepository.findById(id)

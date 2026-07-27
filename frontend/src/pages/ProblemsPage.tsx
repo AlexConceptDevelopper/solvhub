@@ -8,7 +8,10 @@ import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import SearchFilterBar from "../components/SearchFilterBar";
 import PrimaryButton from "../components/PrimaryButton";
+import BackButton from "../components/BackButton";
+import EmptyState from "../components/EmptyState";
 import { matchesSearchQuery } from "../utils/searchUtils";
+import LoadingState from "../components/LoadingState";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -114,11 +117,7 @@ export default function ProblemsPage() {
   });
 
   if (loading && problems.length === 0) {
-    return (
-      <div className="text-center text-slate-500 py-12">
-        Chargement des problèmes...
-      </div>
-    );
+    return <LoadingState label="Chargement des problèmes..." />;
   }
 
   if (error && problems.length === 0) {
@@ -133,7 +132,11 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+      <div>
+        <BackButton to="/" label="Retour à l'accueil" />
+      </div>
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -209,16 +212,14 @@ export default function ProblemsPage() {
       </div>
 
       {filteredProblems.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-xs">
-          {problems.length === 0 ? (
-            <p className="text-slate-500">
-              Aucun problème disponible pour le moment.
-            </p>
-          ) : (
-            <>
-              <p className="text-slate-700 font-semibold">
-                Aucun problème ne correspond à votre recherche.
-              </p>
+        <EmptyState
+          title={
+            problems.length === 0
+              ? "Aucun problème disponible pour le moment."
+              : "Aucun problème ne correspond à votre recherche."
+          }
+          action={
+            problems.length > 0 && (
               <button
                 onClick={() => {
                   setSearch("");
@@ -226,13 +227,13 @@ export default function ProblemsPage() {
                   setSelectedBrand("Toutes");
                   setSelectedModel("Toutes");
                 }}
-                className="mt-4 text-blue-600 font-semibold hover:underline cursor-pointer text-sm"
+                className="text-blue-600 font-semibold hover:underline cursor-pointer text-sm"
               >
                 Réinitialiser les filtres
               </button>
-            </>
-          )}
-        </div>
+            )
+          }
+        />
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
           {filteredProblems.map((problem) => (

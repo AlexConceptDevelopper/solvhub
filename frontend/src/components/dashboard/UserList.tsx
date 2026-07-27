@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../../api/client";
 import type { User } from "../../types/user";
-import ConfirmModal from "../ConfirmModal"; // Ajuste le chemin d'import selon l'emplacement de ton fichier ConfirmModal
-import Pagination from "../Pagination"; // Import du composant Pagination
+import ConfirmModal from "../ConfirmModal"; 
+import Pagination from "../Pagination";
 
 export default function UsersList() {
   const [users, setUsers] = useState<User[]>([]);
@@ -12,6 +12,7 @@ export default function UsersList() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editUsername, setEditUsername] = useState("");
   const [editEmail, setEditEmail] = useState("");
+  const [editRole, setEditRole] = useState("");
 
   // --- États pour la pagination ---
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,6 +41,7 @@ export default function UsersList() {
     setEditingId(user.idUsers);
     setEditUsername(user.username);
     setEditEmail(user.email);
+    setEditRole(user.role || "USER");
   };
 
   // Annuler l'édition
@@ -55,11 +57,12 @@ export default function UsersList() {
         body: JSON.stringify({
           username: editUsername,
           email: editEmail,
+          role: editRole,
         }),
       });
 
       setUsers((prev) =>
-        prev.map((u) => (u.idUsers === id ? (updatedUser || { ...u, username: editUsername, email: editEmail }) : u))
+        prev.map((u) => (u.idUsers === id ? (updatedUser || { ...u, username: editUsername, email: editEmail, role: editRole }) : u))
       );
       setEditingId(null);
     } catch (error) {
@@ -81,14 +84,24 @@ export default function UsersList() {
 
   return (
     <div className="space-y-6 relative">
-      <div className="overflow-x-auto">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-slate-900">Gestion des Utilisateurs</h2>
+      </div>
+
+      <p className="text-slate-500 text-sm">
+        {users.length} utilisateur(s) trouvé(s)
+      </p>
+
+      {/* Tableau des utilisateurs en mode Light harmonisé */}
+      <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-slate-600 bg-slate-900">
-              <th className="p-4 text-white font-bold">ID</th>
-              <th className="p-4 text-white font-bold">Nom</th>
-              <th className="p-4 text-white font-bold">Email</th>
-              <th className="p-4 text-white font-bold text-right">Action</th>
+            <tr className="border-b border-slate-200 bg-slate-100/70">
+              <th className="p-4 text-slate-700 font-bold">ID</th>
+              <th className="p-4 text-slate-700 font-bold">Nom</th>
+              <th className="p-4 text-slate-700 font-bold">Email</th>
+              <th className="p-4 text-slate-700 font-bold">Rôle</th>
+              <th className="p-4 text-slate-700 font-bold text-right">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -98,18 +111,18 @@ export default function UsersList() {
               return (
                 <tr
                   key={user.idUsers}
-                  className="border-b border-slate-700 hover:bg-slate-800 transition-colors"
+                  className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors"
                 >
-                  <td className="p-4 text-slate-100 font-medium">{user.idUsers}</td>
+                  <td className="p-4 text-slate-900 font-medium">{user.idUsers}</td>
 
                   {/* Nom : Input si on édite, texte sinon */}
-                  <td className="p-4 text-slate-100 font-medium">
+                  <td className="p-4 text-slate-900 font-medium">
                     {isEditing ? (
                       <input
                         type="text"
                         value={editUsername}
                         onChange={(e) => setEditUsername(e.target.value)}
-                        className="px-2 py-1 bg-slate-900 border border-slate-600 rounded text-white w-full focus:outline-none focus:border-blue-500"
+                        className="px-3 py-1 bg-white border border-blue-500 rounded text-slate-900 w-full focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     ) : (
                       user.username
@@ -117,16 +130,38 @@ export default function UsersList() {
                   </td>
 
                   {/* Email : Input si on édite, texte sinon */}
-                  <td className="p-4 text-slate-100 font-medium">
+                  <td className="p-4 text-slate-900 font-medium">
                     {isEditing ? (
                       <input
                         type="email"
                         value={editEmail}
                         onChange={(e) => setEditEmail(e.target.value)}
-                        className="px-2 py-1 bg-slate-900 border border-slate-600 rounded text-white w-full focus:outline-none focus:border-blue-500"
+                        className="px-3 py-1 bg-white border border-blue-500 rounded text-slate-900 w-full focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                       />
                     ) : (
                       user.email
+                    )}
+                  </td>
+
+                  {/* Rôle : Sélecteur si on édite, badge stylé sinon */}
+                  <td className="p-4">
+                    {isEditing ? (
+                      <select
+                        value={editRole}
+                        onChange={(e) => setEditRole(e.target.value)}
+                        className="px-3 py-1 bg-white border border-blue-500 rounded text-slate-900 w-full focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                      >
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                      </select>
+                    ) : (
+                      <span className={`px-2.5 py-1 rounded-lg border text-xs font-medium ${
+                        user.role === 'ADMIN' 
+                          ? 'bg-purple-50 text-purple-700 border-purple-100' 
+                          : 'bg-slate-100 text-slate-600 border-slate-200'
+                      }`}>
+                        {user.role || "USER"}
+                      </span>
                     )}
                   </td>
 
@@ -136,13 +171,13 @@ export default function UsersList() {
                         <>
                           <button
                             onClick={() => saveEditing(user.idUsers)}
-                            className="px-3 py-2 font-bold text-white bg-green-600 hover:bg-green-500 border border-green-500 rounded shadow transition-all cursor-pointer text-xs"
+                            className="px-3 py-2 font-bold text-white bg-green-600 hover:bg-green-700 rounded shadow-sm cursor-pointer text-xs transition"
                           >
                             Valider
                           </button>
                           <button
                             onClick={cancelEditing}
-                            className="px-3 py-2 font-bold text-slate-300 hover:text-white bg-slate-700 hover:bg-slate-600 border border-slate-500 rounded shadow transition-all cursor-pointer text-xs"
+                            className="px-3 py-2 font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 rounded shadow-sm cursor-pointer text-xs transition"
                           >
                             Annuler
                           </button>
@@ -151,13 +186,13 @@ export default function UsersList() {
                         <>
                           <button
                             onClick={() => startEditing(user)}
-                            className="px-3 py-2 font-bold text-white bg-blue-600 hover:bg-blue-500 border border-blue-500 rounded shadow transition-all cursor-pointer text-xs"
+                            className="px-3 py-2 font-bold text-white bg-blue-600 hover:bg-blue-700 rounded shadow-sm cursor-pointer text-xs transition"
                           >
                             Modifier
                           </button>
                           <button
                             onClick={() => setUserToDelete(user.idUsers)}
-                            className="px-3 py-2 font-bold text-white bg-slate-700 hover:bg-slate-600 border border-slate-500 rounded shadow transition-all cursor-pointer text-xs"
+                            className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded shadow-sm cursor-pointer text-xs transition"
                           >
                             Supprimer
                           </button>

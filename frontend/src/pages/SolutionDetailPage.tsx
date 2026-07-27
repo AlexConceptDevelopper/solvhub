@@ -13,6 +13,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import useAsync from "../hooks/useAsync";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
+import LoadingStateProps from "../components/LoadingState";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
@@ -76,7 +77,6 @@ export default function SolutionDetailPage() {
       setVotes(votesData);
     }
 
-    // On utilise le vrai idUser s'il est connecté, sinon 0 par défaut
     if (user && user.idUsers) {
       const voted = await hasUserVoted(solutionId, user.idUsers);
       setAlreadyVoted(voted);
@@ -94,7 +94,7 @@ export default function SolutionDetailPage() {
       createVote({
         status,
         comment: "",
-        userId: user.idUsers, // 👈 Utilisation du vrai ID utilisateur
+        userId: user.idUsers,
         solutionId: solution.idSolution,
       }),
     );
@@ -123,18 +123,7 @@ export default function SolutionDetailPage() {
   };
 
   if (loadingSolution || loadingStats || loadingVotes) {
-    return (
-      <div
-        className="
-        max-w-4xl
-        mx-auto
-        text-center
-        text-slate-500
-      "
-      >
-        Chargement...
-      </div>
-    );
+    return <LoadingStateProps label="Chargement..." />;
   }
 
   if (errorSolution || errorStats || errorVotes || voteError) {
@@ -157,88 +146,31 @@ export default function SolutionDetailPage() {
   }
 
   return (
-    <div
-      className="
-        max-w-4xl
-        mx-auto
-        space-y-8
-      "
-    >
-      <section
-        className="
-          bg-white/80
-          backdrop-blur
-          rounded-3xl
-          border
-          border-slate-200
-          shadow-md
-          p-8
-        "
-      >
-        <h1
-          className="
-            text-3xl
-            font-bold
-            text-slate-800
-          "
-        >
-          {solution.title}
-        </h1>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-slate-900">
+            {solution.title}
+          </h1>
+          <BackButton
+            to={`/problem/${solution.problemId}`}
+            label="Retour au problème"
+          />
+        </div>
 
-        <BackButton
-          to={`/problem/${solution.problemId}`}
-          label="Retour au problème"
-        />
+        <p className="text-slate-700 leading-relaxed">{solution.steps}</p>
 
-        <p
-          className="
-            mt-5
-            text-slate-600
-            leading-relaxed
-          "
-        >
-          {solution.steps}
-        </p>
-
-        <div
-          className="
-            mt-6
-            flex
-            flex-wrap
-            gap-3
-            text-sm
-            text-slate-500
-          "
-        >
+        <div className="flex flex-wrap gap-3 text-sm text-slate-500">
           <span>Difficulté : {solution.difficulty}/5</span>
-
           <span>Temps : {solution.timeMinutes} min</span>
-
           <span>Risque : {solution.riskLevel}/5</span>
         </div>
       </section>
 
       {stats && <SolutionStatsCard stats={stats} />}
 
-      <section
-        className="
-          bg-white/70
-          rounded-2xl
-          border
-          border-slate-200
-          p-6
-        "
-      >
-        <h2
-          className="
-            text-xl
-            font-bold
-            text-slate-800
-            mb-4
-          "
-        >
-          Votre avis
-        </h2>
+      <section className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Votre avis</h2>
 
         {!user && (
           <p className="mb-4 text-sm text-amber-600">
@@ -247,42 +179,16 @@ export default function SolutionDetailPage() {
         )}
 
         {alreadyVoted && (
-          <p
-            className="
-            mb-4
-            text-sm
-            text-slate-500
-          "
-          >
+          <p className="mb-4 text-sm text-slate-500">
             Vous avez déjà donné votre avis sur cette solution.
           </p>
         )}
 
-        <div
-          className="
-          mt-6
-          flex
-          gap-3
-          flex-wrap
-        "
-        >
+        <div className="mt-6 flex gap-3 flex-wrap">
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("SUCCESS")}
-            className="
-            flex-1
-            rounded-xl
-            bg-green-500
-            px-4
-            py-2
-            text-white
-            font-semibold
-            hover:bg-green-600
-            transition
-            cursor-pointer
-            disabled:opacity-50
-            disabled:cursor-not-allowed
-          "
+            className="flex-1 rounded-xl bg-green-500 px-4 py-2 text-white font-semibold hover:bg-green-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {voting ? "Envoi..." : "👍 Réussie"}
           </button>
@@ -290,20 +196,7 @@ export default function SolutionDetailPage() {
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("PARTIAL")}
-            className="
-            flex-1
-            rounded-xl
-            bg-amber-500
-            px-4
-            py-2
-            text-white
-            font-semibold
-            hover:bg-amber-600
-            transition
-            cursor-pointer
-            disabled:opacity-50
-            disabled:cursor-not-allowed
-          "
+            className="flex-1 rounded-xl bg-amber-500 px-4 py-2 text-white font-semibold hover:bg-amber-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {voting ? "Envoi..." : "😐 Partielle"}
           </button>
@@ -311,20 +204,7 @@ export default function SolutionDetailPage() {
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("FAILURE")}
-            className="
-            flex-1
-            rounded-xl
-            bg-red-500
-            px-4
-            py-2
-            text-white
-            font-semibold
-            hover:bg-red-600
-            transition
-            cursor-pointer
-            disabled:opacity-50
-            disabled:cursor-not-allowed
-          "
+            className="flex-1 rounded-xl bg-red-500 px-4 py-2 text-white font-semibold hover:bg-red-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {voting ? "Envoi..." : "👎 Échec"}
           </button>

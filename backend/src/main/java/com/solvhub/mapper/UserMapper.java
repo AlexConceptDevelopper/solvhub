@@ -21,6 +21,7 @@ public class UserMapper {
                 user.getEmail(),
                 null,
                 user.getBadge(),
+                user.getRole(),
                 user.getEmailNotificationsEnabled()
         );
     }
@@ -37,6 +38,7 @@ public class UserMapper {
                 user.getEmail(),
                 solutionsCount, 
                 user.getBadge(),
+                user.getRole(),
                 user.getEmailNotificationsEnabled() 
         );
     }

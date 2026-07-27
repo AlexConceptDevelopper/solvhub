@@ -13,6 +13,7 @@ import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
+import LoadingState from "../components/LoadingState";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -57,11 +58,7 @@ export default function ProblemDetailPage() {
   }, [id]);
 
   if (loadingProblem) {
-    return (
-      <div className="max-w-5xl mx-auto text-center py-20 text-slate-600 font-medium tracking-wide animate-pulse">
-        Chargement du problème...
-      </div>
-    );
+    return <LoadingState label="Chargement du problème..." />;
   }
 
   if (errorProblem) {
@@ -210,10 +207,9 @@ export default function ProblemDetailPage() {
         </div>
 
         {/* LOADING & ERRORS */}
+
         {loadingSolutions && (
-          <div className="py-12 text-center text-slate-500 font-medium animate-pulse">
-            Chargement des pistes de résolution...
-          </div>
+          <LoadingState label="Chargement des pistes de résolution..." />
         )}
 
         {errorSolutions && (

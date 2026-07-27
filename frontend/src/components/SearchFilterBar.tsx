@@ -26,13 +26,13 @@ export default function SearchFilterBar({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 rounded-xl border border-slate-300 px-4 py-3 bg-white shadow-sm focus:outline-blue-500"
+        className="flex-1 rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 placeholder-slate-400 shadow-2xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
       />
 
       <select
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        className="rounded-xl border border-slate-300 px-4 py-3 bg-white cursor-pointer shadow-sm focus:outline-blue-500"
+        className="rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 cursor-pointer shadow-2xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
       >
         <option value="Toutes">Toutes les catégories</option>
         {uniqueCategories.map((cat) => (

@@ -60,23 +60,8 @@ export default function CreateSolutionPage() {
   };
 
   return (
-    <div
-      className="
-        max-w-3xl
-        mx-auto
-      "
-    >
-      <div
-        className="
-          bg-white/80
-          backdrop-blur
-          rounded-3xl
-          border
-          border-slate-200
-          shadow-md
-          p-8
-        "
-      >
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-slate-800">
             Proposer une solution
@@ -90,109 +75,93 @@ export default function CreateSolutionPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="
-            mt-8
-            space-y-6
-          "
+          className="mt-8 space-y-6"
+          autoComplete="off"
         >
-          <input
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            placeholder="Titre de la solution"
-            className="
-              w-full
-              rounded-xl
-              border
-              px-4
-              py-3
-            "
-            required
-          />
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Titre
+            </label>
+            <input
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="Ex : Redémarrer le service en mode sans échec"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
+              required
+              autoComplete="off"
+            />
+          </div>
 
-          <textarea
-            name="steps"
-            maxLength={2000}
-            value={form.steps}
-            onChange={handleChange}
-            placeholder="Décrivez les étapes...(max 2000 caractères)"
-            className="
-              w-full
-              rounded-xl
-              border
-              px-4
-              py-3
-              h-40
-            "
-            required
-          />
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Étapes
+            </label>
+            <textarea
+              name="steps"
+              maxLength={2000}
+              value={form.steps}
+              onChange={handleChange}
+              placeholder="Décrivez les étapes...(max 2000 caractères)"
+              rows={6}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
+              required
+              autoComplete="off"
+            />
+          </div>
 
-          <select
-            name="difficulty"
-            value={form.difficulty}
-            onChange={handleChange}
-            className="
-                w-full
-                rounded-xl
-                border
-                px-4
-                py-3
-            "
-          >
-            <option value={1}>1 - Très facile</option>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Difficulté
+            </label>
+            <select
+              name="difficulty"
+              value={form.difficulty}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+            >
+              <option value={1}>1 - Très facile</option>
+              <option value={2}>2 - Facile</option>
+              <option value={3}>3 - Moyen</option>
+              <option value={4}>4 - Difficile</option>
+              <option value={5}>5 - Très difficile</option>
+            </select>
+          </div>
 
-            <option value={2}>2 - Facile</option>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Temps estimé
+            </label>
+            <select
+              name="timeMinutes"
+              value={form.timeMinutes}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+            >
+              <option value={5}>Moins de 10 minutes</option>
+              <option value={15}>10 à 30 minutes</option>
+              <option value={45}>30 minutes à 1 heure</option>
+              <option value={120}>Plus d'une heure</option>
+            </select>
+          </div>
 
-            <option value={3}>3 - Moyen</option>
-
-            <option value={4}>4 - Difficile</option>
-
-            <option value={5}>5 - Très difficile</option>
-          </select>
-
-          <select
-            name="timeMinutes"
-            value={form.timeMinutes}
-            onChange={handleChange}
-            className="
-                w-full
-                rounded-xl
-                border
-                px-4
-                py-3
-            "
-          >
-            <option value={5}>Moins de 10 minutes</option>
-
-            <option value={15}>10 à 30 minutes</option>
-
-            <option value={45}>30 minutes à 1 heure</option>
-
-            <option value={120}>Plus d'une heure</option>
-          </select>
-
-          <select
-            name="riskLevel"
-            value={form.riskLevel}
-            onChange={handleChange}
-            className="
-                w-full
-                rounded-xl
-                border
-                px-4
-                py-3
-            "
-          >
-            <option value={1}>1 - Aucun risque</option>
-
-            <option value={2}>2 - Faible risque</option>
-
-            <option value={3}>3 - Risque modéré</option>
-
-            <option value={4}>4 - Risque important</option>
-
-            <option value={5}>5 - Danger élevé</option>
-          </select>
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Niveau de risque
+            </label>
+            <select
+              name="riskLevel"
+              value={form.riskLevel}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+            >
+              <option value={1}>1 - Aucun risque</option>
+              <option value={2}>2 - Faible risque</option>
+              <option value={3}>3 - Risque modéré</option>
+              <option value={4}>4 - Risque important</option>
+              <option value={5}>5 - Danger élevé</option>
+            </select>
+          </div>
 
           <PrimaryButton
             type="submit"
