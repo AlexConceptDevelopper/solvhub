@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "./ProblemCard";
@@ -6,9 +7,18 @@ import ProblemCard from "./ProblemCard";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "./ErrorMessage";
 
-export default function RecentProblems() {
+interface RecentProblemsProps {
+  returnTo?: string;
+  returnLabel?: string;
+}
+
+export default function RecentProblems({
+  returnTo = "/",
+  returnLabel = "Retour",
+}: RecentProblemsProps) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const { loading, error, execute } = useAsync<Problem[]>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadProblems = async () => {
@@ -16,10 +26,9 @@ export default function RecentProblems() {
       if (data) {
         const sortedAndSliced = [...data]
           .sort((a, b) => {
-            // On convertit en timestamp sécurisé (0 si la date n'existe pas)
             const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
             const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-            return dateB - dateA; // Tri décroissant
+            return dateB - dateA;
           })
           .slice(0, 4);
 
@@ -55,7 +64,6 @@ export default function RecentProblems() {
         border-slate-200/50
       "
     >
-      {/* En-tête de section avec titre normal, propre et efficace */}
       <div className="text-center max-w-xl mx-auto mb-10">
         <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">
           Derniers problèmes posés
@@ -89,7 +97,17 @@ export default function RecentProblems() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {problems.map((problem) => (
-            <ProblemCard key={problem.idProblem} problem={problem} />
+            <div
+              key={problem.idProblem}
+              onClick={() =>
+                navigate(`/problem/${problem.idProblem}`, {
+                  state: { returnTo, returnLabel },
+                })
+              }
+              className="cursor-pointer transition-transform hover:-translate-y-1"
+            >
+              <ProblemCard problem={problem} />
+            </div>
           ))}
         </div>
       )}

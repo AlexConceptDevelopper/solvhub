@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 import { createSolution } from "../api/solution.api";
 
@@ -10,16 +10,22 @@ import PrimaryButton from "../components/PrimaryButton";
 
 export default function CreateSolutionPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const fromAdmin = location.state?.fromAdmin;// on vient de l'admin? 
+
   const { problemId } = useParams();
   const [error, setError] = useState<string | null>(null);
+  const [images, setImages] = useState<FileList | null>(null);
+  const [showVideoInput, setShowVideoInput] = useState(false);
 
-  const [form, setForm] = useState<SolutionCreate>({
+  const [form, setForm] = useState<SolutionCreate & { videoUrl?: string }>({
     title: "",
     steps: "",
     difficulty: 1,
     timeMinutes: 5,
     riskLevel: 1,
     problemId: Number(problemId),
+    videoUrl: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -29,14 +35,15 @@ export default function CreateSolutionPage() {
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
+    const { name, value, type } = e.target;
     setForm({
       ...form,
-      [e.target.name]:
-        e.target.type === "number"
-          ? Number(e.target.value)
-          : Number.isNaN(Number(e.target.value))
-            ? e.target.value
-            : Number(e.target.value),
+      [name]:
+        type === "number"
+          ? Number(value)
+          : Number.isNaN(Number(value))
+            ? value
+            : Number(value),
     });
   };
 
@@ -47,26 +54,50 @@ export default function CreateSolutionPage() {
       setLoading(true);
       setError(null);
 
-      const created = await createSolution(form);
+      const formData = new FormData();
+      formData.append("title", form.title);
+      formData.append("steps", form.steps);
+      formData.append("difficulty", form.difficulty.toString());
+      formData.append("timeMinutes", form.timeMinutes.toString());
+      formData.append("riskLevel", form.riskLevel.toString());
+      formData.append("problemId", form.problemId.toString());
+
+      // Ajout de l'URL de la vidéo si elle est remplie
+      if (form.videoUrl) {
+        formData.append("videoUrl", form.videoUrl);
+      }
+
+      // Ajout des images s'il y en a
+      if (images) {
+        for (let i = 0; i < images.length; i++) {
+          formData.append("images", images[i]);
+        }
+      }
+
+      const created = await createSolution(formData);
 
       navigate(`/solution/${created.idSolution}`);
     } catch (error) {
       console.error(error);
-
       setError("Impossible de créer la solution");
     } finally {
       setLoading(false);
     }
   };
 
+
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
+      <div className="bg-white/85 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-slate-800">
             Proposer une solution
           </h1>
-          <BackButton to={`/problem/${problemId}`} label="Retour au problème" />
+          <BackButton 
+            to={fromAdmin ? "/admin" : `/problem/${problemId}`}
+            state={fromAdmin ? { activeTab: "problems" } : undefined}
+            label={fromAdmin ? "Retour à l'admin" : "Retour au problème"} 
+          />
         </div>
 
         {error && (
@@ -161,6 +192,64 @@ export default function CreateSolutionPage() {
               <option value={4}>4 - Risque important</option>
               <option value={5}>5 - Danger élevé</option>
             </select>
+          </div>
+
+          {/* Section Vidéo YouTube interactive (Déployable) */}
+          <div className="pt-2">
+            {!showVideoInput ? (
+              <button
+                type="button"
+                onClick={() => setShowVideoInput(true)}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-200 transition cursor-pointer"
+              >
+                <span className="text-lg leading-none">+</span>
+                <span>Ajouter une vidéo explicative (YouTube)</span>
+              </button>
+            ) : (
+              <div className="bg-slate-50/80 border border-slate-200 rounded-2xl p-4 space-y-3 transition-all">
+                <div className="flex items-center justify-between">
+                  <label className="block font-semibold text-slate-700 text-sm">
+                    🎬 Lien de la vidéo YouTube
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowVideoInput(false);
+                      setForm({ ...form, videoUrl: "" });
+                    }}
+                    className="text-xs text-slate-400 hover:text-slate-600 font-medium cursor-pointer"
+                  >
+                    Retirer la vidéo
+                  </button>
+                </div>
+                <input
+                  type="url"
+                  name="videoUrl"
+                  value={form.videoUrl || ""}
+                  onChange={handleChange}
+                  placeholder="Ex : https://www.youtube.com/watch?v=..."
+                  className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs text-sm"
+                  autoComplete="off"
+                />
+                <p className="text-xs text-slate-500">
+                  La vidéo s'affichera directement sous forme de lecteur intégré dans votre solution.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Champ d'upload des images */}
+          <div>
+            <label className="block font-semibold text-slate-700 mb-2">
+              Images d'illustration (optionnel)
+            </label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => setImages(e.target.files)}
+              className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition cursor-pointer"
+            />
           </div>
 
           <PrimaryButton

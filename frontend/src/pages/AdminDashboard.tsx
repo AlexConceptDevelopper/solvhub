@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import UsersList from "../components/dashboard/UserList";
 import ProblemsList from "../components/dashboard/ProblemsList";
 import SolutionsList from "../components/dashboard/SolutionsList";
@@ -9,7 +10,12 @@ import type { Problem } from "../types/problem";
 import type { Solution } from "../types/solution";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("users");
+  const location = useLocation();
+  
+  // On récupère l'onglet demandé via le state (ex: "problems"), sinon "users" par défaut
+  const initialTab = (location.state as { activeTab?: string })?.activeTab || "users";
+
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [search, setSearch] = useState("");
 
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -182,12 +188,12 @@ export default function AdminDashboard() {
             ))}
           </div>
 
-          {/* Contenu dynamique par onglet */}
+          {/* Contenu dynamique par onglet avec transmission des props de données et de recherche */}
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            {activeTab === 'users' && <UsersList />}
-            {activeTab === 'problems' && <ProblemsList />}
-            {activeTab === 'solutions' && <SolutionsList />}
-            {activeTab === 'categories' && <CategoriesList />}
+            {activeTab === 'users' && <UsersList users={users} setUsers={setUsers} search={search} />}
+            {activeTab === 'problems' && <ProblemsList problems={problems} setProblems={setProblems} search={search} />}
+            {activeTab === 'solutions' && <SolutionsList solutions={solutions} setSolutions={setSolutions} search={search} />}
+            {activeTab === 'categories' && <CategoriesList categories={categories} setCategories={setCategories} search={search} />}
           </div>
         </>
       )}

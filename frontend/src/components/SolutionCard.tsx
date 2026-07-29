@@ -3,14 +3,20 @@ import type { Solution } from "../types/solution";
 
 interface Props {
   solution: Solution;
+  originTo?: string | number;
+  originLabel?: string;
 }
 
-export default function SolutionCard({ solution }: Props) {
+export default function SolutionCard({ solution, originTo, originLabel }: Props) {
   const navigate = useNavigate();
 
   return (
     <div
-      onClick={() => navigate(`/solution/${solution.idSolution}`)}
+      onClick={() =>
+        navigate(`/solution/${solution.idSolution}`, {
+          state: { originTo, originLabel },
+        })
+      }
       className="
         bg-white
         rounded-2xl
@@ -33,21 +39,7 @@ export default function SolutionCard({ solution }: Props) {
         </h3>
 
         {solution.score !== null && (
-          <span
-            className="
-              shrink-0
-              bg-emerald-50
-              text-emerald-700
-              border
-              border-emerald-200
-              px-2.5
-              py-1
-              rounded-md
-              text-xs
-              font-bold
-              font-mono
-            "
-          >
+          <span className="shrink-0 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-md text-xs font-bold font-mono">
             {(solution.score * 100).toFixed(0)}%
           </span>
         )}
@@ -57,22 +49,7 @@ export default function SolutionCard({ solution }: Props) {
         {solution.steps}
       </p>
 
-      <div
-        className="
-          mt-5
-          pt-4
-          border-t
-          border-slate-100
-          flex
-          flex-wrap
-          items-center
-          gap-x-4
-          gap-y-2
-          text-xs
-          font-medium
-          text-slate-500
-        "
-      >
+      <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-medium text-slate-500">
         <span className="inline-flex items-center gap-1 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-md text-slate-600">
           Difficulté : <strong className="text-slate-900 font-bold">{solution.difficulty}/5</strong>
         </span>

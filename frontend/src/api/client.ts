@@ -1,14 +1,18 @@
-const API_URL = "http://localhost:8080/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
 
 export async function apiFetch<T>(
   endpoint: string,
   options: RequestInit = {}
-): Promise<T | null> {
+): Promise<T> {
   const token = localStorage.getItem("token");
 
+  // On vérifie si on envoie un FormData
+  const isFormData = options.body instanceof FormData;
+
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+    // On ajoute "Content-Type": "application/json" UNIQUEMENT si ce n'est PAS un FormData
+    ...(!isFormData ? { "Content-Type": "application/json" } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
 
@@ -19,20 +23,24 @@ export async function apiFetch<T>(
 
   if (!response.ok) {
     let message = "Une erreur est survenue";
+
     try {
       const error = await response.json();
       message = error.message ?? message;
-    } catch {}
+    } catch {
+      // La réponse ne contient pas de JSON
+    }
+
     throw new Error(message);
   }
 
-  //si le contenu est vide pour éviter le crash de .json()
   const text = await response.text();
+
   if (!text) {
-    return null as T | null;
+    return undefined as T;
   }
 
-  return JSON.parse(text);
+  return JSON.parse(text) as T;
 }
 
 export default API_URL;

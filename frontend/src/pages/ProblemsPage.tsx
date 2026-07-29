@@ -132,7 +132,7 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
       <div>
         <BackButton to="/" label="Retour à l'accueil" />
       </div>
@@ -149,7 +149,14 @@ export default function ProblemsPage() {
         </div>
 
         <PrimaryButton
-          onClick={() => navigate("/problem/create")}
+          onClick={() =>
+            navigate("/problem/create", {
+              state: {
+                returnTo: "/problems",
+                returnLabel: "Retour aux problèmes",
+              },
+            })
+          }
           className="w-fit"
         >
           + Poser un problème

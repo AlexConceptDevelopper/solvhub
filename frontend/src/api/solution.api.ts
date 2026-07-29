@@ -21,14 +21,23 @@ export const getSolutionById = async (
 };
 
 export const createSolution = async (
-  solution: SolutionCreate
+  solutionData: SolutionCreate | FormData
 ): Promise<Solution> => {
+  const isFormData = solutionData instanceof FormData;
+
+  // Récupère ton token habituel (ex: depuis le localStorage)
+  const token = localStorage.getItem("token"); // Adapte selon ta gestion du token
+
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  // On ne met PAS de "Content-Type" si c'est un FormData pour laisser le navigateur faire
+
   const result = await apiFetch<Solution | null>("/solutions", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(solution),
+    headers: isFormData ? headers : { ...headers, "Content-Type": "application/json" },
+    body: isFormData ? solutionData : JSON.stringify(solutionData),
   });
 
   if (!result) {

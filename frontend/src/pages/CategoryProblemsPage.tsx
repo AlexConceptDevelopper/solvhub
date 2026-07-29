@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "../components/ProblemCard";
@@ -9,7 +9,13 @@ import BackButton from "../components/BackButton";
 
 export default function CategoryProblemsPage() {
   const { idCategory } = useParams();
-
+  const location = useLocation();
+  const state = location.state as {
+    returnTo?: string;
+    returnLabel?: string;
+  } | null;
+  const backTo = state?.returnTo ?? "/categories";
+  const backLabel = state?.returnLabel ?? "Retour aux catégories";
   const [problems, setProblems] = useState<Problem[]>([]);
   const { loading, error, execute } = useAsync<Problem[]>();
 
@@ -25,7 +31,7 @@ export default function CategoryProblemsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto text-center py-20 text-slate-500 font-medium">
+      <div className="max-w-6xl px-4 md:px-6 mx-auto text-center py-20 text-slate-500 font-medium">
         Chargement...
       </div>
     );
@@ -33,8 +39,11 @@ export default function CategoryProblemsPage() {
 
   if (error) {
     return (
-      <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6">
-        <ErrorMessage message={error} onRetry={() => window.location.reload()} />
+      <div className="max-w-6xl px-4 md:px-6 mx-auto   mt-6">
+        <ErrorMessage
+          message={error}
+          onRetry={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -53,9 +62,9 @@ export default function CategoryProblemsPage() {
   const category = categoryProblems[0]?.category;
 
   return (
-    <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-8">
+    <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-8">
       <div className="flex items-center justify-between">
-        <BackButton to="/categories" label="Retour aux catégories" />
+        <BackButton to={backTo} label={backLabel} />
       </div>
 
       <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">

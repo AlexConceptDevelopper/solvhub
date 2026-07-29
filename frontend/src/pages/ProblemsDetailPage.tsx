@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import { getProblemById } from "../api/problem.api";
 import { getSolutionsByProblem } from "../api/solution.api";
@@ -18,6 +18,7 @@ import LoadingState from "../components/LoadingState";
 export default function ProblemDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [problem, setProblem] = useState<Problem | null>(null);
   const [solutions, setSolutions] = useState<Solution[]>([]);
@@ -33,6 +34,14 @@ export default function ProblemDetailPage() {
     error: errorSolutions,
     execute: executeSolutions,
   } = useAsync<Solution[]>();
+
+  // Récupération de la provenance passée par RecentProblems (ou toute autre page qui la fournirait)
+  const state = location.state as {
+    returnTo?: string;
+    returnLabel?: string;
+  } | null;
+  const backTo = state?.returnTo ?? -1;
+  const backLabel = state?.returnLabel ?? "Retour";
 
   useEffect(() => {
     if (!id) return;
@@ -87,7 +96,7 @@ export default function ProblemDetailPage() {
         </p>
 
         <button
-          onClick={() => navigate("/problems")}
+          onClick={() => navigate(-1)}
           className="
             mt-6 
             inline-flex 
@@ -105,22 +114,21 @@ export default function ProblemDetailPage() {
             cursor-pointer
           "
         >
-          Retourner à la liste des problèmes
+          Retourner à la page précédente
         </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-12">
-      {/* BOUTON RETOUR*/}
+    <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-12">
+      {/* BOUTON RETOUR INTELLIGENT */}
       <div className="flex items-center justify-between">
-        <BackButton to="/problems" label="Retour aux problèmes" />
+        <BackButton to={backTo} label={backLabel} />
       </div>
 
       {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
       <article className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-6 shadow-sm border border-slate-100">
-        {/* En-tête : Catégorie & Date */}
         <div className="flex items-center justify-between text-xs font-semibold">
           <span className="inline-flex items-center gap-1.5 text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-md">
             <span>{problem.category?.icon || "❓"}</span>
@@ -135,12 +143,10 @@ export default function ProblemDetailPage() {
           )}
         </div>
 
-        {/* Titre : Anthracite très profond (text-slate-900) */}
         <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
           {problem.title}
         </h1>
 
-        {/* 🚗 BLOC VÉHICULE / ÉQUIPEMENT MIS EN VALEUR */}
         {problem.equipment && (
           <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-md">
             <span className="text-2xl bg-slate-800 p-2.5 rounded-lg">🚗</span>
@@ -156,10 +162,8 @@ export default function ProblemDetailPage() {
           </div>
         )}
 
-        {/* Ligne de séparation fine pour le mode clair */}
         <div className="h-px bg-linear-to-r from-slate-200 via-slate-300 to-transparent w-full" />
 
-        {/* Description */}
         <div
           className="
             text-slate-700 
@@ -176,7 +180,6 @@ export default function ProblemDetailPage() {
           {problem.description}
         </div>
 
-        {/* Action principale */}
         <div className="pt-6 flex justify-start">
           <PrimaryButton
             onClick={() =>
@@ -188,7 +191,6 @@ export default function ProblemDetailPage() {
         </div>
       </article>
 
-      {/* BLOC DES SOLUTIONS DE LA COMMUNAUTÉ */}
       <section className="space-y-6 pt-10 border-t border-slate-200">
         <div className="flex bg-white rounded-xl p-5 justify-between items-baseline gap-4">
           <div>
@@ -206,8 +208,6 @@ export default function ProblemDetailPage() {
           </span>
         </div>
 
-        {/* LOADING & ERRORS */}
-
         {loadingSolutions && (
           <LoadingState label="Chargement des pistes de résolution..." />
         )}
@@ -219,7 +219,6 @@ export default function ProblemDetailPage() {
           />
         )}
 
-        {/* ETAT VIDE CLAIR */}
         {!loadingSolutions && solutions.length === 0 && (
           <div className="bg-white rounded-xl border border-dashed border-slate-300 py-16 text-center shadow-xs">
             <span className="text-2xl block mb-2">💡</span>
@@ -232,10 +231,14 @@ export default function ProblemDetailPage() {
           </div>
         )}
 
-        {/* LISTING */}
         <div className="space-y-4">
           {solutions.map((solution) => (
-            <SolutionCard key={solution.idSolution} solution={solution} />
+            <SolutionCard
+              key={solution.idSolution}
+              solution={solution}
+              originTo={backTo}
+              originLabel={backLabel}
+            />
           ))}
         </div>
       </section>

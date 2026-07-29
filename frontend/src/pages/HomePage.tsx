@@ -128,7 +128,11 @@ export default function HomePage() {
             </Link>
 
             <button
-              onClick={() => navigate("/problem/create")}
+              onClick={() =>
+                navigate("/problem/create", {
+                  state: { returnTo: "/", returnLabel: "Retour à l'accueil" },
+                })
+              }
               className="
                 bg-white
                 border
@@ -183,7 +187,11 @@ export default function HomePage() {
           {categories.slice(0, 6).map((category) => (
             <div
               key={category.idCategory}
-              onClick={() => navigate(`/categories/${category.idCategory}`)}
+              onClick={() =>
+                navigate(`/categories/${category.idCategory}`, {
+                  state: { returnTo: "/", returnLabel: "Retour à l'accueil" },
+                })
+              }
               className="
                 group
                 relative
@@ -299,7 +307,7 @@ export default function HomePage() {
       </section>
 
       {/* SECTION DES DERNIERS PROBLÈMES */}
-      <RecentProblems />
+      <RecentProblems returnTo="/" returnLabel="Retour à l'accueil" />
 
       {/* BOUTON FINAL VOIR TOUT */}
       <div className="flex justify-center pt-4">

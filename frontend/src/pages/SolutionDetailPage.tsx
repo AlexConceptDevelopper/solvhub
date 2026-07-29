@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 import { getSolutionById } from "../api/solution.api";
 import { getSolutionStats } from "../api/solutionStats.api";
 import { createVote, hasUserVoted, getVotesBySolution } from "../api/vote.api";
+import { getMediaBySolution } from "../api/solutionMedia.api";
 import type { SolutionStats } from "../types/solutionStats";
 import type { Solution } from "../types/solution";
+import type { SolutionMedia } from "../types/SolutionMedia";
 import SolutionStatsCard from "../components/SolutionStatsCard";
 import type { Vote } from "../types/vote";
 import VoteList from "../components/VoteList";
@@ -13,15 +15,21 @@ import ErrorMessage from "../components/ErrorMessage";
 import useAsync from "../hooks/useAsync";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
-import LoadingStateProps from "../components/LoadingState";
+import LoadingState from "../components/LoadingState";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
   const { user } = useAuth();
+  const location = useLocation();
+  const state = location.state as {
+    originTo?: string;
+    originLabel?: string;
+  } | null;
 
   const [solution, setSolution] = useState<Solution | null>(null);
   const [stats, setStats] = useState<SolutionStats | null>(null);
   const [votes, setVotes] = useState<Vote[]>([]);
+  const [medias, setMedias] = useState<SolutionMedia[]>([]);
   const [alreadyVoted, setAlreadyVoted] = useState(false);
 
   const {
@@ -47,6 +55,16 @@ export default function SolutionDetailPage() {
     error: voteError,
     execute: executeVote,
   } = useAsync<Vote>();
+
+  // --- Fonction utilitaire pour transformer une URL YouTube classique/partage en lien embed ---
+  const getYoutubeEmbedUrl = (rawUrl?: string) => {
+    if (!rawUrl) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = rawUrl.match(regExp);
+    return match && match[2].length === 11
+      ? `https://www.youtube.com/embed/${match[2]}`
+      : null;
+  };
 
   const loadSolution = async () => {
     if (!id) return;
@@ -75,6 +93,11 @@ export default function SolutionDetailPage() {
 
     if (votesData) {
       setVotes(votesData);
+    }
+
+    const mediaData = await getMediaBySolution(solutionId);
+    if (mediaData) {
+      setMedias(mediaData);
     }
 
     if (user && user.idUsers) {
@@ -123,7 +146,7 @@ export default function SolutionDetailPage() {
   };
 
   if (loadingSolution || loadingStats || loadingVotes) {
-    return <LoadingStateProps label="Chargement..." />;
+    return <LoadingState label="Chargement..." />;
   }
 
   if (errorSolution || errorStats || errorVotes || voteError) {
@@ -145,8 +168,13 @@ export default function SolutionDetailPage() {
     return null;
   }
 
+  // --- Séparation dynamique des médias selon le type (ajuste "VIDEO" / "IMAGE" selon tes conventions en base) ---
+  const videoMedia = medias.find((m) => m.type.toUpperCase() === "VIDEO");
+  const imageMedias = medias.filter((m) => m.type.toUpperCase() !== "VIDEO");
+  const youtubeEmbedUrl = videoMedia ? getYoutubeEmbedUrl(videoMedia.url) : null;
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">
       <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-slate-900">
@@ -155,12 +183,62 @@ export default function SolutionDetailPage() {
           <BackButton
             to={`/problem/${solution.problemId}`}
             label="Retour au problème"
+            replace
+            state={
+              state?.originTo
+                ? { returnTo: state.originTo, returnLabel: state.originLabel }
+                : undefined
+            }
           />
         </div>
 
-        <p className="text-slate-700 leading-relaxed">{solution.steps}</p>
+        <p className="text-slate-700 leading-relaxed whitespace-pre-line">{solution.steps}</p>
 
-        <div className="flex flex-wrap gap-3 text-sm text-slate-500">
+        {/* --- Affichage de la vidéo si présente dans les médias --- */}
+        {youtubeEmbedUrl && (
+          <div className="space-y-2 pt-2">
+            <h3 className="text-sm font-semibold text-slate-700">
+              🎬 Vidéo explicative :
+            </h3>
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+              <iframe
+                src={youtubeEmbedUrl}
+                title="Vidéo explicative de la solution"
+                className="absolute top-0 left-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        )}
+
+        {/* --- Affichage des images associées --- */}
+        {imageMedias.length > 0 && (
+          <div className="space-y-2 pt-2">
+            <h3 className="text-sm font-semibold text-slate-700">
+              Images associées :
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              {imageMedias.map((media) => (
+                <a
+                  key={media.idMedia}
+                  href={media.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block overflow-hidden rounded-xl border border-slate-200 hover:opacity-95 transition"
+                >
+                  <img
+                    src={media.url}
+                    alt="Illustration de la solution"
+                    className="h-32 w-32 object-cover"
+                  />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap gap-3 text-sm text-slate-500 pt-2">
           <span>Difficulté : {solution.difficulty}/5</span>
           <span>Temps : {solution.timeMinutes} min</span>
           <span>Risque : {solution.riskLevel}/5</span>

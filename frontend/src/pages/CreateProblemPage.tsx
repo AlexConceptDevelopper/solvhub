@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { createProblem, checkDuplicates } from "../api/problem.api";
 import { getCategories } from "../api/category.api";
@@ -18,6 +18,13 @@ import PrimaryButton from "../components/PrimaryButton";
 
 export default function CreateProblemPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as {
+    returnTo?: string;
+    returnLabel?: string;
+  } | null;
+  const backTo = state?.returnTo ?? "/";
+  const backLabel = state?.returnLabel ?? "Retour à l'accueil";
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
@@ -192,7 +199,7 @@ export default function CreateProblemPage() {
           <h1 className="text-3xl font-bold text-slate-800">
             Poser un problème
           </h1>
-          <BackButton to="/" label="Retour à l'accueil" />
+          <BackButton to={backTo} label={backLabel} />
         </div>
         {(submitError || catError) && (
           <ErrorMessage
@@ -204,7 +211,11 @@ export default function CreateProblemPage() {
           Décrivez votre problème pour obtenir de l'aide de la communauté.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6" autoComplete="off">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-6"
+          autoComplete="off"
+        >
           <div>
             <label className="block font-semibold text-slate-700 mb-2">
               Titre
@@ -369,7 +380,7 @@ export default function CreateProblemPage() {
             loadingLabel="Création..."
             className="w-full"
           >
-                Créer le problème
+            Créer le problème
           </PrimaryButton>
         </form>
       </div>

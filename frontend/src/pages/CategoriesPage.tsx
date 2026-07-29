@@ -1,79 +1,82 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getProblems } from "../api/problem.api";
-import type { Problem } from "../types/problem";
-import ProblemCard from "../components/ProblemCard";
-import useAsync from "../hooks/useAsync";
-import ErrorMessage from "../components/ErrorMessage";
+import { useNavigate } from "react-router-dom";
+import { getCategoriesWithCount } from "../api/category.api";
+import type { Category } from "../types/category";
 import BackButton from "../components/BackButton";
-import EmptyState from "../components/EmptyState";
-import LoadingStateProps from "../components/LoadingState";
 
-export default function CategoryProblemsPage() {
-  const { idCategory } = useParams();
-
-  const [problems, setProblems] = useState<Problem[]>([]);
-  const { loading, error, execute } = useAsync<Problem[]>();
+export default function CategoriesPage() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const loadProblems = async () => {
-      const data = await execute(() => getProblems());
-      if (data) {
-        setProblems(data);
-      }
-    };
-    loadProblems();
+    getCategoriesWithCount()
+      .then((data) => {
+        if (data) setCategories(data);
+      })
+      .catch((error) => console.error("Erreur chargement catégories :", error))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
-    return <LoadingStateProps label="Chargement..." />;
-  }
-
-  if (error) {
-    return (
-      <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6">
-        <ErrorMessage message={error} onRetry={() => window.location.reload()} />
-      </div>
-    );
-  }
-
-  const categoryProblems = problems.filter((problem) => {
-    if (!problem.category) {
-      console.warn(
-        `Problème #${problem.idProblem} sans catégorie détecté`,
-        problem,
-      );
-      return false;
-    }
-    return problem.category?.idCategory === Number(idCategory);
-  });
-
-  const category = categoryProblems[0]?.category;
-
   return (
-    <div className="max-w-5xl px-4 md:px-8 mx-auto mt-6 space-y-8">
-      <div className="flex items-center justify-between">
-        <BackButton to="/categories" label="Retour aux catégories" />
+    <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Toutes les Catégories
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Explore les différents sujets et trouve des solutions adaptées.
+          </p>
+        </div>
+        <BackButton to="/" label="Retour à l'accueil" />
       </div>
 
-      <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-        {category && <span>{category.icon}</span>}
-        <span>{category ? category.name : "Catégorie"}</span>
-      </h1>
-
-      <p className="text-slate-500 -mt-4">
-        {categoryProblems.length} problème(s) trouvé(s)
-      </p>
-
-      {categoryProblems.length === 0 ? (
-        <EmptyState title="Aucun problème disponible pour cette catégorie pour le moment." />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categoryProblems.map((problem) => (
-            <ProblemCard key={problem.idProblem} problem={problem} />
-          ))}
-        </div>
-      )}
+      <div>
+        {loading ? (
+          <p className="text-center py-12 text-slate-500 font-medium">
+            Chargement des catégories...
+          </p>
+        ) : categories.length === 0 ? (
+          <p className="text-center py-12 text-slate-500 font-medium">
+            Aucune catégorie trouvée.
+          </p>
+        ) : (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
+            {categories.map((cat) => (
+              <div
+                key={cat.idCategory}
+                onClick={() =>
+                  navigate(`/categories/${cat.idCategory}`, {
+                    state: {
+                      returnTo: "/categories",
+                      returnLabel: "Retour aux catégories",
+                    },
+                  })
+                }
+                className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex items-center justify-between gap-4 group"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-2xl p-2 bg-blue-50 border border-blue-100 rounded-xl">
+                    {cat.icon || "🏷️"}
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
+                      {cat.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      {cat.problemCount ?? 0} problème(s) répertorié(s)
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
+                  Explorer →
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
