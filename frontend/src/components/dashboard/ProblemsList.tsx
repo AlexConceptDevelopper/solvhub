@@ -95,13 +95,21 @@ export default function ProblemsList({
   };
 
   // Extraction dynamique des catégories pour la barre de filtre secondaire
-  const uniqueCategories = Array.from(
-    new Set(
-      problems
-        .map((p) => p.category?.name)
-        .filter((name): name is string => Boolean(name)),
-    ),
-  ).map((catName) => ({ id: catName, name: catName, count: 0 }));
+  const categoryCounts = problems.reduce(
+    (acc, p) => {
+      const catName = p.category?.name;
+      if (catName) {
+        acc[catName] = (acc[catName] || 0) + 1;
+      }
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const uniqueCategories = Object.keys(categoryCounts).map((catName) => ({
+    name: catName,
+    count: categoryCounts[catName],
+  }));
 
   // Filtrage combinant la recherche globale (du parent) et le filtre de catégorie local
   const filteredProblems = problems.filter((problem) => {
@@ -149,15 +157,12 @@ export default function ProblemsList({
       </div>
 
       <SearchFilterBar
-        search={search}
-        setSearch={() => {}}
         category={category}
         setCategory={(val) => {
           setCategory(val);
           setCurrentPage(1);
         }}
         uniqueCategories={uniqueCategories}
-        placeholder="Filtrer par catégorie..."
       />
 
       <p className="text-slate-500 text-sm">

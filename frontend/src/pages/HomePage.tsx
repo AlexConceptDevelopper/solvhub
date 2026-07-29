@@ -2,11 +2,12 @@ import RecentProblems from "../components/RecentProblems";
 import { Link, useNavigate } from "react-router-dom";
 import type { Category } from "../types/category";
 import { getCategoriesWithCount } from "../api/category.api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import useAsync from "../hooks/useAsync";
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [categories, setCategories] = useState<Category[]>([]);
   const { execute } = useAsync<Category[]>();
@@ -24,9 +25,15 @@ export default function HomePage() {
     loadCategories();
   }, []);
 
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    navigate(`/problems?search=${encodeURIComponent(searchQuery)}`);
+  };
+
   return (
     <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-12 mt-6 mb-16">
-      {/* HERO SECTION */}
+      {/* HERO SECTION AVEC RECHERCHE */}
       <section
         className="
           relative
@@ -103,29 +110,36 @@ export default function HomePage() {
             <span className="text-slate-900 font-semibold">SolvHub</span>.
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 mt-10">
+          <form onSubmit={handleSearch} className="mt-8 flex flex-col sm:flex-row items-center gap-3 max-w-xl">
+            <div className="relative w-full">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                🔍
+              </span>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher un problème, un mot-clé..."
+                className="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full sm:w-auto bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold text-sm shadow-md shadow-blue-600/20 hover:bg-blue-700 hover:shadow-lg transition-all duration-200 cursor-pointer shrink-0"
+            >
+              Rechercher
+            </button>
+          </form>
+
+          <div className="flex flex-wrap items-center gap-4 mt-6">
             <Link
               to="/problems"
-              className="
-                bg-blue-600
-                text-white
-                px-6
-                py-3
-                rounded-xl
-                font-semibold
-                text-sm
-                shadow-lg
-                shadow-blue-600/20
-                hover:bg-blue-700
-                hover:shadow-blue-600/30
-                hover:-translate-y-0.5
-                transition-all
-                duration-200
-                cursor-pointer
-              "
+              className="text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors"
             >
-              Trouver une solution
+              Ou parcourir tous les problèmes →
             </Link>
+
+            <span className="text-slate-300">•</span>
 
             <button
               onClick={() =>
@@ -133,33 +147,63 @@ export default function HomePage() {
                   state: { returnTo: "/", returnLabel: "Retour à l'accueil" },
                 })
               }
-              className="
-                bg-white
-                border
-                border-slate-200
-                text-slate-700
-                px-6
-                py-3
-                rounded-xl
-                font-semibold
-                text-sm
-                hover:border-blue-300
-                hover:text-blue-600
-                hover:-translate-y-0.5
-                shadow-xs
-                hover:shadow-sm
-                transition-all
-                duration-200
-                cursor-pointer
-              "
+              className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
             >
-              Poser un problème
+              + Poser un problème
             </button>
           </div>
         </div>
       </section>
 
-      {/* CATEGORIES */}
+      {/* SECTION DES DERNIERS PROBLÈMES */}
+      <section
+        className="
+          bg-slate-50/80
+          border
+          border-slate-100
+          rounded-3xl
+          p-6
+          md:p-10
+          shadow-sm
+        "
+      >
+        <RecentProblems returnTo="/" returnLabel="Retour à l'accueil" />
+
+        <div className="flex justify-center mt-10">
+          <button
+            onClick={() => navigate("/problems")}
+            className="
+              text-sm
+              font-bold
+              text-slate-700
+              hover:text-blue-600
+              flex
+              items-center
+              gap-1.5
+              group
+              cursor-pointer
+              bg-white
+              border
+              border-slate-200
+              px-5
+              py-2.5
+              rounded-xl
+              shadow-xs
+              hover:border-blue-200
+              hover:bg-blue-50/20
+              hover:shadow-sm
+              transition-all
+            "
+          >
+            Voir tous les problèmes{" "}
+            <span className="transform group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </button>
+        </div>
+      </section>
+
+      {/* CATEGORIES POPULAIRES */}
       <section
         className="
           bg-slate-50/80
@@ -305,37 +349,6 @@ export default function HomePage() {
           </div>
         )}
       </section>
-
-      {/* SECTION DES DERNIERS PROBLÈMES */}
-      <RecentProblems returnTo="/" returnLabel="Retour à l'accueil" />
-
-      {/* BOUTON FINAL VOIR TOUT */}
-      <div className="flex justify-center pt-4">
-        <button
-          onClick={() => navigate("/problems")}
-          className="
-            rounded-xl
-            border
-            border-slate-200
-            bg-white
-            px-6
-            py-3
-            font-bold
-            text-sm
-            text-slate-800
-            hover:text-blue-600
-            hover:border-blue-200
-            hover:bg-blue-50/20
-            shadow-xs
-            hover:shadow-sm
-            transition-all
-            duration-200
-            cursor-pointer
-          "
-        >
-          Voir tous les problèmes →
-        </button>
-      </div>
     </div>
   );
 }

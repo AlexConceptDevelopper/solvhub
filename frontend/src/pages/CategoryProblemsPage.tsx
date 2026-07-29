@@ -85,7 +85,12 @@ export default function CategoryProblemsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categoryProblems.map((problem) => (
-            <ProblemCard key={problem.idProblem} problem={problem} />
+            <ProblemCard
+              key={problem.idProblem}
+              problem={problem}
+              originTo={backTo}
+              originLabel={backLabel}
+            />
           ))}
         </div>
       )}

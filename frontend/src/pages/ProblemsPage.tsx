@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import { getCategoriesWithCount } from "../api/category.api";
 import type { Problem } from "../types/problem";
 import type { Category } from "../types/category";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
-import SearchFilterBar from "../components/SearchFilterBar";
 import PrimaryButton from "../components/PrimaryButton";
 import BackButton from "../components/BackButton";
 import EmptyState from "../components/EmptyState";
@@ -18,13 +17,17 @@ export default function ProblemsPage() {
   const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>(
     [],
   );
-  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("Toutes");
 
   const [selectedBrand, setSelectedBrand] = useState("Toutes");
   const [selectedModel, setSelectedModel] = useState("Toutes");
 
   const navigate = useNavigate();
+
+  // On récupère la recherche directement depuis l'URL (?search=...)
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get("search") || "";
+
   const { loading, error, execute } = useAsync<any>();
 
   useEffect(() => {
@@ -94,9 +97,14 @@ export default function ProblemsPage() {
   const filteredProblems = problems.filter((problem) => {
     if (!problem) return false;
 
+    const brand = problem.equipment?.brand || "";
+    const model = problem.equipment?.model || "";
+    // Filtrage basé sur le texte de l'URL
     const matchesSearch =
-      matchesSearchQuery(problem.title, search) ||
-      matchesSearchQuery(problem.description, search);
+      matchesSearchQuery(problem.title, searchQuery) ||
+      matchesSearchQuery(problem.description, searchQuery) ||
+      matchesSearchQuery(brand, searchQuery) ||
+      matchesSearchQuery(model, searchQuery);
 
     const matchesCategory =
       category === "Toutes" ||
@@ -163,9 +171,26 @@ export default function ProblemsPage() {
         </PrimaryButton>
       </div>
 
+      {/* Bandeau informatif si une recherche est active */}
+      {searchQuery && (
+        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
+          <span>
+            Résultats pour la recherche :{" "}
+            <strong className="font-semibold">"{searchQuery}"</strong>
+          </span>
+          <button
+            onClick={() => {
+              searchParams.delete("search");
+              setSearchParams(searchParams);
+            }}
+            className="text-xs font-bold underline hover:text-blue-900 cursor-pointer"
+          >
+            Effacer la recherche
+          </button>
+        </div>
+      )}
+
       <SearchFilterBar
-        search={search}
-        setSearch={setSearch}
         category={category}
         setCategory={handleCategoryChange}
         uniqueCategories={uniqueCategories}
@@ -229,7 +254,8 @@ export default function ProblemsPage() {
             problems.length > 0 && (
               <button
                 onClick={() => {
-                  setSearch("");
+                  searchParams.delete("search");
+                  setSearchParams(searchParams);
                   setCategory("Toutes");
                   setSelectedBrand("Toutes");
                   setSelectedModel("Toutes");
@@ -246,7 +272,14 @@ export default function ProblemsPage() {
           {filteredProblems.map((problem) => (
             <div
               key={problem.idProblem || Math.random()}
-              onClick={() => navigate(`/problem/${problem.idProblem}`)}
+              onClick={() =>
+                navigate(`/problem/${problem.idProblem}`, {
+                  state: {
+                    returnTo: "/problems",
+                    returnLabel: "Retour aux problèmes",
+                  },
+                })
+              }
               className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
             >
               <div className="space-y-2 flex-1">
@@ -290,6 +323,46 @@ export default function ProblemsPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+interface SearchFilterBarProps {
+  category: string;
+  setCategory: (category: string) => void;
+  uniqueCategories: { name: string; count: number }[];
+}
+
+export function SearchFilterBar({
+  category,
+  setCategory,
+  uniqueCategories,
+}: SearchFilterBarProps) {
+  return (
+    <div className="flex flex-wrap gap-2 items-center">
+      <button
+        onClick={() => setCategory("Toutes")}
+        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          category === "Toutes"
+            ? "bg-blue-600 text-white shadow-sm"
+            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+        }`}
+      >
+        Toutes
+      </button>
+      {uniqueCategories.map((cat) => (
+        <button
+          key={cat.name}
+          onClick={() => setCategory(cat.name)}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            category === cat.name
+              ? "bg-blue-600 text-white shadow-sm"
+              : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+          }`}
+        >
+          {cat.name} ({cat.count})
+        </button>
+      ))}
     </div>
   );
 }

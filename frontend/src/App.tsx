@@ -2,14 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
+import Footer from "./components/Footer"; 
 
-// Importation des "portiers" de sécurité
 import { PrivateRoute, AdminRoute } from "./components/ProtectedRoute";
 
-// Pages
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
-import ProblemDetailPage from "./pages/ProblemsDetailPage";
+import ProblemDetailPage from "./pages/ProblemsDetailPage"; 
 import CreateProblemPage from "./pages/CreateProblemPage";
 import SolutionDetailPage from "./pages/SolutionDetailPage";
 import CreateSolutionPage from "./pages/CreateSolutionPage";
@@ -25,47 +24,66 @@ import RankingSolutionsPage from "./pages/RankingSolutionsPage";
 import RankingContributorPage from "./pages/RankingContributorPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import RankingProblemPage from "./pages/RankingProblemPage";
+import LegalNotice from "./pages/LegalNotice";
+import CGU from "./pages/CGU";
+import Privacy from "./pages/Privacy";
 
 function AppRoutes() {
   return (
     <BrowserRouter>
-    <ScrollToTop />
-      <Navbar />
-      <main className="min-h-screen bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100 px-4 md:px-8 py-8">
-        <Routes>
-          {/* Routes Publiques */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify" element={<VerifyPage />} />
-          <Route path="/problems" element={<ProblemsPage />} />
-          <Route path="/problem/:id" element={<ProblemDetailPage />} />
-          <Route path="/solution/:id" element={<SolutionDetailPage />} />
-          <Route path="/categories/:idCategory" element={<CategoryProblemsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
-          <Route path="/ranking" element={<RankingHubPage />} />
-          <Route path="/ranking/solutions" element={<RankingSolutionsPage />} />
-          <Route path="/ranking/contributors" element={<RankingContributorPage />} />
-          <Route path="/user/:id" element={<UserProfilePage />} />
-          <Route path="/ranking/problems" element={<RankingProblemPage />} />
+      <ScrollToTop />
+      
+      {/* Conteneur global en colonne pour forcer le footer en bas */}
+      <div className="min-h-screen flex flex-col bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
+        
+        <Navbar />
 
-          {/* Routes Authentifiées (nécessitent d'être connecté) */}
-          <Route path="/profile" element={
-            <PrivateRoute><ProfilePage /></PrivateRoute>
-          } />
-          <Route path="/problem/create" element={
-            <PrivateRoute><CreateProblemPage /></PrivateRoute>
-          } />
-          <Route path="/problem/:problemId/create-solution" element={
-            <PrivateRoute><CreateSolutionPage /></PrivateRoute>
-          } />
+        {/* Le contenu principal grandit (flex-1) pour repousser le footer si la page est courte */}
+        <main className="flex-1 px-4 md:px-8 py-8 max-w-7xl mx-auto w-full">
+          <Routes>
+            {/* Routes Publiques */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/verify" element={<VerifyPage />} />
+            <Route path="/problems" element={<ProblemsPage />} />
+            <Route path="/problem/:id" element={<ProblemDetailPage />} />
+            <Route path="/solution/:id" element={<SolutionDetailPage />} />
+            <Route path="/categories/:idCategory" element={<CategoryProblemsPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
+            <Route path="/ranking" element={<RankingHubPage />} />
+            <Route path="/ranking/solutions" element={<RankingSolutionsPage />} />
+            <Route path="/ranking/contributors" element={<RankingContributorPage />} />
+            <Route path="/user/:id" element={<UserProfilePage />} />
+            <Route path="/ranking/problems" element={<RankingProblemPage />} />
 
-          {/* Routes Admin (nécessitent d'être admin) */}
-          <Route path="/admin" element={
-            <AdminRoute><AdminDashboard /></AdminRoute>
-          } />
-        </Routes>
-      </main>
+            {/* Routes Légales */}
+            <Route path="/legal" element={<LegalNotice />} />
+            <Route path="/cgu" element={<CGU />} />
+            <Route path="/privacy" element={<Privacy />} />
+
+            {/* Routes Authentifiées */}
+            <Route path="/profile" element={
+              <PrivateRoute><ProfilePage /></PrivateRoute>
+            } />
+            <Route path="/problem/create" element={
+              <PrivateRoute><CreateProblemPage /></PrivateRoute>
+            } />
+            <Route path="/problem/:problemId/create-solution" element={
+              <PrivateRoute><CreateSolutionPage /></PrivateRoute>
+            } />
+
+            {/* Routes Admin */}
+            <Route path="/admin" element={
+              <AdminRoute><AdminDashboard /></AdminRoute>
+            } />
+          </Routes>
+        </main>
+
+        {/* Le footer s'affiche sur TOUTES les pages tout en bas */}
+        <Footer />
+        
+      </div>
     </BrowserRouter>
   );
 }

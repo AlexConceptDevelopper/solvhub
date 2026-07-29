@@ -3,14 +3,20 @@ import type { Problem } from "../types/problem";
 
 interface Props {
   problem: Problem;
+  originTo?: string | number;
+  originLabel?: string;
 }
 
-export default function ProblemCard({ problem }: Props) {
+export default function ProblemCard({ problem, originTo, originLabel }: Props) {
   const navigate = useNavigate();
 
   return (
     <div
-      onClick={() => navigate(`/problem/${problem.idProblem}`)}
+      onClick={() =>
+        navigate(`/problem/${problem.idProblem}`, {
+          state: { returnTo: originTo, returnLabel: originLabel },
+        })
+      }
       className="
         group
         relative
@@ -25,6 +31,7 @@ export default function ProblemCard({ problem }: Props) {
         duration-200
         cursor-pointer
         w-full
+        h-full
         flex
         flex-col
         justify-between

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import ProblemCard from "./ProblemCard";
-
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "./ErrorMessage";
 
@@ -41,41 +40,29 @@ export default function RecentProblems({
 
   if (error) {
     return (
-      <section className="mt-16 max-w-6xl mx-auto px-4 md:px-6">
-        <ErrorMessage
-          message={error}
-          onRetry={() => window.location.reload()}
-        />
-      </section>
+      <ErrorMessage
+        message={error}
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
   return (
-    <section
-      className="
-        mt-20 
-        max-w-6xl 
-        mx-auto 
-        rounded-3xl 
-        bg-slate-50
-        p-8 
-        md:p-10 
-        border 
-        border-slate-200/50
-      "
-    >
-      <div className="text-center max-w-xl mx-auto mb-10">
-        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900">
-          Derniers problèmes posés
+    <div className="w-full">
+      <div className="mb-8">
+        <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+          Actualité
+        </span>
+        <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mt-3">
+          Derniers problèmes résolus ou actifs
         </h2>
         <p className="text-slate-500 text-sm md:text-base mt-2">
-          Rejoignez l'effort collectif et apportez votre expertise aux questions
-          récentes.
+          Découvrez les dernières contributions de la communauté.
         </p>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
           {[...Array(4)].map((_, i) => (
             <div
               key={i}
@@ -95,7 +82,8 @@ export default function RecentProblems({
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        /* Ajout de `items-stretch` pour forcer la même hauteur par ligne */
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-stretch">
           {problems.map((problem) => (
             <div
               key={problem.idProblem}
@@ -104,13 +92,15 @@ export default function RecentProblems({
                   state: { returnTo, returnLabel },
                 })
               }
-              className="cursor-pointer transition-transform hover:-translate-y-1"
+              className="cursor-pointer transition-transform hover:-translate-y-1 h-full flex flex-col"
             >
-              <ProblemCard problem={problem} />
+              <div className="h-full flex flex-col">
+                <ProblemCard problem={problem} />
+              </div>
             </div>
           ))}
         </div>
       )}
-    </section>
+    </div>
   );
 }

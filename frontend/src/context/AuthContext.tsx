@@ -4,7 +4,7 @@ import type { User } from "../types/user";
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  isAdmin: boolean; // Ajouté ici
+  isAdmin: boolean; 
   setAuth: (data: { token: string; user: User }) => void;
   updateUser: (updatedUser: Partial<User>) => void;
   logout: () => void;
