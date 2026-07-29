@@ -72,6 +72,15 @@ public class VoteService {
                 .findBySolutionIdSolution(
                         dto.getSolutionId());
 
+        if (stats == null) {
+            stats = new SolutionStats();
+            stats.setSolution(solution); // Associe la solution (selon ton modèle exact, vérifie le nom du setter)
+            stats.setSuccessCount(0);
+            stats.setPartialCount(0);
+            stats.setFailureCount(0);
+            stats = statsRepository.save(stats); // On sauvegarde pour lui donner un ID / l'initialiser
+        }
+
         switch (dto.getStatus().toUpperCase()) {
 
             case "SUCCESS":

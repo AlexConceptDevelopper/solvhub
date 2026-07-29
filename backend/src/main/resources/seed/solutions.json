@@ -1,72 +1,182 @@
 [
   {
     "id_solution": 1,
-    "title": "Lancer un diagnostic de la mémoire RAM avec MemTest86 ou l'outil Windows",
-    "steps": "1. Taper 'Diagnostiquer les problèmes de mémoire Windows' dans la barre de recherche.\n2. Choisir 'Redémarrer maintenant et rechercher les problèmes éventuels'.\n3. Laisser le test s'exécuter pour détecter des barrettes de RAM défectueuses.",
-    "difficulty": 2,
-    "time_minutes": 30,
+    "title": "Redémarrage forcé et vérification des processus",
+    "steps": "1. Maintenir le bouton physique d'alimentation du PC pendant 5 secondes pour l'éteindre de force.\n2. Rallumer l'ordinateur.\n3. Ouvrir le Gestionnaire des tâches (Ctrl + Shift + Échap) pour identifier l'application gourmande qui a causé le blocage.",
+    "difficulty": 1,
+    "time_minutes": 10,
     "risk_level": 1,
     "created_at": "2026-06-01T10:00:00",
     "id_problem": 1
   },
   {
     "id_solution": 2,
-    "title": "Démarrer en mode sans échec pour désinstaller le dernier pilote en cause",
-    "steps": "1. Forcer l'arrêt 3 fois pour lancer la récupération > Dépannage > Options avancées > Paramètres.\n2. Cliquer sur Redémarrer, puis appuyer sur 4 ou F4 pour activer le Mode sans échec.\n3. Désinstaller la dernière mise à jour Windows ou le dernier pilote graphique installé.",
-    "difficulty": 2,
-    "time_minutes": 15,
-    "risk_level": 2,
-    "created_at": "2026-06-02T11:00:00",
+    "title": "Raccourci clavier de réinitialisation du GPU",
+    "steps": "1. Lorsque l'écran fige, appuyer simultanément sur les touches Win + Ctrl + Shift + B.\n2. L'écran va clignoter et un signal sonore va retentir.\n3. Le pilote graphique redémarre et débloque l'affichage.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-01T10:05:00",
     "id_problem": 1
   },
   {
     "id_solution": 3,
-    "title": "Remplacer le vieux HDD par un SSD et migrer le système",
-    "steps": "1. Acheter un SSD SATA ou NVMe compatible.\n2. Cloner le disque dur actuel sur le SSD à l'aide d'un logiciel gratuit (Macrium Reflect ou Clonezilla).\n3. Remplacer physiquement le disque dans le PC pour multiplier la vitesse par 10.",
-    "difficulty": 3,
-    "time_minutes": 90,
-    "risk_level": 2,
-    "created_at": "2026-06-03T12:00:00",
+    "title": "Suppression des extensions et réinitialisation",
+    "steps": "1. Ouvrir les paramètres du navigateur.\n2. Aller dans l'onglet \"Extensions\".\n3. Désinstaller toutes les extensions inconnues ou louches.\n4. Vider le cache et les cookies.",
+    "difficulty": 2,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-02T11:00:00",
     "id_problem": 2
   },
   {
     "id_solution": 4,
-    "title": "Nettoyer les poussières et remplacer la pâte thermique",
-    "steps": "1. Éteindre et débrancher le PC, puis ouvrir le boîtier ou le capot arrière.\n2. Utiliser une bombe à air sec pour nettoyer minutieusement les radiateurs.\n3. Démonter le dissipateur, nettoyer l'ancienne pâte thermique et en appliquer une nouvelle.",
-    "difficulty": 3,
-    "time_minutes": 45,
-    "risk_level": 3,
-    "created_at": "2026-06-04T13:00:00",
-    "id_problem": 3
+    "title": "Analyse approfondie avec Malwarebytes",
+    "steps": "1. Télécharger et installer le logiciel officiel Malwarebytes.\n2. Lancer une analyse complète du système.\n3. Mettre en quarantaine et supprimer tous les adware détectés.\n4. Redémarrer le PC.",
+    "difficulty": 2,
+    "time_minutes": 20,
+    "risk_level": 1,
+    "created_at": "2026-06-02T11:15:00",
+    "id_problem": 2
   },
   {
     "id_solution": 5,
-    "title": "Réinitialiser ou changer la pile de la clé de contact (Antidémarrage)",
-    "steps": "1. Vérifier si le voyant rouge fixe ou clignotant rapide indique un problème de transpondeur clé.\n2. Essayer le double des clés.\n3. Remplacer la pile CR2032 de la télécommande ou réinitialiser le système anti-démarrage de la Clio.",
-    "difficulty": 1,
-    "time_minutes": 10,
-    "risk_level": 1,
-    "created_at": "2026-06-05T14:00:00",
-    "id_problem": 4
+    "title": "Décrassage ou nettoyage de la vanne EGR",
+    "steps": "1. Rouler sur autoroute pendant 20 minutes en restant sur un rapport inférieur pour monter dans les tours (environ 3500 tr/min) afin de brûler la suie.\n2. Si le problème persiste, démonter la vanne EGR sous le capot et la nettoyer avec du produit décaper et une brosse métallique.",
+    "difficulty": 3,
+    "time_minutes": 45,
+    "risk_level": 2,
+    "created_at": "2026-06-03T12:00:00",
+    "id_problem": 3
   },
   {
     "id_solution": 6,
-    "title": "Vérifier et nettoyer les cosses de la batterie oxydées",
-    "steps": "1. Ouvrir le capot et localiser la batterie.\n2. Vérifier si les cosses (+) et (-) présentent une poudre blanche ou bleue (oxydation).\n3. Débrancher la batterie (commencer par le négatif), frotter les cosses avec du papier de verre ou une brosse métallique, puis les resserrer fermement.",
-    "difficulty": 1,
-    "time_minutes": 15,
-    "risk_level": 1,
-    "created_at": "2026-06-06T10:00:00",
-    "id_problem": 4
+    "title": "Changement des pièces d'allumage usées",
+    "steps": "1. Vérifier l'état des bougies d'allumage (essence) ou du filtre à carburant (diesel).\n2. Dévisser les anciennes pièces à l'aide des outils adaptés.\n3. Installer les éléments neufs au couple de serrage recommandé.",
+    "difficulty": 3,
+    "time_minutes": 45,
+    "risk_level": 2,
+    "created_at": "2026-06-03T12:30:00",
+    "id_problem": 3
   },
   {
     "id_solution": 7,
-    "title": "Tester le démarreur en donnant de petits <b>chocs</b> légers",
-    "steps": "1. Demander à une aide de maintenir la clé en position de démarrage.\n2. Donner de petits coups secs et mesurés sur le corps du démarreur à l'aide d'un manche de marteau ou d'une clé plate pour décoincer les charbons collés.\n3. Si le moteur se lance, le démarreur est fatigué et doit être remplacé.",
+    "title": "Effectuer une recharge de fluide frigorigène",
+    "steps": "1. Se rendre dans un centre auto pour un diagnostic de fuite et une recharge de gaz si le circuit est vide.\n2. Utiliser un kit de recharge grand public en suivant scrupuleusement la notice si vous le faites vous-même.",
+    "difficulty": 3,
+    "time_minutes": 45,
+    "risk_level": 3,
+    "created_at": "2026-06-04T09:00:00",
+    "id_problem": 4
+  },
+  {
+    "id_solution": 8,
+    "title": "Vérification et changement du fusible grillé",
+    "steps": "1. Consulter le manuel de la voiture pour localiser le boîtier à fusibles de la climatisation.\n2. Retirer le fusible concerné à l'aide d'une pince spécifique.\n3. Vérifier s'il est fondu à l'intérieur et le remplacer par un fusible de même ampérage.",
+    "difficulty": 2,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-04T09:30:00",
+    "id_problem": 4
+  },
+  {
+    "id_solution": 9,
+    "title": "Purger l'air du radiateur",
+    "steps": "1. Se munir d'une clé de purge et d'un récipient.\n2. Tourner délicatement la vis de purge située sur le côté du radiateur jusqu'à entendre un sifflement (l'air s'échappe).\n3. Dès que l'eau commence à couler de manière continue, refermer fermement la vis.",
+    "difficulty": 2,
+    "time_minutes": 10,
+    "risk_level": 2,
+    "created_at": "2026-06-05T14:00:00",
+    "id_problem": 5
+  },
+  {
+    "id_solution": 10,
+    "title": "Contrôle de l'alimentation électrique",
+    "steps": "1. Vérifier au tableau électrique général si le disjoncteur associé au chauffage n'a pas sauté.\n2. Couper l'alimentation du radiateur pendant 1 minute via son interrupteur mural pour réinitialiser sa carte électronique.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-05T14:15:00",
+    "id_problem": 5
+  },
+  {
+    "id_solution": 11,
+    "title": "Changement des joints d'étanchéité du bec",
+    "steps": "1. Couper l'arrivée d'eau générale de la maison.\n2. Dévisser la petite vis de fixation cachée sous le corps du mitigeur pour libérer le bec.\n3. Retirer les vieux joints toriques abîmés, graisser légèrement les nouveaux avec de la graisse silicone et les remonter.",
     "difficulty": 2,
     "time_minutes": 20,
     "risk_level": 2,
-    "created_at": "2026-06-07T11:00:00",
-    "id_problem": 4
+    "created_at": "2026-06-06T15:00:00",
+    "id_problem": 6
+  },
+  {
+    "id_solution": 12,
+    "title": "Désencrassement du port USB-C ou Lightning",
+    "steps": "1. Éteindre complètement le téléphone.\n2. Utiliser un cure-dent en bois pour gratter délicatement le fond du port de charge et en extraire les peluches accumulées.\n3. Souffler doucement et tester à nouveau.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 2,
+    "created_at": "2026-06-07T16:00:00",
+    "id_problem": 7
+  },
+  {
+    "id_solution": 13,
+    "title": "Test croisé du chargeur",
+    "steps": "1. Essayer un autre câble de charge certifié.\n2. Tester un autre bloc chargeur mural (prise secteur).\n3. Vérifier si le problème persiste ou si le matériel d'origine était défectueux.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-07T16:15:00",
+    "id_problem": 7
+  },
+  {
+    "id_solution": 14,
+    "title": "Optimisation des paramètres logiciels",
+    "steps": "1. Aller dans les Paramètres > Batterie pour identifier l'application qui consomme le plus.\n2. Désactiver l'actualisation en arrière-plan pour les applications superflues.\n3. Réduire la luminosité de l'écran et désactiver le GPS permanent.",
+    "difficulty": 2,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-08T10:00:00",
+    "id_problem": 8
+  },
+  {
+    "id_solution": 15,
+    "title": "Réalignement de l'anneau tournant",
+    "steps": "1. Débrancher le micro-ondes par sécurité.\n2. Retirer le plateau en verre.\n3. Vérifier que l'anneau en plastique à roulettes et son croisillon central sont bien emboîtés sur l'axe du moteur au fond de la cuve.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-09T11:00:00",
+    "id_problem": 9
+  },
+  {
+    "id_solution": 16,
+    "title": "Changement du petit moteur sous l'appareil",
+    "steps": "1. Débrancher et retourner délicatement le micro-ondes.\n2. Dévisser la plaque de protection inférieure.\n3. Débrancher les cosses électriques du moteur défectueux, le dévisser et le remplacer par un modèle neuf compatible.",
+    "difficulty": 3,
+    "time_minutes": 45,
+    "risk_level": 4,
+    "created_at": "2026-06-09T11:30:00",
+    "id_problem": 9
+  },
+  {
+    "id_solution": 17,
+    "title": "Nettoyage des bouches d'air de la console",
+    "steps": "1. Éteindre et débrancher complètement la console.\n2. Utiliser une bombe à air sec pour chasser la poussière accumulée dans les grilles de ventilation.\n3. S'assurer que la console est placée dans un meuble bien aéré et dégagé.",
+    "difficulty": 1,
+    "time_minutes": 10,
+    "risk_level": 1,
+    "created_at": "2026-06-10T12:00:00",
+    "id_problem": 10
+  },
+  {
+    "id_solution": 18,
+    "title": "Démontage partiel pour nettoyage du radiateur",
+    "steps": "1. Retirer les coques de protection de la console à l'aide d'un tournevis adapté.\n2. Bloquer les pales du ventilateur avec un cure-dent pour ne pas endommager le moteur, puis dépoussiérer minutieusement le radiateur.\n3. Remonter le tout.",
+    "difficulty": 3,
+    "time_minutes": 45,
+    "risk_level": 2,
+    "created_at": "2026-06-10T12:30:00",
+    "id_problem": 10
   }
 ]

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "solution")
@@ -51,5 +52,8 @@ public class Solution {
     // 🔗 Une solution possède ses statistiques de ranking
     @OneToOne(mappedBy = "solution", cascade = CascadeType.ALL)
     private SolutionStats solutionStats;
+
+    @OneToMany(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SolutionMedia> media;
 
 }

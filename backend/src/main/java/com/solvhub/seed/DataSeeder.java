@@ -27,6 +27,7 @@ public class DataSeeder implements CommandLineRunner {
     private final VoteRepository voteRepository;
     private final SolutionStatsRepository solutionStatsRepository;
 
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final Random random = new Random();
 
@@ -189,6 +190,7 @@ public class DataSeeder implements CommandLineRunner {
 
         System.out.println("✅ Solutions seedées : " + data.size());
     }
+
 
     // private void seedVotes() {
     // if (voteRepository.count() > 0)

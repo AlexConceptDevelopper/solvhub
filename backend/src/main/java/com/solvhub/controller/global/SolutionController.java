@@ -3,9 +3,11 @@ package com.solvhub.controller.global;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.solvhub.dto.SolutionDTO;
 import com.solvhub.dto.SolutionStatsDTO;
@@ -44,12 +46,13 @@ public class SolutionController {
         return solutionStatsService.getStatsDTO(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public SolutionDTO create(
-            @RequestBody SolutionCreateDTO dto) {
-
-        return solutionService.createSolution(dto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<SolutionDTO> createSolution(
+            @ModelAttribute SolutionCreateDTO dto,
+            @RequestParam(value = "images", required = false) List<MultipartFile> images,
+            @RequestParam(value = "videoUrl", required = false) String videoUrl) {
+        SolutionDTO created = solutionService.createSolution(dto, images, videoUrl);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @DeleteMapping("/{id}")

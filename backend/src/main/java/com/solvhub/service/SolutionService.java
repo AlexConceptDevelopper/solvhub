@@ -18,7 +18,9 @@ import com.solvhub.security.SecurityUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -31,6 +33,7 @@ public class SolutionService {
     private final UserRepository userRepository;
     private final SecurityUtils securityUtils;
     private final EmailService emailService;
+    private final SolutionMediaService solutionMediaService;
 
     public SolutionService(
             SolutionRepository repo,
@@ -39,7 +42,8 @@ public class SolutionService {
             SolutionStatsRepository solutionStatsRepository,
             UserRepository userRepository,
             SecurityUtils securityUtils,
-            EmailService emailService) {
+            EmailService emailService,
+            SolutionMediaService solutionMediaService) {
 
         this.repo = repo;
         this.mapper = mapper;
@@ -48,6 +52,7 @@ public class SolutionService {
         this.userRepository = userRepository;
         this.securityUtils = securityUtils;
         this.emailService = emailService;
+        this.solutionMediaService = solutionMediaService;
     }
 
     public List<Solution> findAll() {
@@ -76,14 +81,14 @@ public class SolutionService {
     }
 
     @Transactional
-    public SolutionDTO createSolution(SolutionCreateDTO dto) {
+    public SolutionDTO createSolution(SolutionCreateDTO dto, List<MultipartFile> images, String videoUrl) {
 
         Problem problem = problemRepository.findById(dto.getProblemId())
                 .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
 
-       // --- RÉCUPÉRATION DIRECTE DE L'OBJET USER DEPUIS LA SÉCURITÉ ---
+        // --- RÉCUPÉRATION DIRECTE DE L'OBJET USER DEPUIS LA SÉCURITÉ ---
         Authentication authentication = securityUtils.getCurrentAuthentication();
-        
+
         if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
             throw new ResourceNotFoundException("Utilisateur connecté introuvable");
         }
@@ -101,6 +106,23 @@ public class SolutionService {
         solution.setUser(user);
 
         Solution saved = repo.save(solution);
+
+        // --- UPLOAD DES IMAGES VERS CLOUDINARY ---
+        if (images != null && !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                if (!image.isEmpty()) {
+                    try {
+                        solutionMediaService.uploadAndSaveMedia(image, saved);
+                    } catch (IOException e) {
+                        throw new InvalidDataException("Erreur lors de l'upload de l'image : " + e.getMessage());
+                    }
+                }
+            }
+        }
+
+        if (videoUrl != null && !videoUrl.trim().isEmpty()) {
+            solutionMediaService.saveVideoUrl(videoUrl, saved); // Utilisation de 'saved'
+        }
 
         SolutionStats stats = new SolutionStats();
         stats.setSolution(saved);
@@ -133,10 +155,10 @@ public class SolutionService {
 
             if (isNotSelf && Boolean.TRUE.equals(problemOwner.getEmailNotificationsEnabled())) {
                 emailService.sendNewSolutionNotification(
-                    problemOwner.getEmail(),
-                    problemOwner.getUsername(),
-                    problem.getTitle(),
-                    problem.getIdProblem());
+                        problemOwner.getEmail(),
+                        problemOwner.getUsername(),
+                        problem.getTitle(),
+                        problem.getIdProblem());
             }
         }
 

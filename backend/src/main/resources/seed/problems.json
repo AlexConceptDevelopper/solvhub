@@ -1,23 +1,54 @@
 [
   {
     "category": "Informatique",
-    "title": "L'ordinateur redémarre en boucle ou affiche un écran bleu (BSOD)",
-    "description": "Le PC s'allume, affiche le logo de la carte mère ou de Windows, puis plante subitement avec un écran bleu ou s'éteint et redémarre indéfiniment."
+    "title": "Écran figé et impossible de bouger la souris (Freez complet du PC)",
+    "description": "L'ordinateur se bloque net en pleine utilisation : l'image se fige, le curseur de la souris ne répond plus du tout, le clavier est inopérant (le verrouillage majuscule/Verr Num ne réagit pas aux touches), et un son en boucle (bourdonnement) peut parfois se faire entendre dans les haut-parleurs si une vidéo ou un jeu tournait."
   },
   {
     "category": "Informatique",
-    "title": "Le PC est extrêmement lent au démarrage et à l'utilisation",
-    "description": "L'ordinateur met plus de 5 minutes à s'allumer, les applications rament et le gestionnaire des tâches montre un disque à 100% en permanence."
-  },
-  {
-    "category": "Informatique",
-    "title": "Surchauffe du processeur et ventilateurs bruyants",
-    "description": "Les ventilateurs tournent à fond en permanence, le PC souffle de l'air brûlant et finit par s'éteindre tout seul en plein jeu ou en multitâche lourd."
+    "title": "Le navigateur web s'ouvre tout seul sur des sites publicitaires bizarres",
+    "description": "Dès que vous lancez Google Chrome, Firefox ou Edge (ou même en naviguant normalement), des onglets intempestifs s'ouvrent de manière autonome pour afficher des faux messages de virus, des loteries ou des sites de casino, accompagnés parfois de pop-ups publicitaires agressifs dans le coin de l'écran."
   },
   {
     "category": "Automobile",
-    "title": "La Renault Clio refuse de démarrer et un voyant rouge clignote",
-    "description": "En tournant la clé, le démarreur se lance ou le tableau de bord s'allume, mais le moteur ne part pas et un voyant rouge clignote rapidement.",
-    "id_equipment": 35
+    "title": "La voiture \"broute\" ou donne des accoups à bas régime",
+    "description": " Lors des phases de démarrage, en première ou en seconde, ou lorsque l'on roule à bas régime (sous les 2000 tr/min) en ville, le moteur manque de souplesse, donne des soubresauts désagréables, hésite à accélérer et semble sur le point de caler.",
+    "id_equipment": 1
+  },
+  {
+    "category": "Automobile",
+    "title": "Climatisation qui souffle de l'air chaud au lieu de faire du froid",
+    "description": "Même lorsque le système de climatisation est réglé au maximum sur la température la plus fraîche et que le compresseur semble s'enclencher, les grilles d'aération continuent de propulser de l'air ambiant ou tiède, rendant l'habitacle étouffant par temps chaud.",
+    "id_equipment": 2
+  },
+  {
+    "category": "Maison",
+    "title": "Le radiateur électrique reste froid malgré le thermostat à fond",
+    "description": "Le radiateur mural (à inertie ou panneau rayonnant) reste totalement glacial au toucher alors que le thermostat d'ambiance ou la molette est poussé au maximum, et que le voyant de chauffe de l'appareil reste désespérément éteint ou clignote de façon anormale."
+  },
+  {
+    "category": "Maison",
+    "title": "Un robinet mitigeur fuit par la base du bec quand on l'ouvre",
+    "description": "Dès que l'on actionne la manette du robinet pour faire couler l'eau, de l'eau s'échappe et perle abondamment à la jointure située tout en bas de la partie mobile (le bec verseur), finissant par couler le long du corps du robinet pour s'accumuler sur le plan de travail ou l'évier."
+  },
+  {
+    "category": "Électronique",
+    "title": "Le téléphone ne charge plus du tout ou très lentement",
+    "description": "Lorsque vous branchez le câble de recharge au smartphone, l'icône de la batterie n'indique aucune charge, ou la jauge augmente de façon extrêmement lente (par exemple 5% en une heure), rendant l'utilisation du téléphone impossible en autonomie."
+  },
+  {
+    "category": "Électronique",
+    "title": "La batterie se décharge en moins de 3 heures sans utilisation",
+    "description": "Le pourcentage de la batterie fond à vue d'œil, même lorsque l'écran du téléphone est éteint et que l'appareil est posé sur une table sans aucune application active au premier plan, l'arrière du téléphone restant par ailleurs anormalement tiède."
+  },
+  {
+    "category": "Cuisine",
+    "title": "Le micro-ondes chauffe mais le plateau ne tourne plus",
+    "description": "Le four à micro-ondes parvient parfaitement à réchauffer les aliments à l'intérieur, mais le plateau en verre reste totalement immobile pendant tout le cycle de cuisson, ce qui provoque une chauffe très hétérogène des plats (chaud d'un côté, froid de l'autre)."
+  },
+  {
+    "category": "Jeux vidéo",
+    "title": "La console de jeux surchauffe et s'éteint toute seule en pleine partie",
+    "description": "Après 20 à 30 minutes de jeu sur un titre gourmand en ressources, les ventilateurs de la console se mettent à souffler de manière extrêmement bruyante (analogue à un réacteur d'avion) avant que la console ne coupe subitement son alimentation avec un message d'alerte de surchauffe au redémarrage."
   }
 ]
