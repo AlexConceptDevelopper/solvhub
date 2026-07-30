@@ -88,8 +88,10 @@ export default function CategoryProblemsPage() {
             <ProblemCard
               key={problem.idProblem}
               problem={problem}
-              originTo={backTo}
-              originLabel={backLabel}
+              originTo={`/categories/${idCategory}`}
+              originLabel={
+                category ? `Retour à ${category.name}` : "Retour à la catégorie"
+              }
             />
           ))}
         </div>

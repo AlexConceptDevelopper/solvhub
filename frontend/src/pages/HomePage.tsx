@@ -25,9 +25,11 @@ export default function HomePage() {
     loadCategories();
   }, []);
 
+  // Gestion de la recherche au clic sur "Rechercher" ou touche Entrée
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
+    // Redirige vers la page de liste des problèmes avec le paramètre de recherche
     navigate(`/problems?search=${encodeURIComponent(searchQuery)}`);
   };
 
@@ -37,7 +39,7 @@ export default function HomePage() {
       <section
         className="
           relative
-          overflow-hidden
+          overflow-visible
           rounded-3xl
           bg-linear-to-b
           from-slate-50
@@ -123,6 +125,7 @@ export default function HomePage() {
                 className="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
+
             <button
               type="submit"
               className="w-full sm:w-auto bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold text-sm shadow-md shadow-blue-600/20 hover:bg-blue-700 hover:shadow-lg transition-all duration-200 cursor-pointer shrink-0"

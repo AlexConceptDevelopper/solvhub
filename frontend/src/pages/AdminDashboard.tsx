@@ -4,6 +4,7 @@ import UsersList from "../components/dashboard/UserList";
 import ProblemsList from "../components/dashboard/ProblemsList";
 import SolutionsList from "../components/dashboard/SolutionsList";
 import CategoriesList from "../components/dashboard/CategoriesList";
+import EquipmentsList from "../components/dashboard/EquipmentsList";
 import BackButton from "../components/BackButton";
 import { apiFetch } from "../api/client";
 import type { Problem } from "../types/problem";
@@ -22,12 +23,14 @@ export default function AdminDashboard() {
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [equipments, setEquipments] = useState<any[]>([]);
 
   useEffect(() => {
     apiFetch<Problem[]>("/problems").then((data) => data && setProblems(data));
     apiFetch<Solution[]>("/solutions/dto").then((data) => data && setSolutions(data));
     apiFetch<any[]>("/users").then((data) => data && setUsers(data));
     apiFetch<any[]>("/categories").then((data) => data && setCategories(data));
+    apiFetch<any[]>("/equipments").then((data) => data && setEquipments(data));
   }, []);
 
   // Réinitialise la recherche lorsqu'on change d'onglet pour éviter les confusions
@@ -35,6 +38,8 @@ export default function AdminDashboard() {
     setActiveTab(tab);
     setSearch("");
   };
+
+  const tabs = ['users', 'problems', 'solutions', 'categories', 'equipments'];
 
   return (
     <div className="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
@@ -70,7 +75,7 @@ export default function AdminDashboard() {
 
       {/* Navigation par onglets */}
       <div className="flex space-x-2 border-b border-slate-200 pb-4 overflow-x-auto">
-        {['users', 'problems', 'solutions', 'categories'].map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
@@ -91,6 +96,7 @@ export default function AdminDashboard() {
         {activeTab === 'problems' && <ProblemsList problems={problems} setProblems={setProblems} search={search} />}
         {activeTab === 'solutions' && <SolutionsList solutions={solutions} setSolutions={setSolutions} search={search} />}
         {activeTab === 'categories' && <CategoriesList categories={categories} setCategories={setCategories} search={search} />}
+        {activeTab === 'equipments' && <EquipmentsList equipments={equipments} setEquipments={setEquipments} search={search} />}
       </div>
     </div>
   );

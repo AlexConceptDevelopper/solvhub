@@ -9,7 +9,9 @@ export interface Equipment {
 
 // Si besoin plus tard :
 export interface EquipmentCreate {
-  idCategory: number;
+  category: {
+    idCategory: number;
+  };
   brand: string;
   model: string;
 }

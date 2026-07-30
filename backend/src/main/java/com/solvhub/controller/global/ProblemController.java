@@ -4,26 +4,23 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.solvhub.controller.GenericController;
 import com.solvhub.dto.CreateProblemDTO;
 import com.solvhub.dto.ProblemCheckRequestDTO;
 import com.solvhub.dto.ProblemDTO;
 import com.solvhub.dto.SolutionDTO;
-import com.solvhub.exception.InvalidDataException;
-import com.solvhub.model.Problem;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.service.ProblemService;
 
+
 @RestController
 @RequestMapping("/api/problems")
-public class ProblemController extends GenericController<Problem, Integer> {
+public class ProblemController {
 
     private final ProblemService problemService;
 
     public ProblemController(
             ProblemRepository repository,
             ProblemService problemService) {
-        super(repository);
         this.problemService = problemService;
     }
 
@@ -65,18 +62,17 @@ public class ProblemController extends GenericController<Problem, Integer> {
         return problemService.create(dto);
     }
 
-    @Override
-    @PostMapping("/legacy")
-    public Problem save(Problem entity) {
-        throw new InvalidDataException(
-                "Utilisez POST /api/problems avec { title, description, idCategory }");
-    }
-
     @PutMapping("/{id}")
     public ProblemDTO update(
             @PathVariable Integer id,
             @RequestBody ProblemDTO dto) {
         return problemService.update(id, dto);
+    }
+
+  
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+        problemService.delete(id);
     }
 
     @PostMapping("/check-duplicates")

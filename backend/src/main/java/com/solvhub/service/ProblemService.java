@@ -3,6 +3,7 @@ package com.solvhub.service;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final ProblemMapper problemMapper;
     private final CategoryRepository categoryRepository;
-    private final EquipmentRepository equipmentRepository; // ➕ Déclaration
+    private final EquipmentRepository equipmentRepository;
     private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
 
@@ -46,7 +47,7 @@ public class ProblemService {
             ProblemRepository problemRepository,
             ProblemMapper problemMapper,
             CategoryRepository categoryRepository,
-            EquipmentRepository equipmentRepository, // ➕ Injection dans le constructeur
+            EquipmentRepository equipmentRepository,
             UserRepository userRepository,
             SecurityUtils securityUtils,
             VoteRepository voteRepository) {
@@ -55,7 +56,7 @@ public class ProblemService {
         this.problemRepository = problemRepository;
         this.problemMapper = problemMapper;
         this.categoryRepository = categoryRepository;
-        this.equipmentRepository = equipmentRepository; // ➕ Initialisation
+        this.equipmentRepository = equipmentRepository;
         this.voteRepository = voteRepository;
         this.securityUtils = securityUtils;
     }
@@ -138,6 +139,24 @@ public class ProblemService {
 
         problemRepository.save(problem);
         return problemMapper.toDTO(problem);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        Problem problem = problemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
+
+        // 1. Récupération des infos du propriétaire
+        String ownerEmail = problem.getUser() != null ? problem.getUser().getEmail() : null;
+        String ownerUsername = problem.getUser() != null ? problem.getUser().getUsername() : null;
+
+        // 2. Vérification des droits (Propriétaire ou Admin via SecurityUtils)
+        if (!securityUtils.isOwnerOrAdmin(ownerEmail, ownerUsername)) {
+            throw new ForbiddenException("Vous n'avez pas les droits pour supprimer ce problème.");
+        }
+
+        // 3. Suppression
+        problemRepository.delete(problem);
     }
 
     public List<ProblemDTO> getPopularProblemsByVotes() {

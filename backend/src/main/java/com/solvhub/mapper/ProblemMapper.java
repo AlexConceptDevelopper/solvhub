@@ -61,8 +61,8 @@ public class ProblemMapper {
         }
 
         // Lier l'équipement s'il est présent dans le DTO
-        if (dto.getEquipment() != null && dto.getEquipment().getId() != null) {
-            equipmentRepository.findById(dto.getEquipment().getId())
+        if (dto.getEquipment() != null && dto.getEquipment().getIdEquipment() != null) {
+            equipmentRepository.findById(dto.getEquipment().getIdEquipment())
                     .ifPresent(problem::setEquipment);
         }
 

@@ -9,7 +9,7 @@ export const getProblems = async (): Promise<Problem[]> => {
 export const getProblemById = async (
   idProblem: number
 ): Promise<Problem | null> => {
-  const result = await apiFetch<Problem | null>(`/problems/${idProblem}`);
+  const result = await apiFetch<Problem | null>(`/problems/dto/${idProblem}`);
   return result ?? null;
 };
 

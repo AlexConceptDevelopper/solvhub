@@ -40,21 +40,38 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. PUBLIC : Auth et Lectures générales
+                        // 1. PUBLIC : Authentification et toutes les lectures (GET) autorisées
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**", "/api/problems/**", "/api/solutions/**",
-                                "/api/votes/**", "/api/ranking/**", "/api/users/top-contributors",
-                                "/api/users/top-contributors/top3", "/api/problems/dto/popular")
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/categories/**",
+                                "/api/problems/**",
+                                "/api/solutions/**",
+                                "/api/votes/**",
+                                "/api/ranking/**",
+                                "/api/users/top-contributors",
+                                "/api/users/top-contributors/top3",
+                                "/api/problems/dto/popular",
+                                "/api/equipments/brands",
+                                "/api/equipments/models")
                         .permitAll()
 
-                        .requestMatchers("/api/equipments/brands", "/api/equipments/models").hasAnyRole("USER", "ADMIN")
+                        // 2. ADMIN : Routes critiques et globales réservées exclusivement à l'Admin
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/equipments/**", "/api/categories/**",
+                                "/api/solutions/**")
+                        .hasRole("ADMIN")
 
-                        // 2. ADMIN : Routes critiques
-                        .requestMatchers(HttpMethod.DELETE, "/api/solutions/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/categories/**").hasRole("ADMIN")
-                        // 3. AUTHENTIFIÉ : Tout le reste (création de problème, création de solution,
-                        // profil...)
+                        // 3. AUTHENTIFIÉ (Owner / User) : Création et modification/suppression gérées
+                        // finement par le service
+                        .requestMatchers(HttpMethod.POST, "/api/problems/**", "/api/solutions/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/problems/**", "/api/solutions/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/problems/**").authenticated() // Le service vérifiera
+                                                                                                // si c'est le owner ou
+                                                                                                // l'admin
+
+                        // 4. Tout le reste nécessite d'être authentifié
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

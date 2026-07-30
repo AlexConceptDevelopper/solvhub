@@ -20,7 +20,7 @@ public class EquipmentMapper {
         }
 
         EquipmentDTO dto = new EquipmentDTO();
-        dto.setId(equipment.getIdEquipment());
+        dto.setIdEquipment(equipment.getIdEquipment());
         dto.setCategory(categoryMapper.toDTO(equipment.getCategory()));
         dto.setBrand(equipment.getBrand());
         dto.setModel(equipment.getModel());
@@ -34,7 +34,7 @@ public class EquipmentMapper {
         }
 
         Equipment equipment = new Equipment();
-        equipment.setIdEquipment(dto.getId());
+        equipment.setIdEquipment(dto.getIdEquipment());
         equipment.setCategory(categoryMapper.toEntity(dto.getCategory()));
         equipment.setBrand(dto.getBrand());
         equipment.setModel(dto.getModel());

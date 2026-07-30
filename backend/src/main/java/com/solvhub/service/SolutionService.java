@@ -2,6 +2,7 @@ package com.solvhub.service;
 
 import com.solvhub.dto.SolutionCreateDTO;
 import com.solvhub.dto.SolutionDTO;
+import com.solvhub.exception.ForbiddenException;
 import com.solvhub.exception.InvalidDataException;
 import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.mapper.SolutionMapper;
@@ -171,8 +172,16 @@ public class SolutionService {
         Solution solution = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Solution introuvable pour suppression"));
 
-        solutionStatsRepository.deleteBySolution(solution);
+        // 2. Récupération des infos du propriétaire
+        String ownerEmail = solution.getUser() != null ? solution.getUser().getEmail() : null;
+        String ownerUsername = solution.getUser() != null ? solution.getUser().getUsername() : null;
 
+        // 3. Vérification des droits (Propriétaire ou Admin via SecurityUtils)
+        if (!securityUtils.isOwnerOrAdmin(ownerEmail, ownerUsername)) {
+            throw new ForbiddenException("Vous n'avez pas les droits pour supprimer cette solution.");
+        }
+
+        solutionStatsRepository.deleteBySolution(solution);
         repo.delete(solution);
     }
 

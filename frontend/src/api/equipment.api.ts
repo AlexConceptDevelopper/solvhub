@@ -1,5 +1,5 @@
 import { apiFetch } from "./client";
-import type { Equipment } from "../types/equipment";
+import type { Equipment, EquipmentCreate  } from "../types/equipment";
 
 // --- Pour tes listes déroulantes (actuel) ---
 export const getBrandsByCategory = async (categoryId: number): Promise<string[]> => {
@@ -24,4 +24,22 @@ export const findEquipmentByCriteria = async (categoryId: number, brand: string,
     `/equipments/find?categoryId=${categoryId}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(model)}`
   );
   return data ?? null;
+};
+
+export const createEquipment = async (payload: EquipmentCreate): Promise<Equipment | null> => {
+  return await apiFetch<Equipment>("/equipments", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+};
+
+export const updateEquipment = async (idEquipment: number, payload: EquipmentCreate): Promise<Equipment | null> => {
+  return await apiFetch<Equipment>(`/equipments/${idEquipment}`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+};
+
+export const deleteEquipment = async (idEquipment: number): Promise<void> => {
+  await apiFetch(`/equipments/${idEquipment}`, { method: "DELETE" });
 };

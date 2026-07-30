@@ -122,11 +122,6 @@ export default function ProblemDetailPage() {
 
   return (
     <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-12">
-      {/* BOUTON RETOUR INTELLIGENT */}
-      <div className="flex items-center justify-between">
-        <BackButton to={backTo} label={backLabel} />
-      </div>
-
       {/* ZONE ARTICLE DÉPOUILLÉE ET ACCESSIBLE */}
       <article className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-6 shadow-sm border border-slate-100">
         <div className="flex items-center justify-between text-xs font-semibold">
@@ -134,18 +129,23 @@ export default function ProblemDetailPage() {
             <span>{problem.category?.icon || "❓"}</span>
             <span>{problem.category?.name || "Sans catégorie"}</span>
           </span>
-
-          {problem.createdAt && (
-            <span className="text-slate-500">
-              Publié le{" "}
-              {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
-            </span>
-          )}
         </div>
 
-        <h1 className="text-3xl md:text-5xl font-black tracking-tight text-slate-900 leading-tight">
-          {problem.title}
-        </h1>
+        {/* TITRE ET BOUTON RETOUR ALIGNÉS + SOUS-BLOC DATE */}
+        <div className="space-y-1">
+          <div className="flex items-center justify-between gap-4">
+            <h1 className="text-3xl font-bold text-slate-900">
+              {problem.title}
+            </h1>
+            <BackButton to={backTo} label={backLabel} />
+          </div>
+
+          {problem.createdAt && (
+            <p className="text-xs text-slate-500">
+              Publié le {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+            </p>
+          )}
+        </div>
 
         {problem.equipment && (
           <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-md">

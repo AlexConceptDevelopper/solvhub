@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EquipmentDTO {
-    private Integer id;
+    private Integer idEquipment;
     private CategoryDTO category;
     private String brand;
     private String model;

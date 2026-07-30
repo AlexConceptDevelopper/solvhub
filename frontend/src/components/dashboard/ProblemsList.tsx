@@ -12,12 +12,19 @@ interface ProblemsListProps {
   search: string; // La recherche vient du parent (AdminDashboard)
 }
 
+interface Category {
+  idCategory?: number;
+  name: string;
+  icon?: string;
+}
+
 export default function ProblemsList({
   problems,
   setProblems,
   search,
 }: ProblemsListProps) {
   const [category, setCategory] = useState("Toutes");
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
 
   // --- États pour la modale de modification complète ---
@@ -31,6 +38,21 @@ export default function ProblemsList({
   // --- États pour la pagination ---
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  // Récupérer la liste des catégories pour le select de la modale
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const data = await apiFetch<Category[]>("/categories");
+        if (data) {
+          setAllCategories(data);
+        }
+      } catch (error) {
+        console.error("Erreur chargement des catégories :", error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const confirmDelete = async () => {
     if (problemToDelete === null) return;
@@ -302,12 +324,21 @@ export default function ProblemsList({
                 <label className="block text-sm font-semibold text-slate-700 mb-1">
                   Catégorie
                 </label>
-                <input
-                  type="text"
+                <select
                   value={editCategoryName}
                   onChange={(e) => setEditCategoryName(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
-                />
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm cursor-pointer"
+                >
+                  <option value="" disabled>
+                    Sélectionner une catégorie
+                  </option>
+                  {allCategories.map((cat, idx) => (
+                    <option key={cat.idCategory || idx} value={cat.name}>
+                      {cat.icon ? `${cat.icon} ` : ""}
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
