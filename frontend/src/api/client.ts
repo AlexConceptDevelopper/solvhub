@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+const VITE_API_URL="https://api.solvhub.fr/api"
 
 export async function apiFetch<T>(
   endpoint: string,
@@ -16,7 +16,7 @@ export async function apiFetch<T>(
     ...options.headers,
   };
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`${VITE_API_URL}${endpoint}`, {
     ...options,
     headers,
   });
@@ -43,4 +43,4 @@ export async function apiFetch<T>(
   return JSON.parse(text) as T;
 }
 
-export default API_URL;
+export default VITE_API_URL;
