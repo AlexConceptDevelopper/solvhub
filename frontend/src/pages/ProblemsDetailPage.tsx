@@ -134,7 +134,7 @@ export default function ProblemDetailPage() {
         {/* TITRE ET BOUTON RETOUR ALIGNÉS + SOUS-BLOC DATE */}
         <div className="space-y-1">
           <div className="flex items-center justify-between gap-4">
-            <h1 className="text-3xl font-bold text-slate-900">
+            <h1 className="text-3xl font-bold text-slate-900 w-0 flex-1 wrap-break-word">
               {problem.title}
             </h1>
             <BackButton to={backTo} label={backLabel} />

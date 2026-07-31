@@ -33,7 +33,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -59,17 +59,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/equipments/**", "/api/categories/**",
-                                "/api/solutions/**")
-                        .hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/equipments/**", "/api/categories/**")
+                        .hasRole("ADMIN") // 👈 /api/solutions/** a été retiré d'ici
 
                         // 3. AUTHENTIFIÉ (Owner / User) : Création et modification/suppression gérées
                         // finement par le service
                         .requestMatchers(HttpMethod.POST, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/problems/**", "/api/solutions/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/problems/**").authenticated() // Le service vérifiera
-                                                                                                // si c'est le owner ou
-                                                                                                // l'admin
+                        .requestMatchers(HttpMethod.DELETE, "/api/problems/**", "/api/solutions/**").authenticated() // 👈 Ajout de /api/solutions/** ici
 
                         // 4. Tout le reste nécessite d'être authentifié
                         .anyRequest().authenticated())

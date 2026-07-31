@@ -64,7 +64,7 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
           </div>
         </div>
 
-        <h3 className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+        <h3 className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 ">
           {problem.title}
         </h3>
 

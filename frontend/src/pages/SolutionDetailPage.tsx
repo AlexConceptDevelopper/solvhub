@@ -177,7 +177,7 @@ export default function SolutionDetailPage() {
     <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">
       <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-slate-900 w-0 flex-1 wrap-break-word">
             {solution.title}
           </h1>
           <BackButton

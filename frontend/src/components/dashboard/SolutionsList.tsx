@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../api/client";
+import { updateSolution, deleteSolution } from "../../api/solution.api";
 import type { Solution } from "../../types/solution";
 import type { SolutionMedia } from "../../types/SolutionMedia";
 import ConfirmModal from "../ConfirmModal"; 

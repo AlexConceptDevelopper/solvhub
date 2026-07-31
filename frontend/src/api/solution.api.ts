@@ -46,3 +46,23 @@ export const createSolution = async (
 
   return result;
 };
+
+export const updateSolution = async (
+  idSolution: number,
+  solutionData: Partial<Solution>
+): Promise<Solution> => {
+  const result = await apiFetch<Solution | null>(`/solutions/${idSolution}`, {
+    method: "PUT",
+    body: JSON.stringify(solutionData),
+  });
+
+  if (!result) {
+    throw new Error(`Erreur lors de la mise à jour de la solution ${idSolution}.`);
+  }
+
+  return result;
+};
+
+export const deleteSolution = async (idSolution: number): Promise<void> => {
+  await apiFetch(`/solutions/${idSolution}`, { method: "DELETE" });
+};
