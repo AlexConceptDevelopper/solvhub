@@ -178,7 +178,7 @@ export default function SolutionDetailPage() {
         
         {/* EN-TÊTE : Titre et Bouton retour proprement séparés pour éviter le bug des lignes */}
         <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 break-words flex-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 wrap-break-word flex-1">
             {solution.title}
           </h1>
           <div className="self-start sm:self-auto">

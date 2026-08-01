@@ -134,7 +134,7 @@ export default function ProblemDetailPage() {
         {/* TITRE ET BOUTON RETOUR CORRIGÉS (Responsive sans bug de coupe) */}
         <div className="space-y-1">
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 break-words flex-1">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 wrap-break-word flex-1">
               {problem.title}
             </h1>
             <div className="self-start sm:self-auto">
@@ -174,7 +174,7 @@ export default function ProblemDetailPage() {
             leading-relaxed 
             space-y-4 
             whitespace-pre-wrap 
-            break-words 
+            wrap-break-word 
             pt-2
             font-normal
           "
