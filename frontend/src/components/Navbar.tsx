@@ -49,9 +49,8 @@ export default function Navbar() {
   };
 
   return (
-    // SECURISATION : w-full et max-w-full bloquent tout dépassement horizontal intempestif sur mobile
-    <div className="sticky top-0 z-50 w-full max-w-full overflow-x-hidden bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-xs">
-      <nav className="max-w-6xl mx-auto px-4 md:px-6 py-3.5 relative w-full box-border">
+    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      <nav className="max-w-6xl mx-auto px-4 md:px-6 py-3.5 relative w-full">
         <div className="flex items-center justify-between w-full">
           {/* LOGO */}
           <button
@@ -205,7 +204,7 @@ export default function Navbar() {
 
         {/* MENU DÉROULANT MOBILE */}
         {isMobileMenuOpen && (
-          <div ref={mobileMenuRef} className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl py-4 px-6 flex flex-col gap-3 z-50 box-border">
+          <div ref={mobileMenuRef} className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl py-4 px-6 flex flex-col gap-3 z-50">
             <button
               onClick={() => { navigate("/"); setIsMobileMenuOpen(false); }}
               className="text-left text-sm font-semibold text-slate-700 hover:text-blue-600 py-2 cursor-pointer"
@@ -264,6 +263,6 @@ export default function Navbar() {
           </div>
         )}
       </nav>
-    </div>
+    </header>
   );
 }
