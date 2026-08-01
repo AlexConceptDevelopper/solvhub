@@ -196,24 +196,24 @@ public class ProblemService {
                 .toList();
     }
 
-    public List<ProblemDTO> findPossibleDuplicates(String newTitle, String newDescription, Integer categoryId, Integer equipmentId) {
-    List<Problem> existingProblems = problemRepository.findAll();
-    
-    // On combine le titre et la description du nouveau problème pour avoir un maximum de matière
-    String queryWords = cleanAndNormalize(newTitle + " " + (newDescription != null ? newDescription : ""));
+    public List<ProblemDTO> findPossibleDuplicates(String newTitle, String newDescription, Integer categoryId,
+            Integer equipmentId) {
+        List<Problem> existingProblems = problemRepository.findAll();
 
-    return existingProblems.stream().filter(problem -> {
+        // On ne nettoie et compare que le TITRE
+        String queryTitle = cleanAndNormalize(newTitle);
 
-        String existingWords = cleanAndNormalize(problem.getTitle() + " " + (problem.getDescription() != null ? problem.getDescription() : ""));
-        
-        double similarityScore = calculateJaccardSimilarity(queryWords, existingWords);
+        return existingProblems.stream().filter(problem -> {
+            String existingTitle = cleanAndNormalize(problem.getTitle());
 
-        // Seuil de tolérance pour considérer un problème comme un doublon potentiel
-        return similarityScore > 0.18;
-    })
-    .map(problemMapper::toDTO)
-    .toList();
-}
+            double similarityScore = calculateJaccardSimilarity(queryTitle, existingTitle);
+
+            // Seuil de similarité pour considérer un problème comme un doublon potentiel
+            return similarityScore > 0.20;
+        })
+                .map(problemMapper::toDTO)
+                .toList();
+    }
 
     private String cleanAndNormalize(String text) {
         if (text == null)
