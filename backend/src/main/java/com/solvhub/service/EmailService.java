@@ -12,14 +12,10 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class EmailService {
     
-
     private final JavaMailSender mailSender;
 
     @Value("${app.frontend-url}")
     private String frontendUrl;
-
-    @Value("${spring.mail.username}")
-    private String fromEmail;
 
     public EmailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -28,6 +24,8 @@ public class EmailService {
     public void sendVerificationEmail(String to, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
+        // Utilisation obligatoire de l'adresse de test Resend au début
+        message.setFrom("onboarding@resend.dev");
         message.setSubject("Vérifiez votre compte SolvHub");
         message.setText(
                 "Bienvenue sur SolvHub !\n\n" +
@@ -54,13 +52,13 @@ public class EmailService {
 
         try {
             MimeMessage message = mailSender.createMimeMessage();
-            // Le "true" ici est crucial pour activer le mode HTML multipart
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
-            helper.setFrom(fromEmail);
+            // Idem ici pour l'expéditeur
+            helper.setFrom("onboarding@resend.dev");
             helper.setTo(toEmail);
             helper.setSubject(subject);
-            helper.setText(htmlContent, true); // Le "true" indique que c'est du HTML
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
