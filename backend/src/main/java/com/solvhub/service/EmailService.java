@@ -85,4 +85,20 @@ public class EmailService {
             System.err.println("Erreur envoi email Resend API : " + e.getMessage());
         }
     }
+
+    public void sendContactEmail(String fromEmail, String senderName, String message) {
+        String subject = "[SolvHub Contact] Message de " + senderName;
+
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;\">"
+                + "<h2 style=\"color: #4F46E5;\">Nouveau message de contact</h2>"
+                + "<p><b>Nom :</b> " + senderName + "</p>"
+                + "<p><b>Email de l'expéditeur :</b> " + fromEmail + "</p>"
+                + "<p><b>Message :</b></p>"
+                + "<p style=\"background: #f1f5f9; padding: 15px; border-radius: 6px; white-space: pre-wrap;\">" + message + "</p>"
+                + "<p style=\"color: #6b7280; font-size: 0.9em; margin-top: 20px;\">Envoyé depuis le formulaire de contact de SolvHub.</p>"
+                + "</div>";
+
+        // On s'envoie le mail à nous-mêmes (contact@solvhub.fr)
+        sendEmailViaApi("alexandre.cubizolle@gmail.com", subject, htmlContent, true);
+    }
 }
