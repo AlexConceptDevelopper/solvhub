@@ -11,7 +11,7 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    @Value("${resend.api.key}")
+    @Value("${RESEND_API_KEY}")
     private String resendApiKey;
 
     @Value("${app.frontend-url}")
