@@ -19,8 +19,8 @@ public class EquipmentService {
     private final EquipmentMapper equipmentMapper;
 
     public EquipmentService(
-            EquipmentRepository equipmentRepository, 
-            CategoryRepository categoryRepository, 
+            EquipmentRepository equipmentRepository,
+            CategoryRepository categoryRepository,
             EquipmentMapper equipmentMapper) {
         this.equipmentRepository = equipmentRepository;
         this.categoryRepository = categoryRepository;
@@ -57,6 +57,15 @@ public class EquipmentService {
     }
 
     public EquipmentDTO createEquipment(Integer idCategory, String brand, String model) {
+        // 1. On vérifie si l'équipement existe déjà en base
+        var existingEquipment = equipmentRepository.findByCategory_IdCategoryAndBrandAndModel(idCategory, brand, model);
+
+        if (existingEquipment.isPresent()) {
+            // S'il existe déjà, on le renvoie directement sans planter !
+            return equipmentMapper.toDTO(existingEquipment.get());
+        }
+
+        // 2. S'il n'existe pas, on le crée
         Category category = categoryRepository.findById(idCategory)
                 .orElseThrow(() -> new ResourceNotFoundException("Catégorie introuvable avec l'id : " + idCategory));
 
