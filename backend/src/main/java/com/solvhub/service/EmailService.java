@@ -24,8 +24,7 @@ public class EmailService {
     public void sendVerificationEmail(String to, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
-        // Utilisation obligatoire de l'adresse de test Resend au début
-        message.setFrom("onboarding@resend.dev");
+        message.setFrom("contact@solvhub.fr");
         message.setSubject("Vérifiez votre compte SolvHub");
         message.setText(
                 "Bienvenue sur SolvHub !\n\n" +
@@ -54,8 +53,8 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
-            // Idem ici pour l'expéditeur
-            helper.setFrom("onboarding@resend.dev");
+            // CORRECTION ICI : Utilisation de ton domaine vérifié
+            helper.setFrom("contact@solvhub.fr");
             helper.setTo(toEmail);
             helper.setSubject(subject);
             helper.setText(htmlContent, true);
