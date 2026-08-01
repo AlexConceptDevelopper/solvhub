@@ -11,10 +11,10 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    @Value("${RESEND_API_KEY}")
+    @Value("${RESEND_API_KEY:}")
     private String resendApiKey;
 
-    @Value("${app.frontend-url}")
+    @Value("${app.frontend-url:https://solvhub.fr}")
     private String frontendUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
