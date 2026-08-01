@@ -15,7 +15,6 @@ export default function Navbar() {
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-  // Fermer les menus si on clique à l'extérieur
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -50,7 +49,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-xs px-4 md:px-10 py-3.5 transition-all">
+    // CORRECTION ICI : On aligne le padding global sur px-4 md:px-6 pour matcher le layout des pages
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-xs px-4 md:px-6 py-3.5 transition-all">
       <div className="max-w-6xl mx-auto flex items-center justify-between">
         {/* LOGO */}
         <button
