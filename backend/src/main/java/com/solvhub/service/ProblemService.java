@@ -14,12 +14,12 @@ import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.mapper.ProblemMapper;
 import com.solvhub.mapper.SolutionMapper;
 import com.solvhub.model.Category;
-import com.solvhub.model.Equipment; 
+import com.solvhub.model.Equipment;
 import com.solvhub.model.Problem;
 import com.solvhub.model.Solution;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.CategoryRepository;
-import com.solvhub.repository.global.EquipmentRepository; 
+import com.solvhub.repository.global.EquipmentRepository;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.VoteRepository;
@@ -199,18 +199,18 @@ public class ProblemService {
     public List<ProblemDTO> findPossibleDuplicates(String newTitle, String newDescription, Integer categoryId,
             Integer equipmentId) {
         List<Problem> existingProblems = problemRepository.findAll();
-        String queryWords = cleanAndNormalize(newTitle + " " + newDescription);
+
+        String queryTitle = cleanAndNormalize(newTitle);
 
         return existingProblems.stream().filter(problem -> {
             if (problem.getCategory() != null && categoryId != null
                     && !problem.getCategory().getIdCategory().equals(categoryId)) {
                 return false;
             }
+            String existingTitle = cleanAndNormalize(problem.getTitle());
+            double similarityScore = calculateJaccardSimilarity(queryTitle, existingTitle);
 
-            String existingText = cleanAndNormalize(problem.getTitle() + " " + problem.getDescription());
-            double similarityScore = calculateJaccardSimilarity(queryWords, existingText);
-
-            return similarityScore > 0.25;
+            return similarityScore > 0.20;
         })
                 .map(problemMapper::toDTO)
                 .toList();
