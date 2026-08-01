@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { apiFetch } from "../api/client"; // 👈 Adapte le chemin vers ton fichier api.ts
 
-// Définition des types pour les props
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,20 +19,22 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setStatus({ loading: true, error: null, success: false });
 
     try {
-      const response = await fetch("https://www.solvhub.fr/api/contact", {
+      // apiFetch ajoute automatiquement le domaine backend + "/contact" et le Header Content-Type
+      await apiFetch("/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),
       });
-
-      if (!response.ok) throw new Error("Erreur serveur");
 
       setStatus({ loading: false, error: null, success: true });
       setName("");
       setEmail("");
       setMessage("");
-    } catch (err) {
-      setStatus({ loading: false, error: "Impossible d'envoyer le message. Réessaie plus tard.", success: false });
+    } catch (err: any) {
+      setStatus({ 
+        loading: false, 
+        error: err.message || "Impossible d'envoyer le message. Réessaie plus tard.", 
+        success: false 
+      });
     }
   };
 
