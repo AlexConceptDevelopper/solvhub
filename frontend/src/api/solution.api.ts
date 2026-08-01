@@ -1,7 +1,7 @@
 import { apiFetch } from "./client";
-
 import type { Solution } from "../types/solution";
 import type { SolutionCreate } from "../types/solutionCreate";
+import type { SolutionMedia } from "../types/SolutionMedia";
 
 export const getSolutionsByProblem = async (
   idProblem: number
@@ -24,15 +24,12 @@ export const createSolution = async (
   solutionData: SolutionCreate | FormData
 ): Promise<Solution> => {
   const isFormData = solutionData instanceof FormData;
-
-  // Récupère ton token habituel (ex: depuis le localStorage)
-  const token = localStorage.getItem("token"); // Adapte selon ta gestion du token
+  const token = localStorage.getItem("token");
 
   const headers: Record<string, string> = {};
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
-  // On ne met PAS de "Content-Type" si c'est un FormData pour laisser le navigateur faire
 
   const result = await apiFetch<Solution | null>("/solutions", {
     method: "POST",
@@ -53,6 +50,9 @@ export const updateSolution = async (
 ): Promise<Solution> => {
   const result = await apiFetch<Solution | null>(`/solutions/${idSolution}`, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(solutionData),
   });
 
@@ -68,6 +68,15 @@ export const deleteSolution = async (idSolution: number): Promise<void> => {
 };
 
 export const getSolutionsByUser = async (idUser: number): Promise<Solution[]> => {
-  const result = await apiFetch<Solution[] | null>(`/solutions/user/${idUser}`); // Adapte le chemin si ton back-end attend une autre route
+  const result = await apiFetch<Solution[] | null>(`/solutions/user/${idUser}`);
   return result ?? [];
+};
+
+export const getSolutionMedias = async (idSolution: number): Promise<SolutionMedia[]> => {
+  const result = await apiFetch<SolutionMedia[] | null>(`/solutions/${idSolution}/media`);
+  return result ?? [];
+};
+
+export const deleteSolutionMedia = async (mediaId: number): Promise<void> => {
+  await apiFetch(`/solutions/media/${mediaId}`, { method: "DELETE" });
 };

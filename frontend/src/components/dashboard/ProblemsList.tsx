@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiFetch } from "../../api/client";
+import { deleteProblem, updateProblem } from "../../api/problem.api";
 import type { Problem } from "../../types/problem";
 import SearchFilterBar from "../SearchFilterBar";
 import ConfirmModal from "../ConfirmModal";
@@ -9,7 +10,7 @@ import Pagination from "../Pagination";
 interface ProblemsListProps {
   problems: Problem[];
   setProblems: React.Dispatch<React.SetStateAction<Problem[]>>;
-  search: string; // La recherche vient du parent (AdminDashboard)
+  search: string; 
 }
 
 interface Category {
@@ -27,7 +28,6 @@ export default function ProblemsList({
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
 
-  // --- États pour la modale de modification complète ---
   const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -35,11 +35,9 @@ export default function ProblemsList({
 
   const [problemToDelete, setProblemToDelete] = useState<number | null>(null);
 
-  // --- États pour la pagination ---
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  // Récupérer la liste des catégories pour le select de la modale
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -57,7 +55,7 @@ export default function ProblemsList({
   const confirmDelete = async () => {
     if (problemToDelete === null) return;
     try {
-      await apiFetch(`/problems/${problemToDelete}`, { method: "DELETE" });
+      await deleteProblem(problemToDelete);
       setProblems((prev) =>
         prev.filter((p) => p.idProblem !== problemToDelete),
       );
@@ -68,7 +66,6 @@ export default function ProblemsList({
     }
   };
 
-  // Ouvrir la modale et pré-remplir les champs
   const openEditModal = (problem: Problem) => {
     setEditingProblem(problem);
     setEditTitle(problem.title);
@@ -80,23 +77,20 @@ export default function ProblemsList({
     setEditingProblem(null);
   };
 
-  // Enregistrer les modifications globales via la modale
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProblem) return;
 
+    const selectedCategory = allCategories.find(
+      (cat) => cat.name === editCategoryName
+    );
+
     try {
-      const updatedProblem = await apiFetch<Problem>(
-        `/problems/${editingProblem.idProblem}`,
-        {
-          method: "PUT",
-          body: JSON.stringify({
-            title: editTitle,
-            description: editDescription,
-            category: editCategoryName,
-          }),
-        },
-      );
+      const updatedProblem = await updateProblem(editingProblem.idProblem, {
+        title: editTitle,
+        description: editDescription,
+        idCategory: selectedCategory?.idCategory,
+      } as any);
 
       setProblems((prev) =>
         prev.map((p) =>
@@ -105,7 +99,9 @@ export default function ProblemsList({
                 ...p,
                 title: editTitle,
                 description: editDescription,
-                category: { ...p.category, name: editCategoryName },
+                category: selectedCategory
+                  ? { ...p.category, idCategory: selectedCategory.idCategory, name: selectedCategory.name }
+                  : p.category,
               }) as Problem)
             : p,
         ),
@@ -116,7 +112,6 @@ export default function ProblemsList({
     }
   };
 
-  // Extraction dynamique des catégories pour la barre de filtre secondaire
   const categoryCounts = problems.reduce(
     (acc, p) => {
       const catName = p.category?.name;
@@ -133,7 +128,6 @@ export default function ProblemsList({
     count: categoryCounts[catName],
   }));
 
-  // Filtrage combinant la recherche globale (du parent) et le filtre de catégorie local
   const filteredProblems = problems.filter((problem) => {
     if (!problem) return false;
 
@@ -150,7 +144,6 @@ export default function ProblemsList({
     return matchesSearch && matchesCategory;
   });
 
-  // --- Calculs de la pagination ---
   const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProblems = filteredProblems.slice(
@@ -191,7 +184,6 @@ export default function ProblemsList({
         {filteredProblems.length} problème(s) trouvé(s)
       </p>
 
-      {/* Tableau des problèmes épuré */}
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -277,7 +269,6 @@ export default function ProblemsList({
         onPageChange={(page) => setCurrentPage(page)}
       />
 
-      {/* --- MODALE DE MODIFICATION COMPLÈTE DU PROBLÈME --- */}
       {editingProblem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl p-6 space-y-6 my-8 max-h-[90vh] overflow-y-auto">

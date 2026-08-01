@@ -22,7 +22,6 @@ import com.solvhub.repository.global.CategoryRepository;
 import com.solvhub.repository.global.EquipmentRepository; 
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionRepository;
-import com.solvhub.repository.global.UserRepository;
 import com.solvhub.repository.global.VoteRepository;
 import com.solvhub.security.SecurityUtils;
 
@@ -39,7 +38,6 @@ public class ProblemService {
     private final EquipmentRepository equipmentRepository;
     private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
-    private final UserRepository userRepository;
 
     public ProblemService(
             SolutionRepository solutionRepository,
@@ -48,7 +46,6 @@ public class ProblemService {
             ProblemMapper problemMapper,
             CategoryRepository categoryRepository,
             EquipmentRepository equipmentRepository,
-            UserRepository userRepository,
             SecurityUtils securityUtils,
             VoteRepository voteRepository) {
         this.solutionRepository = solutionRepository;
@@ -57,7 +54,6 @@ public class ProblemService {
         this.problemMapper = problemMapper;
         this.categoryRepository = categoryRepository;
         this.equipmentRepository = equipmentRepository;
-        this.userRepository = userRepository;
         this.voteRepository = voteRepository;
         this.securityUtils = securityUtils;
     }
@@ -99,7 +95,6 @@ public class ProblemService {
         problem.setCategory(category);
         problem.setUser(currentUser);
 
-        // ➕ Gestion de l'équipement si l'ID est fourni (ex: Catégorie 3)
         if (dto.getIdEquipment() != null) {
             Equipment equipment = equipmentRepository.findById(dto.getIdEquipment())
                     .orElseThrow(() -> new ResourceNotFoundException("Équipement introuvable"));
@@ -116,16 +111,13 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
 
-        // 1. Récupération des infos du propriétaire via l'entité
         String ownerEmail = problem.getUser() != null ? problem.getUser().getEmail() : null;
         String ownerUsername = problem.getUser() != null ? problem.getUser().getUsername() : null;
 
-        // 2. Vérification des droits (Propriétaire ou Admin via ton SecurityUtils)
         if (!securityUtils.isOwnerOrAdmin(ownerEmail, ownerUsername)) {
             throw new ForbiddenException("Vous n'avez pas les droits pour modifier ce problème.");
         }
 
-        // 3. Mise à jour des champs modifiés
         if (dto.getTitle() != null) {
             problem.setTitle(dto.getTitle());
         }
@@ -147,16 +139,13 @@ public class ProblemService {
         Problem problem = problemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Problème introuvable"));
 
-        // 1. Récupération des infos du propriétaire
         String ownerEmail = problem.getUser() != null ? problem.getUser().getEmail() : null;
         String ownerUsername = problem.getUser() != null ? problem.getUser().getUsername() : null;
 
-        // 2. Vérification des droits (Propriétaire ou Admin via SecurityUtils)
         if (!securityUtils.isOwnerOrAdmin(ownerEmail, ownerUsername)) {
             throw new ForbiddenException("Vous n'avez pas les droits pour supprimer ce problème.");
         }
 
-        // 3. Suppression
         problemRepository.delete(problem);
     }
 
@@ -171,9 +160,7 @@ public class ProblemService {
 
             long totalVotes = 0;
             for (Solution s : solutions) {
-
                 long votesForSolution = voteRepository.countBySolutionIdSolution(s.getIdSolution());
-
                 totalVotes += votesForSolution;
             }
 
@@ -186,22 +173,19 @@ public class ProblemService {
                     Long v2 = p2.getVoteCount() == null ? 0L : p2.getVoteCount();
                     int voteCompare = Long.compare(v2, v1);
                     if (voteCompare != 0) {
-                        return voteCompare; // D'abord par votes décroissants
+                        return voteCompare;
                     }
-                    // En cas d'égalité de votes, les plus récents en premier
                     return p2.getCreatedAt().compareTo(p1.getCreatedAt());
                 })
                 .toList();
     }
 
     public List<ProblemDTO> getTop3PopularProblems() {
-        // La base de données ne ramène que les 3 meilleurs directement !
         List<Problem> topProblems = problemRepository.findPopularProblems(PageRequest.of(0, 3));
 
         return topProblems.stream()
                 .map(problem -> {
                     ProblemDTO dto = problemMapper.toDTO(problem);
-                    // On calcule les votes pour ces 3-là spécifiquement
                     List<Solution> solutions = solutionRepository.findByProblemIdProblem(dto.getIdProblem());
                     long totalVotes = solutions.stream()
                             .mapToLong(s -> voteRepository.countBySolutionIdSolution(s.getIdSolution()))
@@ -218,18 +202,14 @@ public class ProblemService {
         String queryWords = cleanAndNormalize(newTitle + " " + newDescription);
 
         return existingProblems.stream().filter(problem -> {
-            // Filtrage optionnel par catégorie si fournie
             if (problem.getCategory() != null && categoryId != null
                     && !problem.getCategory().getIdCategory().equals(categoryId)) {
                 return false;
             }
 
             String existingText = cleanAndNormalize(problem.getTitle() + " " + problem.getDescription());
-
-            // Calcul du score de similarité Jaccard
             double similarityScore = calculateJaccardSimilarity(queryWords, existingText);
 
-            // Seuil de similarité (25% de mots communs)
             return similarityScore > 0.25;
         })
                 .map(problemMapper::toDTO)
@@ -262,7 +242,7 @@ public class ProblemService {
         return (double) intersection.size() / union.size();
     }
 
-@Transactional
+    @Transactional
     public List<ProblemDTO> getProblemsByUser(Integer userId) {
         return problemRepository.findByUserIdUsers(userId)
                 .stream()

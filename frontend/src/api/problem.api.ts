@@ -31,6 +31,23 @@ export const createProblem = async (
   return result;
 };
 
+export const updateProblem = async (
+  idProblem: number,
+  problemData: Partial<ProblemCreate>
+): Promise<Problem | null> => {
+  return await apiFetch<Problem>(`/problems/${idProblem}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(problemData),
+  });
+};
+
+export const deleteProblem = async (idProblem: number): Promise<void> => {
+  await apiFetch(`/problems/${idProblem}`, { method: "DELETE" });
+};
+
 export const checkDuplicates = async (
   data: ProblemCheckRequest
 ): Promise<Problem[]> => {
@@ -46,6 +63,6 @@ export const checkDuplicates = async (
 };
 
 export const getProblemsByUser = async (idUser: number): Promise<Problem[]> => {
-  const result = await apiFetch<Problem[] | null>(`/problems/user/${idUser}`); // Adapte le chemin selon ton back-end
+  const result = await apiFetch<Problem[] | null>(`/problems/user/${idUser}`);
   return result ?? [];
 };

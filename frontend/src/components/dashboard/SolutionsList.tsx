@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { apiFetch } from "../../api/client";
+import { deleteSolution, updateSolution, getSolutionMedias, deleteSolutionMedia } from "../../api/solution.api";
 import type { Solution } from "../../types/solution";
 import type { SolutionMedia } from "../../types/SolutionMedia";
 import ConfirmModal from "../ConfirmModal"; 
@@ -14,7 +14,6 @@ interface SolutionsListProps {
 export default function SolutionsList({ solutions, setSolutions, search }: SolutionsListProps) {
   const [solutionToDelete, setSolutionToDelete] = useState<number | null>(null);
 
-  // --- États pour la modale de modification complète ---
   const [editingSolution, setEditingSolution] = useState<Solution | null>(null);
   const [editTitle, setEditTitle] = useState("");
   const [editSteps, setEditSteps] = useState("");
@@ -22,18 +21,16 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
   const [editTimeMinutes, setEditTimeMinutes] = useState<number>(10);
   const [editRiskLevel, setEditRiskLevel] = useState<number>(1);
   
-  // Médias de la solution en cours d'édition
   const [solutionMedias, setSolutionMedias] = useState<SolutionMedia[]>([]);
-  const [mediasToDelete, setMediasToDelete] = useState<number[]>([]); // IDs des médias à supprimer
+  const [mediasToDelete, setMediasToDelete] = useState<number[]>([]);
 
-  // --- États pour la pagination ---
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
   const confirmDelete = async () => {
     if (solutionToDelete === null) return;
     try {
-      await apiFetch(`/solutions/${solutionToDelete}`, { method: "DELETE" });
+      await deleteSolution(solutionToDelete);
       setSolutions(solutions.filter((s) => s.idSolution !== solutionToDelete));
     } catch (error) {
       console.error("Erreur suppression solution :", error);
@@ -42,7 +39,6 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
     }
   };
 
-  // Ouvrir la modale et charger les données + les médias associés
   const openEditModal = async (sol: Solution) => {
     setEditingSolution(sol);
     setEditTitle(sol.title);
@@ -53,12 +49,8 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
     setMediasToDelete([]);
 
     try {
-      const mediaData = await apiFetch<SolutionMedia[]>(`/solutions/${sol.idSolution}/media`);
-      if (mediaData) {
-        setSolutionMedias(mediaData);
-      } else {
-        setSolutionMedias([]);
-      }
+      const mediaData = await getSolutionMedias(sol.idSolution);
+      setSolutionMedias(mediaData);
     } catch (error) {
       console.error("Erreur chargement médias de la solution :", error);
       setSolutionMedias([]);
@@ -71,33 +63,26 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
     setMediasToDelete([]);
   };
 
-  // Marquer un média pour suppression locale (visuel)
   const handleMarkMediaForDelete = (idMedia: number) => {
     setMediasToDelete((prev) => [...prev, idMedia]);
     setSolutionMedias((prev) => prev.filter((m) => (m.idMedia ?? m.id) !== idMedia));
   };
 
-  // Sauvegarder les modifications globales
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingSolution) return;
 
     try {
-      // 1. Mise à jour des informations textuelles de base de la solution
-      const updatedSolution = await apiFetch<Solution>(`/solutions/${editingSolution.idSolution}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          title: editTitle,
-          steps: editSteps,
-          difficulty: editDifficulty,
-          timeMinutes: editTimeMinutes,
-          riskLevel: editRiskLevel,
-        }),
+      const updatedSolution = await updateSolution(editingSolution.idSolution, {
+        title: editTitle,
+        steps: editSteps,
+        difficulty: editDifficulty,
+        timeMinutes: editTimeMinutes,
+        riskLevel: editRiskLevel,
       });
 
-      // 2. Suppression en base des médias que l'admin a voulu retirer
       for (const mediaId of mediasToDelete) {
-        await apiFetch(`/solutions/media/${mediaId}`, { method: "DELETE" }).catch(() => {});
+        await deleteSolutionMedia(mediaId).catch(() => {});
       }
 
       setSolutions((prev) =>
@@ -120,12 +105,10 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
     }
   };
 
-  // --- Filtrage par recherche ---
   const filteredSolutions = solutions.filter((s) => 
     s.title?.toLowerCase().includes(search.toLowerCase())
   );
 
-  // --- Calculs de la pagination ---
   const totalPages = Math.ceil(filteredSolutions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentSolutions = filteredSolutions.slice(startIndex, startIndex + itemsPerPage);
@@ -146,7 +129,6 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
         {filteredSolutions.length} solution(s) trouvée(s)
       </p>
 
-      {/* Tableau épuré */}
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -208,7 +190,6 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
         />
       )}
 
-      {/* --- MODALE DE MODIFICATION COMPLÈTE DE LA SOLUTION --- */}
       {editingSolution && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-2xl p-6 space-y-6 my-8 max-h-[90vh] overflow-y-auto">
@@ -285,7 +266,6 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
                 </div>
               </div>
 
-              {/* --- SECTION GESTION DES MÉDIAS (Images & Vidéos) --- */}
               <div className="space-y-2 pt-2 border-t border-slate-100">
                 <label className="block text-sm font-semibold text-slate-700">Médias associés (Photos / Vidéo)</label>
                 {solutionMedias.length === 0 ? (

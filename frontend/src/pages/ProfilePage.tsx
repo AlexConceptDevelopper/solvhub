@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
 import { updateProfile, changePassword } from "../api/user.api";
-import { getProblemsByUser } from "../api/problem.api"; 
-import { getSolutionsByUser } from "../api/solution.api"; 
+import { getProblemsByUser, deleteProblem } from "../api/problem.api"; 
+import { getSolutionsByUser, deleteSolution } from "../api/solution.api"; 
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import type { Problem } from "../types/problem";
@@ -24,7 +24,6 @@ export default function ProfilePage() {
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
 
-  // États pour les problèmes et solutions de l'utilisateur
   const [userProblems, setUserProblems] = useState<Problem[]>([]);
   const [userSolutions, setUserSolutions] = useState<Solution[]>([]);
   const [contentLoading, setContentLoading] = useState(true);
@@ -47,7 +46,6 @@ export default function ProfilePage() {
         setEmailNotificationsEnabled(user.emailNotificationsEnabled);
       }
       
-      // Charger le contenu posté par l'utilisateur via les services
       fetchUserContent();
     }
   }, [user]);
@@ -66,6 +64,24 @@ export default function ProfilePage() {
       console.error("Erreur lors du chargement du contenu utilisateur :", error);
     } finally {
       setContentLoading(false);
+    }
+  };
+
+  const handleDeleteUserProblem = async (idProblem: number) => {
+    try {
+      await deleteProblem(idProblem);
+      setUserProblems((prev) => prev.filter((p) => p.idProblem !== idProblem));
+    } catch (error) {
+      console.error("Erreur lors de la suppression du problème :", error);
+    }
+  };
+
+  const handleDeleteUserSolution = async (idSolution: number) => {
+    try {
+      await deleteSolution(idSolution);
+      setUserSolutions((prev) => prev.filter((s) => s.idSolution !== idSolution));
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la solution :", error);
     }
   };
 
@@ -138,7 +154,6 @@ export default function ProfilePage() {
         </div>
 
         <div className="grid gap-8">
-          {/* Section Informations */}
           <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">
               Informations personnelles
@@ -208,7 +223,6 @@ export default function ProfilePage() {
             </form>
           </div>
 
-          {/* Section Sécurité */}
           <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
             <h2 className="text-lg font-semibold text-slate-900 mb-4">Sécurité</h2>
 
@@ -292,7 +306,6 @@ export default function ProfilePage() {
             )}
           </div>
 
-          {/* --- SECTION : MES PROBLÈMES POSTÉS --- */}
           <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl space-y-4">
             <h2 className="text-lg font-semibold text-slate-900">
               Mes problèmes postés ({userProblems.length})
@@ -310,16 +323,23 @@ export default function ProfilePage() {
                       <h4 className="font-semibold text-slate-900 text-sm">{prob.title}</h4>
                       <p className="text-xs text-slate-500 line-clamp-1">{prob.description}</p>
                     </div>
-                    <span className="text-xs px-2.5 py-1 bg-slate-100 font-medium text-slate-600 rounded-lg">
-                      {prob.category?.name || "Général"}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs px-2.5 py-1 bg-slate-100 font-medium text-slate-600 rounded-lg">
+                        {prob.category?.name || "Général"}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteUserProblem(prob.idProblem)}
+                        className="text-red-600 hover:text-red-700 text-xs font-semibold px-2 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                      >
+                        Supprimer
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* --- SECTION : MES SOLUTIONS POSTÉES --- */}
           <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl space-y-4">
             <h2 className="text-lg font-semibold text-slate-900">
               Mes solutions postées ({userSolutions.length})
@@ -342,6 +362,12 @@ export default function ProfilePage() {
                       <span className="text-xs px-2.5 py-1 bg-blue-50 font-medium text-blue-700 rounded-lg">
                         Difficulté: {sol.difficulty}/5
                       </span>
+                      <button
+                        onClick={() => handleDeleteUserSolution(sol.idSolution)}
+                        className="text-red-600 hover:text-red-700 text-xs font-semibold px-2 py-1 bg-red-50 hover:bg-red-100 rounded-lg transition"
+                      >
+                        Supprimer
+                      </button>
                     </div>
                   </div>
                 ))}
