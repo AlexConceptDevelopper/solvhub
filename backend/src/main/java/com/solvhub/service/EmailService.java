@@ -17,7 +17,7 @@ public class EmailService {
     private String resendApiKey;
 
     // URL mise en dur pour éviter toute pollution par les variables de configuration
-    private static final String FRONTEND_URL = "https://solvhub.fr";
+    private static final String FRONTEND_URL = "https://www.solvhub.fr";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String RESEND_URL = "https://api.resend.com/emails";
