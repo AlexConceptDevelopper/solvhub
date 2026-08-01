@@ -29,4 +29,13 @@ public class SolutionMediaController {
 
         return ResponseEntity.ok(mediaList);
     }
+
+    @DeleteMapping("/media/{id}")
+    public ResponseEntity<Void> deleteMedia(@PathVariable("id") Integer id) {
+        if (!mediaRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        mediaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
