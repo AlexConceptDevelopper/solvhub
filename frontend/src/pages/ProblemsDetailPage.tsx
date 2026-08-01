@@ -35,7 +35,6 @@ export default function ProblemDetailPage() {
     execute: executeSolutions,
   } = useAsync<Solution[]>();
 
-  // Récupération de la provenance passée par RecentProblems (ou toute autre page qui la fournirait)
   const state = location.state as {
     returnTo?: string;
     returnLabel?: string;
@@ -73,20 +72,22 @@ export default function ProblemDetailPage() {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "QAPage",
-      "mainEntity": {
+      mainEntity: {
         "@type": "Question",
-        "name": problem.title,
-        "text": problem.description,
-        "answerCount": solutions.length,
-        "suggestedAnswer": solutions.map((s) => ({
+        name: problem.title,
+        text: problem.description,
+        answerCount: solutions.length,
+        suggestedAnswer: solutions.map((s) => ({
           "@type": "Answer",
-          "name": s.title,
-          "text": s.steps,
+          name: s.title,
+          text: s.steps,
         })),
       },
     };
 
-    let scriptTag = document.getElementById("structured-data-qa") as HTMLScriptElement | null;
+    let scriptTag = document.getElementById(
+      "structured-data-qa",
+    ) as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement("script");
       scriptTag.id = "structured-data-qa";
@@ -178,17 +179,22 @@ export default function ProblemDetailPage() {
 
           {problem.createdAt && (
             <p className="text-xs text-slate-500">
-              Publié le {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+              Publié le{" "}
+              {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
             </p>
           )}
         </div>
 
         {problem.equipment && (
           <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-md">
-            <span className="text-2xl bg-slate-800 p-2.5 rounded-lg">🚗</span>
+            <span className="text-2xl bg-slate-800 p-2.5 rounded-lg">
+              {problem.category?.icon || "🔧"}
+            </span>
             <div>
               <div className="text-xs uppercase tracking-wider text-slate-400 font-bold">
-                Équipement concerné
+                {problem.category?.name
+                  ? `${problem.category.name} concerné(e)`
+                  : "Équipement concerné"}
               </div>
               <div className="text-lg md:text-xl font-extrabold tracking-wide">
                 {problem.equipment.brand}{" "}
