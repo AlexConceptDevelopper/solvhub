@@ -208,4 +208,15 @@ public class SolutionService {
         Solution updated = repo.save(solution);
         return mapper.toDTO(updated);
     }
+
+    @Transactional
+    public List<SolutionDTO> getSolutionsByUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable"));
+
+        return repo.findByUser(user)
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
+    }
 }

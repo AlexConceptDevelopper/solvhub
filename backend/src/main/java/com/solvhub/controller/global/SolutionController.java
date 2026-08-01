@@ -66,4 +66,9 @@ public class SolutionController {
             @RequestBody SolutionDTO dto) {
         return solutionService.updateSolution(id, dto);
     }
+
+    @GetMapping("/user/{userId}")
+    public List<SolutionDTO> getSolutionsByUser(@PathVariable Integer userId) {
+        return solutionService.getSolutionsByUser(userId);
+    }
 }

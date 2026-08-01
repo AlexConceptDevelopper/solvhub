@@ -14,4 +14,6 @@ public interface ProblemRepository extends GenericRepository<Problem, Integer> {
            "GROUP BY p " +
            "ORDER BY COUNT(v) DESC, p.createdAt DESC")
     List<Problem> findPopularProblems(Pageable pageable);
+
+    List<Problem> findByUserIdUsers(Integer userId);
 }

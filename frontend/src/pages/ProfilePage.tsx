@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
 import { updateProfile, changePassword } from "../api/user.api";
+import { getProblemsByUser } from "../api/problem.api"; 
+import { getSolutionsByUser } from "../api/solution.api"; 
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
+import type { Problem } from "../types/problem";
+import type { Solution } from "../types/solution";
 
 export default function ProfilePage() {
   const { user, updateUser } = useAuth();
@@ -19,6 +23,11 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [localError, setLocalError] = useState<string | null>(null);
+
+  // États pour les problèmes et solutions de l'utilisateur
+  const [userProblems, setUserProblems] = useState<Problem[]>([]);
+  const [userSolutions, setUserSolutions] = useState<Solution[]>([]);
+  const [contentLoading, setContentLoading] = useState(true);
 
   const {
     loading: profileLoading,
@@ -37,8 +46,28 @@ export default function ProfilePage() {
       if (user.emailNotificationsEnabled !== undefined) {
         setEmailNotificationsEnabled(user.emailNotificationsEnabled);
       }
+      
+      // Charger le contenu posté par l'utilisateur via les services
+      fetchUserContent();
     }
   }, [user]);
+
+  const fetchUserContent = async () => {
+    if (!user?.idUsers) return;
+    setContentLoading(true);
+    try {
+      const [problemsData, solutionsData] = await Promise.all([
+        getProblemsByUser(user.idUsers).catch(() => []),
+        getSolutionsByUser(user.idUsers).catch(() => []),
+      ]);
+      setUserProblems(problemsData);
+      setUserSolutions(solutionsData);
+    } catch (error) {
+      console.error("Erreur lors du chargement du contenu utilisateur :", error);
+    } finally {
+      setContentLoading(false);
+    }
+  };
 
   const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,8 +129,8 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+      <div className="max-w-4xl mx-auto space-y-8">
+        <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold text-slate-900">
             Paramètres du profil
           </h1>
@@ -260,6 +289,63 @@ export default function ProfilePage() {
                   </button>
                 </div>
               </form>
+            )}
+          </div>
+
+          {/* --- SECTION : MES PROBLÈMES POSTÉS --- */}
+          <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl space-y-4">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Mes problèmes postés ({userProblems.length})
+            </h2>
+
+            {contentLoading ? (
+              <p className="text-slate-400 text-sm italic">Chargement de vos problèmes...</p>
+            ) : userProblems.length === 0 ? (
+              <p className="text-slate-400 text-sm">Vous n'avez posté aucun problème pour le moment.</p>
+            ) : (
+              <div className="divide-y divide-slate-100">
+                {userProblems.map((prob) => (
+                  <div key={prob.idProblem} className="py-3 flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 text-sm">{prob.title}</h4>
+                      <p className="text-xs text-slate-500 line-clamp-1">{prob.description}</p>
+                    </div>
+                    <span className="text-xs px-2.5 py-1 bg-slate-100 font-medium text-slate-600 rounded-lg">
+                      {prob.category?.name || "Général"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* --- SECTION : MES SOLUTIONS POSTÉES --- */}
+          <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl space-y-4">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Mes solutions postées ({userSolutions.length})
+            </h2>
+
+            {contentLoading ? (
+              <p className="text-slate-400 text-sm italic">Chargement de vos solutions...</p>
+            ) : userSolutions.length === 0 ? (
+              <p className="text-slate-400 text-sm">Vous n'avez posté aucune solution pour le moment.</p>
+            ) : (
+              <div className="divide-y divide-slate-100">
+                {userSolutions.map((sol) => (
+                  <div key={sol.idSolution} className="py-3 flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold text-slate-900 text-sm">{sol.title}</h4>
+                      <p className="text-xs text-slate-500 line-clamp-1">{sol.steps}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-slate-500">⏱️ {sol.timeMinutes} min</span>
+                      <span className="text-xs px-2.5 py-1 bg-blue-50 font-medium text-blue-700 rounded-lg">
+                        Difficulté: {sol.difficulty}/5
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>

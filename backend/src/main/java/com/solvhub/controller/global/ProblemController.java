@@ -11,7 +11,6 @@ import com.solvhub.dto.SolutionDTO;
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.service.ProblemService;
 
-
 @RestController
 @RequestMapping("/api/problems")
 public class ProblemController {
@@ -69,7 +68,6 @@ public class ProblemController {
         return problemService.update(id, dto);
     }
 
-  
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
         problemService.delete(id);
@@ -78,10 +76,14 @@ public class ProblemController {
     @PostMapping("/check-duplicates")
     public List<ProblemDTO> checkDuplicates(@RequestBody ProblemCheckRequestDTO dto) {
         return problemService.findPossibleDuplicates(
-            dto.getTitle(), 
-            dto.getDescription(), 
-            dto.getCategoryId(), 
-            dto.getEquipmentId()
-        );
+                dto.getTitle(),
+                dto.getDescription(),
+                dto.getCategoryId(),
+                dto.getEquipmentId());
+    }
+
+    @GetMapping("/user/{userId}")
+    public List<ProblemDTO> getProblemsByUser(@PathVariable Integer userId) {
+        return problemService.getProblemsByUser(userId);
     }
 }

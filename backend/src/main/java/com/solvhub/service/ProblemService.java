@@ -14,12 +14,12 @@ import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.mapper.ProblemMapper;
 import com.solvhub.mapper.SolutionMapper;
 import com.solvhub.model.Category;
-import com.solvhub.model.Equipment; // ➕ Import de l'équipement
+import com.solvhub.model.Equipment; 
 import com.solvhub.model.Problem;
 import com.solvhub.model.Solution;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.CategoryRepository;
-import com.solvhub.repository.global.EquipmentRepository; // ➕ Import du repository d'équipement
+import com.solvhub.repository.global.EquipmentRepository; 
 import com.solvhub.repository.global.ProblemRepository;
 import com.solvhub.repository.global.SolutionRepository;
 import com.solvhub.repository.global.UserRepository;
@@ -39,6 +39,7 @@ public class ProblemService {
     private final EquipmentRepository equipmentRepository;
     private final VoteRepository voteRepository;
     private final SecurityUtils securityUtils;
+    private final UserRepository userRepository;
 
     public ProblemService(
             SolutionRepository solutionRepository,
@@ -56,6 +57,7 @@ public class ProblemService {
         this.problemMapper = problemMapper;
         this.categoryRepository = categoryRepository;
         this.equipmentRepository = equipmentRepository;
+        this.userRepository = userRepository;
         this.voteRepository = voteRepository;
         this.securityUtils = securityUtils;
     }
@@ -258,5 +260,13 @@ public class ProblemService {
         if (union.isEmpty())
             return 0.0;
         return (double) intersection.size() / union.size();
+    }
+
+@Transactional
+    public List<ProblemDTO> getProblemsByUser(Integer userId) {
+        return problemRepository.findByUserIdUsers(userId)
+                .stream()
+                .map(problemMapper::toDTO)
+                .toList();
     }
 }

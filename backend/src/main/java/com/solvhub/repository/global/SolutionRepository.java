@@ -13,4 +13,6 @@ public interface SolutionRepository extends GenericRepository<Solution, Integer>
     long countByUser_IdUsers(Integer idUsers);
 
     long countByUser(User user);
+
+    List<Solution> findByUser(User user);
 }

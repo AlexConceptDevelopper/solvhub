@@ -44,3 +44,8 @@ export const checkDuplicates = async (
 
   return result ?? [];
 };
+
+export const getProblemsByUser = async (idUser: number): Promise<Problem[]> => {
+  const result = await apiFetch<Problem[] | null>(`/problems/user/${idUser}`); // Adapte le chemin selon ton back-end
+  return result ?? [];
+};

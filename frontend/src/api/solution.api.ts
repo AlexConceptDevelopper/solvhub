@@ -66,3 +66,8 @@ export const updateSolution = async (
 export const deleteSolution = async (idSolution: number): Promise<void> => {
   await apiFetch(`/solutions/${idSolution}`, { method: "DELETE" });
 };
+
+export const getSolutionsByUser = async (idUser: number): Promise<Solution[]> => {
+  const result = await apiFetch<Solution[] | null>(`/solutions/user/${idUser}`); // Adapte le chemin si ton back-end attend une autre route
+  return result ?? [];
+};
