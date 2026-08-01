@@ -11,8 +11,7 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    @Value("${RESEND_API_KEY:}")
-    private String resendApiKey;
+    private final String resendApiKey = System.getenv("RESEND_API_KEY");
 
     @Value("${app.frontend-url:https://solvhub.fr}")
     private String frontendUrl;
