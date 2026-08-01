@@ -14,9 +14,7 @@ import LoadingState from "../components/LoadingState";
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<Problem[]>([]);
-  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>(
-    [],
-  );
+  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>([]);
   const [category, setCategory] = useState("Toutes");
 
   const [selectedBrand, setSelectedBrand] = useState("Toutes");
@@ -24,7 +22,7 @@ export default function ProblemsPage() {
 
   const navigate = useNavigate();
 
-  // On récupère la recherche directement depuis l'URL (?search=...)
+  // On récupère et pilote la recherche directement depuis l'URL (?search=...)
   const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get("search") || "";
 
@@ -94,12 +92,25 @@ export default function ProblemsPage() {
     }
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchParams((prev) => {
+      if (value.trim()) {
+        prev.set("search", value);
+      } else {
+        prev.delete("search");
+      }
+      return prev;
+    });
+  };
+
   const filteredProblems = problems.filter((problem) => {
     if (!problem) return false;
 
     const brand = problem.equipment?.brand || "";
     const model = problem.equipment?.model || "";
-    // Filtrage basé sur le texte de l'URL
+    
+    // Filtrage textuel intelligent (titre, description, marque, modèle)
     const matchesSearch =
       matchesSearchQuery(problem.title, searchQuery) ||
       matchesSearchQuery(problem.description, searchQuery) ||
@@ -171,22 +182,40 @@ export default function ProblemsPage() {
         </PrimaryButton>
       </div>
 
-      {/* Bandeau informatif si une recherche est active */}
-      {searchQuery && (
-        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
-          <span>
-            Résultats pour la recherche :{" "}
-            <strong className="font-semibold">"{searchQuery}"</strong>
-          </span>
+      {/* --- BARRE DE RECHERCHE TEXTUELLE INTÉGRÉE --- */}
+      <div className="relative">
+        <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+          🔍
+        </span>
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Rechercher par mot-clé (ex: écran, broute, batterie)..."
+          className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-800 text-sm shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+        />
+        {searchQuery && (
           <button
             onClick={() => {
               searchParams.delete("search");
               setSearchParams(searchParams);
             }}
-            className="text-xs font-bold underline hover:text-blue-900 cursor-pointer"
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-semibold text-slate-400 hover:text-slate-600 cursor-pointer"
           >
-            Effacer la recherche
+            Effacer
           </button>
+        )}
+      </div>
+
+      {/* Bandeau informatif si une recherche active filtre des résultats */}
+      {searchQuery && (
+        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
+          <span>
+            Résultats pour : <strong className="font-semibold">"{searchQuery}"</strong>
+          </span>
+          <span className="text-xs font-medium text-blue-600">
+            {filteredProblems.length} trouvé(s)
+          </span>
         </div>
       )}
 
@@ -240,7 +269,7 @@ export default function ProblemsPage() {
       )}
 
       <div className="flex justify-between items-center text-sm text-slate-500 px-1">
-        <span>{filteredProblems.length} problème(s) trouvé(s)</span>
+        <span>{filteredProblems.length} problème(s) affiché(s)</span>
       </div>
 
       {filteredProblems.length === 0 ? (
@@ -277,10 +306,10 @@ export default function ProblemsPage() {
                 returnTo: "/problems",
                 returnLabel: "Retour aux problèmes",
               }}
-              className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex-col md:flex-row md:items-center justify-between gap-4 group block"
+              className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group block"
             >
               <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3 text-xs">
+                <div className="flex items-center gap-3 text-xs flex-wrap">
                   {problem.category && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
                       <span>{problem.category.icon || "🏷️"}</span>
