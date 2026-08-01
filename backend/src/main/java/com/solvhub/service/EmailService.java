@@ -1,11 +1,12 @@
 package com.solvhub.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.http.HttpHeaders;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +70,6 @@ public class EmailService {
             restTemplate.postForEntity(RESEND_URL, request, String.class);
             
         } catch (Exception e) {
-            // Log l'erreur mais évite de bloquer l'app si besoin, ou lève une exception propre
             System.err.println("Erreur envoi email Resend API : " + e.getMessage());
         }
     }
