@@ -24,12 +24,20 @@ public class EmailService {
 
     public void sendVerificationEmail(String to, String token) {
         String verificationUrl = frontendUrl + "/verify?token=" + token;
-        String text = "Bienvenue sur SolvHub !\n\n" +
-                "Cliquez sur ce lien pour vérifier votre compte :\n" +
-                verificationUrl + "\n\n" +
-                "Ce lien expire dans 24 heures.";
+        
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;\">"
+                           + "<h2 style=\"color: #4F46E5;\">SolvHub</h2>"
+                           + "<p>Bienvenue sur SolvHub !</p>"
+                           + "<p>Cliquez sur le bouton ci-dessous pour vérifier votre compte :</p>"
+                           + "<div style=\"text-align: center; margin: 30px 0;\">"
+                           + "<a href=\"" + verificationUrl + "\" style=\"background-color: #4F46E5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;\">Vérifier mon compte</a>"
+                           + "</div>"
+                           + "<p style=\"color: #6b7280; font-size: 0.9em;\">Ce lien expire dans 24 heures.</p>"
+                           + "<p style=\"color: #6b7280; font-size: 0.9em;\">À bientôt sur SolvHub !</p>"
+                           + "</div>";
 
-        sendEmailViaApi(to, "Vérifiez votre compte SolvHub", text, false);
+        // On passe le dernier paramètre à true pour activer le mode HTML
+        sendEmailViaApi(to, "Vérifiez votre compte SolvHub", htmlContent, true);
     }
 
     public void sendNewSolutionNotification(String toEmail, String username, String problemTitle, Integer problemId) {
