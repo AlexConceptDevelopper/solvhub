@@ -14,40 +14,37 @@ import java.util.Map;
 public class EmailService {
 
     @Value("${resend.api.key:}")
-    private String resendApiKey;;
+    private String resendApiKey;
 
-    @Value("${app.frontend-url:https://solvhub.fr}")
-    private String frontendUrl;
+    // URL mise en dur pour éviter toute pollution par les variables de configuration
+    private static final String FRONTEND_URL = "https://solvhub.fr";
 
     private final RestTemplate restTemplate = new RestTemplate();
     private static final String RESEND_URL = "https://api.resend.com/emails";
 
     public void sendVerificationEmail(String to, String token) {
-        String verificationUrl = frontendUrl + "/verify?token=" + token;
+        String verificationUrl = FRONTEND_URL + "/verify?token=" + token;
 
         String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;\">"
-                +
-                "<h2 style=\"color: #4F46E5;\">SolvHub</h2>" +
-                "<p>Bienvenue sur SolvHub !</p>" +
-                "<p>Pour vérifier votre compte, veuillez cliquer sur le lien ci-dessous :</p>" +
-                "<p style=\"margin: 30px 0;\">" +
-                "<a href=\"" + verificationUrl
+                + "<h2 style=\"color: #4F46E5;\">SolvHub</h2>"
+                + "<p>Bienvenue sur SolvHub !</p>"
+                + "<p>Pour vérifier votre compte, veuillez cliquer sur le lien ci-dessous :</p>"
+                + "<p style=\"margin: 30px 0;\">"
+                + "<a href=\"" + verificationUrl
                 + "\" target=\"_blank\" style=\"color: #4F46E5; font-size: 16px; font-weight: bold; text-decoration: underline;\">Cliquer ici pour vérifier mon compte</a>"
-                +
-                "</p>" +
-                "<p style=\"font-size: 0.9em; color: #555;\">Si le lien ne fonctionne pas, copiez-collez cette URL dans votre navigateur :<br>"
-                +
-                "<a href=\"" + verificationUrl + "\" style=\"color: #6b7280; word-break: break-all;\">"
-                + verificationUrl + "</a></p>" +
-                "<p style=\"color: #6b7280; font-size: 0.9em;\">Ce lien expire dans 24 heures.</p>" +
-                "<p style=\"color: #6b7280; font-size: 0.9em;\">À bientôt sur SolvHub !</p>" +
-                "</div>";
+                + "</p>"
+                + "<p style=\"font-size: 0.9em; color: #555;\">Si le lien ne fonctionne pas, copiez-collez cette URL dans votre navigateur :<br>"
+                + "<a href=\"" + verificationUrl + "\" style=\"color: #6b7280; word-break: break-all;\">"
+                + verificationUrl + "</a></p>"
+                + "<p style=\"color: #6b7280; font-size: 0.9em;\">Ce lien expire dans 24 heures.</p>"
+                + "<p style=\"color: #6b7280; font-size: 0.9em;\">À bientôt sur SolvHub !</p>"
+                + "</div>";
 
         sendEmailViaApi(to, "Vérifiez votre compte SolvHub", htmlContent, true);
     }
 
     public void sendNewSolutionNotification(String toEmail, String username, String problemTitle, Integer problemId) {
-        String problemUrl = frontendUrl + "/problem/" + problemId;
+        String problemUrl = FRONTEND_URL + "/problem/" + problemId;
         String subject = "Nouvelle solution pour votre problème : " + problemTitle;
 
         String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 8px;\">"
@@ -84,7 +81,7 @@ public class EmailService {
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
             restTemplate.postForEntity(RESEND_URL, request, String.class);
 
-        } catch (Exception e) {
+            } catch (Exception e) {
             System.err.println("Erreur envoi email Resend API : " + e.getMessage());
         }
     }
