@@ -66,10 +66,13 @@ public class EquipmentController {
     }
 
     @GetMapping("/find")
-    public EquipmentDTO findEquipment(
+    public ResponseEntity<EquipmentDTO> findEquipment(
             @RequestParam("categoryId") Integer categoryId,
             @RequestParam("brand") String brand,
             @RequestParam("model") String model) {
-        return equipmentService.findByCategoryAndBrandAndModel(categoryId, brand, model);
+        
+        EquipmentDTO equipment = equipmentService.findByCategoryAndBrandAndModel(categoryId, brand, model);
+        
+        return ResponseEntity.ok(equipment); 
     }
 }

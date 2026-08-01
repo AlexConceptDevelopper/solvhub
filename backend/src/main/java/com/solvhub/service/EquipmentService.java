@@ -42,10 +42,10 @@ public class EquipmentService {
     }
 
     public EquipmentDTO findByCategoryAndBrandAndModel(Integer categoryId, String brand, String model) {
-        Equipment equipment = equipmentRepository
+        return equipmentRepository
                 .findByCategory_IdCategoryAndBrandAndModel(categoryId, brand, model)
-                .orElseThrow(() -> new ResourceNotFoundException("Équipement introuvable"));
-        return equipmentMapper.toDTO(equipment);
+                .map(equipmentMapper::toDTO)
+                .orElse(null); // 🟢 Retourne null proprement au lieu de lever une exception 404
     }
 
     public List<String> getBrandsByCategoryId(Integer categoryId) {
