@@ -86,7 +86,6 @@ export default function CreateProblemPage() {
       } else {
         setBrands([]);
       }
-      // Reset des sélections en cascade
       setSelectedBrand("");
       setCustomBrand("");
       setModels([]);
@@ -117,6 +116,40 @@ export default function CreateProblemPage() {
     fetchModels();
   }, [selectedBrand, customBrand, form.idCategory]);
 
+  // ⚡ POINT 1 : Détection automatique des doublons en temps réel (avec Debounce 500ms)
+  useEffect(() => {
+    if (!form.title || form.title.length < 3) {
+      setAiChecked(false);
+      setAiSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      let equipmentId = undefined;
+      try {
+        equipmentId = await resolveOrCreateIndex();
+      } catch (e) {
+        // Ignorer l'erreur silencieusement pendant la frappe
+      }
+
+      const duplicates = await checkDuplicatesExecute(() =>
+        checkDuplicates({
+          title: form.title,
+          description: form.description,
+          categoryId: form.idCategory,
+          equipmentId: equipmentId,
+        }),
+      );
+
+      if (duplicates) {
+        setAiSuggestions(duplicates);
+        setAiChecked(true);
+      }
+    }, 500); // Attend 500ms après la dernière frappe de l'utilisateur
+
+    return () => clearTimeout(timer);
+  }, [form.title, form.description, form.idCategory, selectedBrand, customBrand, selectedModel, customModel]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -128,13 +161,9 @@ export default function CreateProblemPage() {
       ...form,
       [name]: name === "idCategory" ? parseInt(value, 10) : value,
     });
-
-    if (name === "title" || name === "description") {
-      setAiChecked(false);
-    }
   };
 
-  // Résout ou crée l'équipement en s'appuyant sur tes méthodes existantes
+  // Résout ou crée l'équipement en arrière-plan à la volée
   const resolveOrCreateIndex = async (): Promise<number | undefined> => {
     const finalBrand = selectedBrand === "OTHER" ? customBrand.trim() : selectedBrand;
     const finalModel = selectedModel === "OTHER" ? customModel.trim() : selectedModel;
@@ -142,16 +171,14 @@ export default function CreateProblemPage() {
     if (!finalBrand || !finalModel) return undefined;
 
     try {
-      // 1. On cherche si l'équipement existe déjà via ton endpoint /find
       const existing = await findEquipmentByCriteria(form.idCategory, finalBrand, finalModel);
       if (existing && existing.idEquipment) {
         return existing.idEquipment;
       }
     } catch (e) {
-      // S'il n'est pas trouvé (404 géré par findEquipmentByCriteria), on passe à la création
+      // Non trouvé, on crée
     }
 
-    // 2. S'il n'existe pas, on le crée à la volée avec ton DTO
     try {
       const newEq = await createEquipment({
         category: { idCategory: form.idCategory },
@@ -167,36 +194,6 @@ export default function CreateProblemPage() {
     } catch (err) {
       console.error("Erreur création équipement", err);
       throw new Error("Impossible de créer l'équipement associé.");
-    }
-  };
-
-  const handleCheckDuplicates = async () => {
-    if (!form.title || form.title.length < 3) {
-      alert("Veuillez saisir un titre (3 caractères min.) avant de lancer la vérification.");
-      return;
-    }
-
-    setAiChecked(false);
-
-    let equipmentId = undefined;
-    try {
-      equipmentId = await resolveOrCreateIndex();
-    } catch (e) {
-      // Gérer l'erreur
-    }
-
-    const duplicates = await checkDuplicatesExecute(() =>
-      checkDuplicates({
-        title: form.title,
-        description: form.description,
-        categoryId: form.idCategory,
-        equipmentId: equipmentId,
-      }),
-    );
-
-    if (duplicates) {
-      setAiSuggestions(duplicates);
-      setAiChecked(true);
     }
   };
 
@@ -273,7 +270,6 @@ export default function CreateProblemPage() {
 
           {/* SÉLECTION MARQUE & MODÈLE EN CASCADE AVEC OPTION "AUTRE" */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
-            {/* MARQUE */}
             <div>
               <label className="block font-semibold text-slate-700 mb-2">Marque (Optionnel)</label>
               <select
@@ -305,7 +301,6 @@ export default function CreateProblemPage() {
               )}
             </div>
 
-            {/* MODÈLE */}
             <div>
               <label className="block font-semibold text-slate-700 mb-2">Modèle (Optionnel)</label>
               {(selectedBrand && selectedBrand !== "OTHER") || (selectedBrand === "OTHER" && customBrand) ? (
@@ -361,25 +356,22 @@ export default function CreateProblemPage() {
             />
           </div>
 
-          {/* Bloc de détection de doublons */}
+          {/* Bloc de détection de doublons en temps réel (Le bouton a été retiré, tout est automatisé) */}
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
                   <span>🛡️ Détection de doublons</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Vérifiez si un problème similaire existe déjà dans la base.
+                  Vérification automatique pendant que vous écrivez...
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={handleCheckDuplicates}
-                disabled={checkingAI}
-                className="bg-slate-700 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-2.5 rounded-xl transition shadow-sm cursor-pointer disabled:opacity-50 whitespace-nowrap"
-              >
-                {checkingAI ? "Vérification..." : "🔍 Vérifier les doublons"}
-              </button>
+              {checkingAI && (
+                <span className="text-xs text-blue-600 font-medium animate-pulse">
+                  Vérification...
+                </span>
+              )}
             </div>
 
             {aiChecked && (
