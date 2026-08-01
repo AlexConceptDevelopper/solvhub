@@ -52,24 +52,24 @@ public class EquipmentController {
     }
 
     @GetMapping("/brands")
-    public ResponseEntity<List<String>> getBrandsByCategory(@RequestParam("idCategory") Integer categoryId) {
+    public ResponseEntity<List<String>> getBrandsByCategory(@RequestParam("categoryId") Integer categoryId) {
         List<String> brands = equipmentService.getBrandsByCategoryId(categoryId);
         return ResponseEntity.ok(brands);
     }
 
     @GetMapping("/models")
     public ResponseEntity<List<String>> getModelsByCategoryAndBrand(
-            @RequestParam Integer idCategory,
-            @RequestParam String brand) {
-        List<String> models = equipmentService.getModelsByCategoryIdAndBrand(idCategory, brand);
+            @RequestParam("categoryId") Integer categoryId,
+            @RequestParam("brand") String brand) {
+        List<String> models = equipmentService.getModelsByCategoryIdAndBrand(categoryId, brand);
         return ResponseEntity.ok(models);
     }
 
     @GetMapping("/find")
     public EquipmentDTO findEquipment(
-            @RequestParam Integer idCategory,
-            @RequestParam String brand,
-            @RequestParam String model) {
-        return equipmentService.findByCategoryAndBrandAndModel(idCategory, brand, model);
+            @RequestParam("categoryId") Integer categoryId,
+            @RequestParam("brand") String brand,
+            @RequestParam("model") String model) {
+        return equipmentService.findByCategoryAndBrandAndModel(categoryId, brand, model);
     }
 }
