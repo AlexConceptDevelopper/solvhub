@@ -80,7 +80,6 @@ function AppRoutes() {
           </Routes>
         </main>
 
-        {/* Le footer s'affiche sur TOUTES les pages tout en bas */}
         <Footer />
         
       </div>

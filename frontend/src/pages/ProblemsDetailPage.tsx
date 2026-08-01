@@ -66,6 +66,40 @@ export default function ProblemDetailPage() {
     load();
   }, [id]);
 
+  // AJOUT SEO : Injection des données structurées Schema.org (QAPage) pour Google
+  useEffect(() => {
+    if (!problem) return;
+
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "QAPage",
+      "mainEntity": {
+        "@type": "Question",
+        "name": problem.title,
+        "text": problem.description,
+        "answerCount": solutions.length,
+        "suggestedAnswer": solutions.map((s) => ({
+          "@type": "Answer",
+          "name": s.title,
+          "text": s.steps,
+        })),
+      },
+    };
+
+    let scriptTag = document.getElementById("structured-data-qa") as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement("script");
+      scriptTag.id = "structured-data-qa";
+      scriptTag.type = "application/ld+json";
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(structuredData);
+
+    return () => {
+      scriptTag?.remove();
+    };
+  }, [problem, solutions]);
+
   if (loadingProblem) {
     return <LoadingState label="Chargement du problème..." />;
   }

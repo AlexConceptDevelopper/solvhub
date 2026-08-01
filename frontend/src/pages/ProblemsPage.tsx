@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { getProblems } from "../api/problem.api";
 import { getCategoriesWithCount } from "../api/category.api";
 import type { Problem } from "../types/problem";
@@ -270,17 +270,14 @@ export default function ProblemsPage() {
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
           {filteredProblems.map((problem) => (
-            <div
+            <Link
               key={problem.idProblem || Math.random()}
-              onClick={() =>
-                navigate(`/problem/${problem.idProblem}`, {
-                  state: {
-                    returnTo: "/problems",
-                    returnLabel: "Retour aux problèmes",
-                  },
-                })
-              }
-              className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+              to={`/problem/${problem.idProblem}`}
+              state={{
+                returnTo: "/problems",
+                returnLabel: "Retour aux problèmes",
+              }}
+              className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex-col md:flex-row md:items-center justify-between gap-4 group block"
             >
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3 text-xs">
@@ -319,7 +316,7 @@ export default function ProblemsPage() {
                   Voir les solutions →
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

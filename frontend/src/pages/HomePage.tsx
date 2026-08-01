@@ -25,11 +25,10 @@ export default function HomePage() {
     loadCategories();
   }, []);
 
-  // Gestion de la recherche au clic sur "Rechercher" ou touche Entrée
+  // Gestion de la recherche au clic sur "Rechercher" ou touche Entrée (Reste en navigate car c'est une action/soumission de formulaire)
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     if (!searchQuery.trim()) return;
-    // Redirige vers la page de liste des problèmes avec le paramètre de recherche
     navigate(`/problems?search=${encodeURIComponent(searchQuery)}`);
   };
 
@@ -144,16 +143,13 @@ export default function HomePage() {
 
             <span className="text-slate-300">•</span>
 
-            <button
-              onClick={() =>
-                navigate("/problem/create", {
-                  state: { returnTo: "/", returnLabel: "Retour à l'accueil" },
-                })
-              }
+            <Link
+              to="/problem/create"
+              state={{ returnTo: "/", returnLabel: "Retour à l'accueil" }}
               className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
             >
               + Poser un problème
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -173,8 +169,8 @@ export default function HomePage() {
         <RecentProblems returnTo="/" returnLabel="Retour à l'accueil" />
 
         <div className="flex justify-center mt-10">
-          <button
-            onClick={() => navigate("/problems")}
+          <Link
+            to="/problems"
             className="
               text-sm
               font-bold
@@ -202,7 +198,7 @@ export default function HomePage() {
             <span className="transform group-hover:translate-x-1 transition-transform">
               →
             </span>
-          </button>
+          </Link>
         </div>
       </section>
 
@@ -232,13 +228,10 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {categories.slice(0, 6).map((category) => (
-            <div
+            <Link
               key={category.idCategory}
-              onClick={() =>
-                navigate(`/categories/${category.idCategory}`, {
-                  state: { returnTo: "/", returnLabel: "Retour à l'accueil" },
-                })
-              }
+              to={`/categories/${category.idCategory}`}
+              state={{ returnTo: "/", returnLabel: "Retour à l'accueil" }}
               className="
                 group
                 relative
@@ -313,14 +306,14 @@ export default function HomePage() {
                 {category.problemCount} problème
                 {category.problemCount > 1 ? "s" : ""}
               </span>
-            </div>
+            </Link>
           ))}
         </div>
 
         {categories.length > 6 && (
           <div className="flex justify-center mt-10">
-            <button
-              onClick={() => navigate("/categories")}
+            <Link
+              to="/categories"
               className="
                 text-sm
                 font-bold
@@ -348,7 +341,7 @@ export default function HomePage() {
               <span className="transform group-hover:translate-x-1 transition-transform">
                 →
               </span>
-            </button>
+            </Link>
           </div>
         )}
       </section>

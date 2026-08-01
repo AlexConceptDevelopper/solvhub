@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getCategoriesWithCount } from "../api/category.api";
 import type { Category } from "../types/category";
 import BackButton from "../components/BackButton";
@@ -7,7 +7,6 @@ import BackButton from "../components/BackButton";
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     getCategoriesWithCount()
@@ -44,17 +43,14 @@ export default function CategoriesPage() {
         ) : (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
             {categories.map((cat) => (
-              <div
+              <Link
                 key={cat.idCategory}
-                onClick={() =>
-                  navigate(`/categories/${cat.idCategory}`, {
-                    state: {
-                      returnTo: "/categories",
-                      returnLabel: "Retour aux catégories",
-                    },
-                  })
-                }
-                className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex items-center justify-between gap-4 group"
+                to={`/categories/${cat.idCategory}`}
+                state={{
+                  returnTo: "/categories",
+                  returnLabel: "Retour aux catégories",
+                }}
+                className="p-6 hover:bg-slate-50/80 transition cursor-pointer items-center justify-between gap-4 group block"
               >
                 <div className="flex items-center gap-4">
                   <span className="text-2xl p-2 bg-blue-50 border border-blue-100 rounded-xl">
@@ -72,7 +68,7 @@ export default function CategoriesPage() {
                 <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
                   Explorer →
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         )}
