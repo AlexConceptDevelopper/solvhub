@@ -74,7 +74,7 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
   // Marquer un média pour suppression locale (visuel)
   const handleMarkMediaForDelete = (idMedia: number) => {
     setMediasToDelete((prev) => [...prev, idMedia]);
-    setSolutionMedias((prev) => prev.filter((m) => m.idMedia !== idMedia));
+    setSolutionMedias((prev) => prev.filter((m) => (m.idMedia ?? m.id) !== idMedia));
   };
 
   // Sauvegarder les modifications globales
@@ -97,10 +97,7 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
 
       // 2. Suppression en base des médias que l'admin a voulu retirer
       for (const mediaId of mediasToDelete) {
-        await apiFetch(`/solutions/media/${mediaId}`, { method: "DELETE" }).catch(() => {
-          // Si ton endpoint de suppression de média a une route spécifique, adapte-la ici
-          // Ex: /solutions/media/{id} ou /media/{id} selon ton back
-        });
+        await apiFetch(`/solutions/media/${mediaId}`, { method: "DELETE" }).catch(() => {});
       }
 
       setSolutions((prev) =>
@@ -295,25 +292,32 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
                   <p className="text-slate-400 text-xs italic">Aucun média associé à cette solution.</p>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {solutionMedias.map((media) => (
-                      <div key={media.idMedia} className="relative group rounded-xl border border-slate-200 p-2 bg-slate-50 flex flex-col items-center justify-between">
-                        {media.type.toUpperCase() === "VIDEO" ? (
-                          <div className="w-full h-20 bg-slate-900 rounded-lg flex items-center justify-center text-white text-xs font-semibold px-2 text-center truncate">
-                            🎥 Vidéo YouTube
-                          </div>
-                        ) : (
-                          <img src={media.url} alt="Média solution" className="w-full h-20 object-cover rounded-lg" />
-                        )}
-                        <span className="text-[10px] text-slate-500 mt-1 truncate w-full text-center">{media.type}</span>
-                        <button
-                          type="button"
-                          onClick={() => handleMarkMediaForDelete(media.idMedia)}
-                          className="mt-2 w-full py-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-semibold cursor-pointer transition"
-                        >
-                          Supprimer
-                        </button>
-                      </div>
-                    ))}
+                    {solutionMedias.map((media) => {
+                      const currentMediaId = media.idMedia ?? media.id;
+                      return (
+                        <div key={currentMediaId} className="relative group rounded-xl border border-slate-200 p-2 bg-slate-50 flex flex-col items-center justify-between">
+                          {media.type.toUpperCase() === "VIDEO" ? (
+                            <div className="w-full h-20 bg-slate-900 rounded-lg flex items-center justify-center text-white text-xs font-semibold px-2 text-center truncate">
+                              🎥 Vidéo YouTube
+                            </div>
+                          ) : (
+                            <img src={media.url} alt="Média solution" className="w-full h-20 object-cover rounded-lg" />
+                          )}
+                          <span className="text-[10px] text-slate-500 mt-1 truncate w-full text-center">{media.type}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (currentMediaId !== undefined) {
+                                handleMarkMediaForDelete(currentMediaId);
+                              }
+                            }}
+                            className="mt-2 w-full py-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-lg text-xs font-semibold cursor-pointer transition"
+                          >
+                            Supprimer
+                          </button>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>

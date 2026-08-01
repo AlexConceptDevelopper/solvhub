@@ -1,5 +1,6 @@
 export interface SolutionMedia {
-  idMedia: number;
+  idMedia?: number;
+  id?: number;
   url: string;
   type: string;
 }
