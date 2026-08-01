@@ -116,7 +116,7 @@ export default function CreateProblemPage() {
     fetchModels();
   }, [selectedBrand, customBrand, form.idCategory]);
 
-  // ⚡ POINT 1 : Détection automatique des doublons en temps réel (avec Debounce 500ms)
+  // Détection automatique des doublons en temps réel (Debounce 500ms)
   useEffect(() => {
     if (!form.title || form.title.length < 3) {
       setAiChecked(false);
@@ -145,7 +145,7 @@ export default function CreateProblemPage() {
         setAiSuggestions(duplicates);
         setAiChecked(true);
       }
-    }, 500); // Attend 500ms après la dernière frappe de l'utilisateur
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [form.title, form.description, form.idCategory, selectedBrand, customBrand, selectedModel, customModel]);
@@ -163,7 +163,6 @@ export default function CreateProblemPage() {
     });
   };
 
-  // Résout ou crée l'équipement en arrière-plan à la volée
   const resolveOrCreateIndex = async (): Promise<number | undefined> => {
     const finalBrand = selectedBrand === "OTHER" ? customBrand.trim() : selectedBrand;
     const finalModel = selectedModel === "OTHER" ? customModel.trim() : selectedModel;
@@ -221,43 +220,56 @@ export default function CreateProblemPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-white/80 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-slate-800">
-            Poser un problème
-          </h1>
+    <div className="max-w-3xl mx-auto pb-12">
+      <div className="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200/80 shadow-xl p-8 md:p-10">
+        <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-100">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+              Espace Communauté
+            </span>
+            <h1 className="text-3xl font-extrabold text-slate-900 mt-2">
+              Soumettre un problème technique
+            </h1>
+          </div>
           <BackButton to={backTo} label={backLabel} />
         </div>
 
         {(submitError || catError) && (
-          <ErrorMessage message={submitError || catError || "Une erreur est survenue"} />
+          <div className="mb-6">
+            <ErrorMessage message={submitError || catError || "Une erreur est survenue"} />
+          </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6" autoComplete="off">
+        <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+          {/* Titre */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">Titre</label>
+            <label className="block text-sm font-bold text-slate-800 mb-2">
+              Titre du problème <span className="text-blue-600">*</span>
+            </label>
             <input
               name="title"
               value={form.title}
               onChange={handleChange}
-              placeholder="Ex : Mon appareil ne démarre plus"
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+              placeholder="Ex : Panne de compresseur d'air sur ligne 2 ou voyant moteur allumé..."
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-slate-900 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium"
               required
             />
           </div>
 
+          {/* Catégorie */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">Catégorie</label>
+            <label className="block text-sm font-bold text-slate-800 mb-2">
+              Catégorie principale <span className="text-blue-600">*</span>
+            </label>
             <select
               name="idCategory"
               value={form.idCategory}
               onChange={handleChange}
               disabled={loadingCats}
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 bg-slate-50/50 focus:bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium cursor-pointer"
             >
               {loadingCats ? (
-                <option>Chargement...</option>
+                <option>Chargement des catégories...</option>
               ) : (
                 categories.map((cat) => (
                   <option key={cat.idCategory} value={cat.idCategory}>
@@ -269,16 +281,18 @@ export default function CreateProblemPage() {
           </div>
 
           {/* SÉLECTION MARQUE & MODÈLE EN CASCADE AVEC OPTION "AUTRE" */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
             <div>
-              <label className="block font-semibold text-slate-700 mb-2">Marque (Optionnel)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Marque (Optionnel)
+              </label>
               <select
                 value={selectedBrand}
                 onChange={(e) => {
                   setSelectedBrand(e.target.value);
                   if (e.target.value !== "OTHER") setCustomBrand("");
                 }}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition shadow-2xs mb-2"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mb-2"
               >
                 <option value="">-- Choisir une marque --</option>
                 {brands.map((b) => (
@@ -294,15 +308,17 @@ export default function CreateProblemPage() {
                   type="text"
                   value={customBrand}
                   onChange={(e) => setCustomBrand(e.target.value)}
-                  placeholder="Nom de la marque"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+                  placeholder="Nom de la nouvelle marque"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm"
                   required
                 />
               )}
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-2">Modèle (Optionnel)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Modèle (Optionnel)
+              </label>
               {(selectedBrand && selectedBrand !== "OTHER") || (selectedBrand === "OTHER" && customBrand) ? (
                 <select
                   value={selectedModel}
@@ -310,7 +326,7 @@ export default function CreateProblemPage() {
                     setSelectedModel(e.target.value);
                     if (e.target.value !== "OTHER") setCustomModel("");
                   }}
-                  className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 transition shadow-2xs mb-2"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mb-2"
                 >
                   <option value="">-- Choisir un modèle --</option>
                   {models.map((m) => (
@@ -325,7 +341,7 @@ export default function CreateProblemPage() {
                   type="text"
                   disabled
                   placeholder="Sélectionnez d'abord une marque"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-slate-100 text-slate-400 cursor-not-allowed shadow-2xs"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-slate-100 text-slate-400 cursor-not-allowed shadow-2xs text-sm"
                 />
               )}
 
@@ -334,93 +350,98 @@ export default function CreateProblemPage() {
                   type="text"
                   value={customModel}
                   onChange={(e) => setCustomModel(e.target.value)}
-                  placeholder="Nom du modèle"
-                  className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 transition shadow-2xs mt-2"
+                  placeholder="Nom du nouveau modèle"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mt-2"
                   required
                 />
               )}
             </div>
           </div>
 
+          {/* Description */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">Description</label>
+            <label className="block text-sm font-bold text-slate-800 mb-2">
+              Description détaillée <span className="text-blue-600">*</span>
+            </label>
             <textarea
               name="description"
               maxLength={1000}
               value={form.description}
               onChange={handleChange}
               rows={6}
-              placeholder="Expliquez votre problème..."
-              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 bg-white resize-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
+              placeholder="Décrivez les symptômes, le contexte d'apparition et les vérifications déjà effectuées..."
+              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-slate-900 bg-slate-50/50 focus:bg-white resize-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium"
               required
             />
           </div>
 
-          {/* Bloc de détection de doublons en temps réel (Le bouton a été retiré, tout est automatisé) */}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+          {/* Bloc de détection de doublons en temps réel */}
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50/40 border border-slate-200/80 rounded-2xl p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-slate-700 flex items-center gap-2">
-                  <span>🛡️ Détection de doublons</span>
+                <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                  <span>🛡️ Analyse anti-doublon intelligente</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Vérification automatique pendant que vous écrivez...
+                  Vérification automatique croisée dans la base pour éviter les redondances.
                 </p>
               </div>
               {checkingAI && (
-                <span className="text-xs text-blue-600 font-medium animate-pulse">
-                  Vérification...
+                <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-3 py-1 rounded-full animate-pulse">
+                  Analyse...
                 </span>
               )}
             </div>
 
             {aiChecked && (
-              <div className="mt-3 pt-3 border-t border-slate-200 space-y-2">
+              <div className="mt-3 pt-3 border-t border-slate-200/60 space-y-2">
                 {aiSuggestions.length > 0 ? (
                   <div>
-                    <p className="text-xs font-bold text-amber-800 mb-2">
-                      ⚠️ Problèmes similaires détectés :
+                    <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
+                      <span>⚠️ Un problème similaire existe déjà :</span>
                     </p>
                     {aiSuggestions.map((item) => (
                       <div
                         key={item.idProblem}
-                        className="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-2 shadow-xs mb-2"
+                        className="bg-white p-3.5 rounded-xl border border-amber-200/80 flex items-center justify-between gap-3 shadow-xs mb-2 hover:border-amber-400 transition-colors"
                       >
-                        <div>
-                          <p className="text-xs font-semibold text-slate-800">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
                             {item.title}
                           </p>
-                          <p className="text-[11px] text-slate-500 line-clamp-1">
+                          <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
                             {item.description}
                           </p>
                         </div>
                         <button
                           type="button"
                           onClick={() => navigate(`/problem/${item.idProblem}`)}
-                          className="text-xs font-semibold text-blue-600 hover:underline whitespace-nowrap cursor-pointer"
+                          className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                         >
-                          Voir →
+                          Consulter →
                         </button>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-emerald-700 font-semibold">
-                    ✨ Aucun doublon détecté. Vous pouvez publier !
+                  <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-100">
+                    <span>✨ Aucun doublon trouvé. Le sujet est inédit, vous pouvez publier !</span>
                   </p>
                 )}
               </div>
             )}
           </div>
 
-          <PrimaryButton
-            type="submit"
-            loading={submitting || loadingCats}
-            loadingLabel="Création..."
-            className="w-full"
-          >
-            Créer le problème
-          </PrimaryButton>
+          <div className="pt-2">
+            <PrimaryButton
+              type="submit"
+              loading={submitting || loadingCats}
+              loadingLabel="Publication en cours..."
+              className="w-full py-4 text-base font-bold shadow-lg shadow-blue-500/25"
+            >
+              Publier le problème
+            </PrimaryButton>
+          </div>
         </form>
       </div>
     </div>
