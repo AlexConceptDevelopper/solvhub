@@ -110,6 +110,36 @@ export default function SolutionDetailPage() {
     loadSolution();
   }, [id, user]);
 
+  // AJOUT SEO : Injection des données structurées Schema.org (TechArticle) pour Google
+  useEffect(() => {
+    if (!solution) return;
+
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      "headline": solution.title,
+      "text": solution.steps,
+      "datePublished": solution.createdAt,
+      "author": {
+        "@type": "Person",
+        "name": solution.user?.username || "Communauté SolvHub",
+      },
+    };
+
+    let scriptTag = document.getElementById("structured-data-solution") as HTMLScriptElement | null;
+    if (!scriptTag) {
+      scriptTag = document.createElement("script");
+      scriptTag.id = "structured-data-solution";
+      scriptTag.type = "application/ld+json";
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = JSON.stringify(structuredData);
+
+    return () => {
+      scriptTag?.remove();
+    };
+  }, [solution]);
+
   const handleVote = async (status: "SUCCESS" | "PARTIAL" | "FAILURE") => {
     if (!solution || alreadyVoted || !user || !user.idUsers) return;
 
