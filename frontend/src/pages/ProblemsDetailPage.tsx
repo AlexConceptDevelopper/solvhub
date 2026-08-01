@@ -131,13 +131,15 @@ export default function ProblemDetailPage() {
           </span>
         </div>
 
-        {/* TITRE ET BOUTON RETOUR ALIGNÉS + SOUS-BLOC DATE */}
+        {/* TITRE ET BOUTON RETOUR CORRIGÉS (Responsive sans bug de coupe) */}
         <div className="space-y-1">
-          <div className="flex items-center justify-between gap-4">
-            <h1 className="text-3xl font-bold text-slate-900 w-0 flex-1 wrap-break-word">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 break-words flex-1">
               {problem.title}
             </h1>
-            <BackButton to={backTo} label={backLabel} />
+            <div className="self-start sm:self-auto">
+              <BackButton to={backTo} label={backLabel} />
+            </div>
           </div>
 
           {problem.createdAt && (
@@ -167,12 +169,12 @@ export default function ProblemDetailPage() {
         <div
           className="
             text-slate-700 
-            text-base 
-            md:text-lg 
+            text-sm 
+            md:text-base 
             leading-relaxed 
             space-y-4 
             whitespace-pre-wrap 
-            wrap-break-word
+            break-words 
             pt-2
             font-normal
           "
@@ -203,7 +205,7 @@ export default function ProblemDetailPage() {
             </p>
           </div>
 
-          <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 shadow-xs">
+          <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 shadow-xs shrink-0">
             {solutions.length} {solutions.length > 1 ? "solutions" : "solution"}
           </span>
         </div>

@@ -69,7 +69,7 @@ public class SecurityConfig {
                         // finement par le service
                         .requestMatchers(HttpMethod.POST, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/problems/**", "/api/solutions/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/problems/**", "/api/solutions/**").authenticated() // 👈 Ajout de /api/solutions/** ici
+                        .requestMatchers(HttpMethod.DELETE, "/api/problems/**", "/api/solutions/**").authenticated()
 
                         // 4. Tout le reste nécessite d'être authentifié
                         .anyRequest().authenticated())

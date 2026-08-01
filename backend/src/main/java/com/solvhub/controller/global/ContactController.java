@@ -8,7 +8,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = {"https://www.solvhub.fr", "http://localhost:3000"})
+@CrossOrigin(origins = { "https://www.solvhub.fr", "http://localhost:3000" })
 public class ContactController {
 
     private final EmailService emailService;
@@ -19,6 +19,11 @@ public class ContactController {
 
     @PostMapping
     public ResponseEntity<?> sendContactMessage(@RequestBody Map<String, String> payload) {
+
+        String botCheck = payload.get("botcheck");
+        if (botCheck != null && !botCheck.isBlank()) {
+            return ResponseEntity.ok(Map.of("success", "Message envoyé avec succès !"));
+        }
         String name = payload.get("name");
         String email = payload.get("email");
         String message = payload.get("message");

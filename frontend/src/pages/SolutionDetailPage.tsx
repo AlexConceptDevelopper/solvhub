@@ -168,7 +168,6 @@ export default function SolutionDetailPage() {
     return null;
   }
 
-  // --- Séparation dynamique des médias selon le type (ajuste "VIDEO" / "IMAGE" selon tes conventions en base) ---
   const videoMedia = medias.find((m) => m.type.toUpperCase() === "VIDEO");
   const imageMedias = medias.filter((m) => m.type.toUpperCase() !== "VIDEO");
   const youtubeEmbedUrl = videoMedia ? getYoutubeEmbedUrl(videoMedia.url) : null;
@@ -176,23 +175,27 @@ export default function SolutionDetailPage() {
   return (
     <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">
       <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-slate-900 w-0 flex-1 wrap-break-word">
+        
+        {/* EN-TÊTE : Titre et Bouton retour proprement séparés pour éviter le bug des lignes */}
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 break-words flex-1">
             {solution.title}
           </h1>
-          <BackButton
-            to={`/problem/${solution.problemId}`}
-            label="Retour au problème"
-            replace
-            state={
-              state?.originTo
-                ? { returnTo: state.originTo, returnLabel: state.originLabel }
-                : undefined
-            }
-          />
+          <div className="self-start sm:self-auto">
+            <BackButton
+              to={`/problem/${solution.problemId}`}
+              label="Retour au problème"
+              replace
+              state={
+                state?.originTo
+                  ? { returnTo: state.originTo, returnLabel: state.originLabel }
+                  : undefined
+              }
+            />
+          </div>
         </div>
 
-        <p className="text-slate-700 leading-relaxed whitespace-pre-line">{solution.steps}</p>
+        <p className="text-slate-700 leading-relaxed whitespace-pre-line text-sm md:text-base">{solution.steps}</p>
 
         {/* --- Affichage de la vidéo si présente dans les médias --- */}
         {youtubeEmbedUrl && (
@@ -238,10 +241,10 @@ export default function SolutionDetailPage() {
           </div>
         )}
 
-        <div className="flex flex-wrap gap-3 text-sm text-slate-500 pt-2">
-          <span>Difficulté : {solution.difficulty}/5</span>
-          <span>Temps : {solution.timeMinutes} min</span>
-          <span>Risque : {solution.riskLevel}/5</span>
+        <div className="flex flex-wrap gap-3 text-xs md:text-sm text-slate-500 pt-2">
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Difficulté : {solution.difficulty}/5</span>
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Temps : {solution.timeMinutes} min</span>
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Risque : {solution.riskLevel}/5</span>
         </div>
       </section>
 
@@ -266,7 +269,7 @@ export default function SolutionDetailPage() {
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("SUCCESS")}
-            className="flex-1 rounded-xl bg-green-500 px-4 py-2 text-white font-semibold hover:bg-green-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 text-white font-semibold hover:bg-green-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {voting ? "Envoi..." : "👍 Réussie"}
           </button>
@@ -274,7 +277,7 @@ export default function SolutionDetailPage() {
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("PARTIAL")}
-            className="flex-1 rounded-xl bg-amber-500 px-4 py-2 text-white font-semibold hover:bg-amber-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-white font-semibold hover:bg-amber-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {voting ? "Envoi..." : "😐 Partielle"}
           </button>
@@ -282,7 +285,7 @@ export default function SolutionDetailPage() {
           <button
             disabled={alreadyVoted || voting || !user}
             onClick={() => handleVote("FAILURE")}
-            className="flex-1 rounded-xl bg-red-500 px-4 py-2 text-white font-semibold hover:bg-red-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-white font-semibold hover:bg-red-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {voting ? "Envoi..." : "👎 Échec"}
           </button>

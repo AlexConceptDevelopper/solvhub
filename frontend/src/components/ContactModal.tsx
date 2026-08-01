@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { apiFetch } from "../api/client"; // 👈 Adapte le chemin vers ton fichier api.ts
+import { apiFetch } from "../api/client";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -10,6 +10,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [botcheck, setBotcheck] = useState(""); // 👈 Le piège à robots
   const [status, setStatus] = useState({ loading: false, error: null as string | null, success: false });
 
   if (!isOpen) return null;
@@ -19,16 +20,16 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setStatus({ loading: true, error: null, success: false });
 
     try {
-      // apiFetch ajoute automatiquement le domaine backend + "/contact" et le Header Content-Type
       await apiFetch("/contact", {
         method: "POST",
-        body: JSON.stringify({ name, email, message }),
+        body: JSON.stringify({ name, email, message, botcheck }), // 👈 On l'envoie au backend
       });
 
       setStatus({ loading: false, error: null, success: true });
       setName("");
       setEmail("");
       setMessage("");
+      setBotcheck("");
     } catch (err: any) {
       setStatus({ 
         loading: false, 
@@ -94,7 +95,19 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 placeholder="Comment pouvons-nous vous aider ?"
               />
             </div>
-            
+
+            {/* 🛑 CHAMP PIÈGE ANTI-ROBOT (Invisible pour les humains) */}
+            <div className="hidden" aria-hidden="true">
+              <label htmlFor="botcheck">Ne remplissez pas ce champ si vous êtes humain</label>
+              <input 
+                type="text" 
+                id="botcheck"
+                value={botcheck} 
+                onChange={(e) => setBotcheck(e.target.value)} 
+                tabIndex={-1} 
+                autoComplete="off" 
+              />
+            </div>
 
             {status.error && (
               <p className="text-xs text-rose-600">{status.error}</p>
