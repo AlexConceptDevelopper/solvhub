@@ -26,7 +26,7 @@ export default function AdminDashboard() {
   const [equipments, setEquipments] = useState<any[]>([]);
 
   useEffect(() => {
-    apiFetch<Problem[]>("/problems").then((data) => data && setProblems(data));
+    apiFetch<Problem[]>("/problems/dto").then((data) => data && setProblems(data));
     apiFetch<Solution[]>("/solutions/dto").then((data) => data && setSolutions(data));
     apiFetch<any[]>("/users").then((data) => data && setUsers(data));
     apiFetch<any[]>("/categories").then((data) => data && setCategories(data));
