@@ -32,12 +32,13 @@ public class EmailService {
                 "<p>Pour vérifier votre compte, veuillez cliquer sur le lien ci-dessous :</p>" +
                 "<p style=\"margin: 30px 0;\">" +
                 "<a href=\"" + verificationUrl
-                + "\" target=\"_blank\" style=\"color: #4F46E5; font-size: 16px; font-weight: bold; text-decoration: underline;\">👉 Cliquer ici pour vérifier mon compte</a>"
+                + "\" target=\"_blank\" style=\"color: #4F46E5; font-size: 16px; font-weight: bold; text-decoration: underline;\">Cliquer ici pour vérifier mon compte</a>"
                 +
                 "</p>" +
                 "<p style=\"font-size: 0.9em; color: #555;\">Si le lien ne fonctionne pas, copiez-collez cette URL dans votre navigateur :<br>"
                 +
-                "<span style=\"color: #6b7280; word-break: break-all;\">" + verificationUrl + "</span></p>" +
+                "<a href=\"" + verificationUrl + "\" style=\"color: #6b7280; word-break: break-all;\">"
+                + verificationUrl + "</a></p>" +
                 "<p style=\"color: #6b7280; font-size: 0.9em;\">Ce lien expire dans 24 heures.</p>" +
                 "<p style=\"color: #6b7280; font-size: 0.9em;\">À bientôt sur SolvHub !</p>" +
                 "</div>";
