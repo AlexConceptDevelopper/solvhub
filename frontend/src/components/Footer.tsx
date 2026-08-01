@@ -22,7 +22,7 @@ export default function Footer() {
             href="mailto:contact@solvhub.com" 
             className="font-medium text-blue-600 hover:underline flex items-center gap-1"
           >
-            <span>✉️</span> contact@solvhub.com
+            <span>✉️</span> contact@solvhub.fr
           </a>
         </div>
 
