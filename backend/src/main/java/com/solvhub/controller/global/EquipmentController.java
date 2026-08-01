@@ -52,8 +52,8 @@ public class EquipmentController {
     }
 
     @GetMapping("/brands")
-    public ResponseEntity<List<String>> getBrandsByCategory(@RequestParam Integer idCategory) {
-        List<String> brands = equipmentService.getBrandsByCategoryId(idCategory);
+    public ResponseEntity<List<String>> getBrandsByCategory(@RequestParam("idCategory") Integer categoryId) {
+        List<String> brands = equipmentService.getBrandsByCategoryId(categoryId);
         return ResponseEntity.ok(brands);
     }
 
