@@ -43,3 +43,12 @@ export const updateEquipment = async (idEquipment: number, payload: EquipmentCre
 export const deleteEquipment = async (idEquipment: number): Promise<void> => {
   await apiFetch(`/equipments/${idEquipment}`, { method: "DELETE" });
 };
+
+export const searchEquipment = async (query: string, categoryId?: number): Promise<Equipment[]> => {
+  const params = new URLSearchParams();
+  if (query) params.append("query", query);
+  if (categoryId && categoryId !== 0) params.append("categoryId", categoryId.toString());
+
+  const data = await apiFetch<Equipment[]>(`/equipments/search?${params.toString()}`);
+  return data ?? [];
+};
