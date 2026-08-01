@@ -1,38 +1,33 @@
 package com.solvhub.service;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EmailService {
-    
-    private final JavaMailSender mailSender;
+
+    @Value("${resend.api.key}")
+    private String resendApiKey;
 
     @Value("${app.frontend-url}")
     private String frontendUrl;
 
-    public EmailService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+    private final RestTemplate restTemplate = new RestTemplate();
+    private static final String RESEND_URL = "https://api.resend.com/emails";
 
     public void sendVerificationEmail(String to, String token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setFrom("contact@solvhub.fr");
-        message.setSubject("Vérifiez votre compte SolvHub");
-        message.setText(
-                "Bienvenue sur SolvHub !\n\n" +
-                "Cliquez sur ce lien pour vérifier votre compte :\n" +
-                frontendUrl + "/verify?token=" + token + "\n\n" +
-                "Ce lien expire dans 24 heures."
-        );
-        mailSender.send(message);
+        String verificationUrl = frontendUrl + "/verify?token=" + token;
+        String text = "Bienvenue sur SolvHub !\n\n" +
+                      "Cliquez sur ce lien pour vérifier votre compte :\n" +
+                      verificationUrl + "\n\n" +
+                      "Ce lien expire dans 24 heures.";
+
+        sendEmailViaApi(to, "Vérifiez votre compte SolvHub", text, false);
     }
 
     public void sendNewSolutionNotification(String toEmail, String username, String problemTitle, Integer problemId) {
@@ -49,19 +44,32 @@ public class EmailService {
                            + "<p style=\"color: #6b7280; font-size: 0.9em;\">À bientôt sur SolvHub !</p>"
                            + "</div>";
 
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            
-            // CORRECTION ICI : Utilisation de ton domaine vérifié
-            helper.setFrom("contact@solvhub.fr");
-            helper.setTo(toEmail);
-            helper.setSubject(subject);
-            helper.setText(htmlContent, true);
+        sendEmailViaApi(toEmail, subject, htmlContent, true);
+    }
 
-            mailSender.send(message);
-        } catch (MessagingException e) {
-            throw new RuntimeException("Erreur lors de l'envoi de l'e-mail", e);
+    private void sendEmailViaApi(String to, String subject, String content, boolean isHtml) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(resendApiKey);
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("from", "contact@solvhub.fr");
+            body.put("to", new String[]{to});
+            body.put("subject", subject);
+            
+            if (isHtml) {
+                body.put("html", content);
+            } else {
+                body.put("text", content);
+            }
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+            restTemplate.postForEntity(RESEND_URL, request, String.class);
+            
+        } catch (Exception e) {
+            // Log l'erreur mais évite de bloquer l'app si besoin, ou lève une exception propre
+            System.err.println("Erreur envoi email Resend API : " + e.getMessage());
         }
     }
 }
