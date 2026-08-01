@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "problem")
@@ -44,4 +45,7 @@ public class Problem {
     @ManyToOne
     @JoinColumn(name = "id_equipment", nullable = true)
     private Equipment equipment;
+
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Solution> solutions;
 }
