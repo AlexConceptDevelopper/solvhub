@@ -94,6 +94,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 placeholder="Comment pouvons-nous vous aider ?"
               />
             </div>
+            
 
             {status.error && (
               <p className="text-xs text-rose-600">{status.error}</p>

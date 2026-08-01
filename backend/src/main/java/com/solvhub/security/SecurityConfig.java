@@ -55,6 +55,9 @@ public class SecurityConfig {
                                 "/api/equipments/models")
                         .permitAll()
 
+                        // contact form endpoint
+                        .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
+
                         // 2. ADMIN : Routes critiques et globales réservées exclusivement à l'Admin
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
