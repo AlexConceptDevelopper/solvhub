@@ -33,9 +33,10 @@ public class UserController {
     public UserDTO updateMyProfile(
             @RequestBody UserDTO userDTO,
             org.springframework.security.core.Authentication authentication) {
-        String currentEmail = authentication.getName();
 
-        return userService.update(currentEmail, userDTO);
+        User currentUser = (User) authentication.getPrincipal();
+
+        return userService.update(currentUser.getIdUsers(), userDTO);
     }
 
     // --Top contributeur--

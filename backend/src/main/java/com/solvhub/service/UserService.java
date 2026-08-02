@@ -39,21 +39,19 @@ public class UserService {
                 .toList();
     }
 
-    public UserDTO update(String currentPrincipalEmail, UserDTO dto) {
+    public UserDTO update(Integer userId, UserDTO dto) {
+        User userToModify = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + userId));
 
-        User userToModify = userRepository.findByEmail(currentPrincipalEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable."));
-
-        // 1. Mise à jour du username uniquement si présent
+        // Mise à jour du username
         if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
             userToModify.setUsername(dto.getUsername());
         }
 
-        // 2. Mise à jour des notifications
+        // Mise à jour des notifications
         if (dto.getEmailNotificationsEnabled() != null) {
             userToModify.setEmailNotificationsEnabled(dto.getEmailNotificationsEnabled());
         }
-
 
         User savedUser = userRepository.save(userToModify);
         return userMapper.toDTO(savedUser);
