@@ -247,61 +247,61 @@ export default function CreateProblemPage() {
             />
           </div>
 
-          {/* BLOC DE DÉTECTION DE DOUBLONS (Déplacé juste sous le titre) */}
-          {(checkingAI || aiChecked) && (
-            <div className="bg-linear-to-br from-slate-50 to-blue-50/40 border border-slate-200/80 rounded-2xl p-4 space-y-3 animate-fadeIn">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xs font-extrabold text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
-                    <span>🛡️ Vérification automatique des doublons</span>
-                  </h3>
-                </div>
-                {checkingAI && (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
-                    Analyse...
-                  </span>
-                )}
-              </div>
-
-              {aiChecked && (
-                <div className="pt-2 border-t border-slate-200/60 space-y-2">
-                  {aiSuggestions.length > 0 ? (
-                    <div>
-                      <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
-                        <span>⚠️ Un problème similaire existe déjà :</span>
-                      </p>
-                      {aiSuggestions.map((item) => (
-                        <div
-                          key={item.idProblem}
-                          className="bg-white p-3 rounded-xl border border-amber-200/80 flex items-center justify-between gap-3 shadow-xs mb-1.5 hover:border-amber-400 transition-colors"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold text-slate-900 truncate">
-                              {item.title}
-                            </p>
-                            <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                              {item.description}
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => navigate(`/problem/${item.idProblem}`)}
-                            className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                          >
-                            Consulter →
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
-                      <span>✨ Aucun doublon trouvé. Le sujet est inédit !</span>
-                    </p>
-                  )}
-                </div>
+          {/* BLOC DE DÉTECTION TOUJOURS VISIBLE (Incite à taper et guide l'user) */}
+          <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider">
+                <span>🛡️ Vérification automatique des doublons</span>
+              </h3>
+              {checkingAI && (
+                <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
+                  Recherche...
+                </span>
               )}
             </div>
-          )}
+
+            {(!form.title || form.title.trim().length < 3) ? (
+              <p className="text-xs text-slate-500 italic">
+                Commencez à saisir un titre ci-dessus pour vérifier si ce problème n'a pas déjà été résolu par la communauté.
+              </p>
+            ) : aiChecked ? (
+              <div className="pt-2 border-t border-slate-200/60 space-y-2">
+                {aiSuggestions.length > 0 ? (
+                  <div>
+                    <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
+                      <span>⚠️ Un problème similaire existe déjà :</span>
+                    </p>
+                    {aiSuggestions.map((item) => (
+                      <div
+                        key={item.idProblem}
+                        className="bg-white p-3 rounded-xl border border-amber-200/80 flex items-center justify-between gap-3 shadow-xs mb-1.5 hover:border-amber-400 transition-colors"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
+                            {item.title}
+                          </p>
+                          <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
+                            {item.description}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => navigate(`/problem/${item.idProblem}`)}
+                          className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                        >
+                          Consulter →
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
+                    <span>✨ Aucun doublon trouvé. Le sujet est inédit !</span>
+                  </p>
+                )}
+              </div>
+            ) : null}
+          </div>
 
           {/* Catégorie */}
           <div>
