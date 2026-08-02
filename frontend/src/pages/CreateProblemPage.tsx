@@ -116,28 +116,19 @@ export default function CreateProblemPage() {
     fetchModels();
   }, [selectedBrand, customBrand, form.idCategory]);
 
-  // Détection automatique des doublons en temps réel (Debounce 500ms)
+  // Détection automatique des doublons en temps réel (Global sur le titre et la description)
   useEffect(() => {
-    if (!form.title || form.title.length < 3) {
+    if (!form.title || form.title.trim().length < 3) {
       setAiChecked(false);
       setAiSuggestions([]);
       return;
     }
 
     const timer = setTimeout(async () => {
-      let equipmentId = undefined;
-      try {
-        equipmentId = await resolveOrCreateIndex();
-      } catch (e) {
-        // Ignorer l'erreur silencieusement pendant la frappe
-      }
-
       const duplicates = await checkDuplicatesExecute(() =>
         checkDuplicates({
           title: form.title,
           description: form.description,
-          categoryId: form.idCategory,
-          equipmentId: equipmentId,
         }),
       );
 
@@ -148,7 +139,7 @@ export default function CreateProblemPage() {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [form.title, form.description, form.idCategory, selectedBrand, customBrand, selectedModel, customModel]);
+  }, [form.title, form.description]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -376,14 +367,14 @@ export default function CreateProblemPage() {
           </div>
 
           {/* Bloc de détection de doublons en temps réel */}
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50/40 border border-slate-200/80 rounded-2xl p-5 space-y-3">
+          <div className="bg-linear-to-br from-slate-50 to-blue-50/40 border border-slate-200/80 rounded-2xl p-5 space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
                   <span>🛡️ Analyse anti-doublon intelligente</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Vérification automatique croisée dans la base pour éviter les redondances.
+                  Vérification automatique croisée dans toute la base pour éviter les redondances.
                 </p>
               </div>
               {checkingAI && (

@@ -200,7 +200,6 @@ public class ProblemService {
             Integer equipmentId) {
         List<Problem> existingProblems = problemRepository.findAll();
 
-        // On ne nettoie et compare que le TITRE
         String queryTitle = cleanAndNormalize(newTitle);
 
         return existingProblems.stream().filter(problem -> {
@@ -208,8 +207,8 @@ public class ProblemService {
 
             double similarityScore = calculateJaccardSimilarity(queryTitle, existingTitle);
 
-            // Seuil de similarité pour considérer un problème comme un doublon potentiel
-            return similarityScore > 0.20;
+            // Seuil ajusté à 0.15 pour tolérer les variations de formulation
+            return similarityScore >= 0.15;
         })
                 .map(problemMapper::toDTO)
                 .toList();

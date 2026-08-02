@@ -481,7 +481,7 @@ export default function ProblemsPage() {
                   returnTo: "/problems",
                   returnLabel: "Retour aux problèmes",
                 }}
-                className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group block"
+                className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
               >
                 <div className="space-y-2 flex-1">
                   <div className="flex items-center gap-3 text-xs flex-wrap">
