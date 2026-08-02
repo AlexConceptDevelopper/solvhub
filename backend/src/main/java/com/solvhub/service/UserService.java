@@ -46,27 +46,28 @@ public class UserService {
         User userToModify = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + id));
 
-        // 2. Récupérer l'email (ou le username) de l'utilisateur connecté via le token
-        // JWT
+        // 2. Récupérer l'email de l'utilisateur connecté via le token JWT (le "sub")
         String currentPrincipalEmail = org.springframework.security.core.context.SecurityContextHolder
                 .getContext()
                 .getAuthentication()
-                .getName(); // Contient généralement l'email ou le "sub" du JWT
+                .getName();
 
-        // 3. Vérifier s'il est propriétaire ou admin (adapter selon si ton 'sub' est
-        // l'email ou le username)
+        // 3. Vérifier si c'est bien le propriétaire du compte
         boolean isOwner = userToModify.getEmail().equals(currentPrincipalEmail);
+
+        // 4. Vérifier si l'utilisateur connecté est ADMIN (en gérant le format "ADMIN"
+        // sans préfixe)
         boolean isAdmin = org.springframework.security.core.context.SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+                .anyMatch(a -> a.getAuthority().equals("ADMIN") || a.getAuthority().equals("ROLE_ADMIN"));
 
         if (!isOwner && !isAdmin) {
             throw new InvalidDataException("Action non autorisée : vous ne pouvez modifier que votre propre profil.");
         }
 
-        // 4. Mise à jour des champs autorisés
+        // 5. Mise à jour des champs autorisés
         if (dto.getUsername() != null) {
             userToModify.setUsername(dto.getUsername());
         }
