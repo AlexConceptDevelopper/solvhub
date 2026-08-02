@@ -57,7 +57,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String token = jwtUtil.generateToken(user.getIdUsers(), user.getEmail(), user.getRole());
 
         // 4. Rediriger vers le front-end avec le token
-        String targetUrl = "https://solvhub.fr/oauth-success?token=" + token;
+        String targetUrl = "https://www.solvhub.fr/oauth-success?token=" + token;
         
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
