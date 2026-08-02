@@ -102,13 +102,14 @@ export default function ProfilePage() {
       return;
     }
 
-    if (!user?.idUsers) {
+    if (!user) {
       setProfileError("Utilisateur non identifié.");
       return;
     }
 
+    // Appel via la nouvelle route /users/me (sans besoin d'ID dans l'URL)
     const result = await executeProfile(() =>
-      updateProfile(user.idUsers, { username, emailNotificationsEnabled }),
+      updateProfile({ username, emailNotificationsEnabled }),
     );
 
     if (result) {

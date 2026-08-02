@@ -3,10 +3,9 @@ import type { User } from "../types/user";
 
 // Mettre à jour le profil
 export async function updateProfile(
-  idUsers: number, 
   data: { username?: string; emailNotificationsEnabled?: boolean }
 ): Promise<User> {
-  const result = await apiFetch<User>(`/users/${idUsers}`, {
+  const result = await apiFetch<User>(`/users/me`, {
     method: "PUT",
     body: JSON.stringify(data),
   });

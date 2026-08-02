@@ -34,6 +34,11 @@ public class UserController {
         return userService.update(id, userDTO);
     }
 
+    @PutMapping("/me")
+    public UserDTO updateMyProfile(@RequestBody UserDTO userDTO, @AuthenticationPrincipal User currentUser) {
+        return userService.update(currentUser.getIdUsers(), userDTO);
+    }
+
     // --Top contributeur--
     @GetMapping("/top-contributors")
     public ResponseEntity<List<UserDTO>> getTopContributors() {
