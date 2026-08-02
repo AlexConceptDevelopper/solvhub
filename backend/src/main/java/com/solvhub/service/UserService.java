@@ -46,19 +46,33 @@ public class UserService {
         User userToModify = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + id));
 
-        // 2. On utilise userToModify (et non 'user') pour vérifier les droits
-        if (!securityUtils.isOwnerOrAdmin(userToModify.getEmail(), userToModify.getUsername())) {
+        // 2. Récupérer l'email (ou le username) de l'utilisateur connecté via le token
+        // JWT
+        String currentPrincipalEmail = org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName(); // Contient généralement l'email ou le "sub" du JWT
+
+        // 3. Vérifier s'il est propriétaire ou admin (adapter selon si ton 'sub' est
+        // l'email ou le username)
+        boolean isOwner = userToModify.getEmail().equals(currentPrincipalEmail);
+        boolean isAdmin = org.springframework.security.core.context.SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isOwner && !isAdmin) {
             throw new InvalidDataException("Action non autorisée : vous ne pouvez modifier que votre propre profil.");
         }
 
-        // 3. Si c'est bon, on met à jour et on sauvegarde
+        // 4. Mise à jour des champs autorisés
         if (dto.getUsername() != null) {
             userToModify.setUsername(dto.getUsername());
         }
         if (dto.getEmail() != null) {
             userToModify.setEmail(dto.getEmail());
         }
-        // Mise à jour de la préférence de notification si fournie
         if (dto.getEmailNotificationsEnabled() != null) {
             userToModify.setEmailNotificationsEnabled(dto.getEmailNotificationsEnabled());
         }
