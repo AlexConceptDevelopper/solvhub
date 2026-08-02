@@ -54,7 +54,8 @@ public class SecurityConfig {
                                 "/api/users/top-contributors/top3",
                                 "/api/problems/dto/popular",
                                 "/api/equipments/brands",
-                                "/api/equipments/models")
+                                "/api/equipments/models",
+                                "/sitemap.xml")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -67,8 +68,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/users/me").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
-                        .successHandler(oAuth2LoginSuccessHandler) 
-                )
+                        .successHandler(oAuth2LoginSuccessHandler))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
