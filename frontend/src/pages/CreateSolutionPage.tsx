@@ -11,7 +11,7 @@ import PrimaryButton from "../components/PrimaryButton";
 export default function CreateSolutionPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const fromAdmin = location.state?.fromAdmin;// on vient de l'admin? 
+  const fromAdmin = location.state?.fromAdmin;
 
   const { problemId } = useParams();
   const [error, setError] = useState<string | null>(null);
@@ -62,12 +62,10 @@ export default function CreateSolutionPage() {
       formData.append("riskLevel", form.riskLevel.toString());
       formData.append("problemId", form.problemId.toString());
 
-      // Ajout de l'URL de la vidéo si elle est remplie
       if (form.videoUrl) {
         formData.append("videoUrl", form.videoUrl);
       }
 
-      // Ajout des images s'il y en a
       if (images) {
         for (let i = 0; i < images.length; i++) {
           formData.append("images", images[i]);
@@ -84,7 +82,6 @@ export default function CreateSolutionPage() {
       setLoading(false);
     }
   };
-
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -110,10 +107,11 @@ export default function CreateSolutionPage() {
           autoComplete="off"
         >
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-title" className="block font-semibold text-slate-700 mb-2">
               Titre
             </label>
             <input
+              id="solution-title"
               name="title"
               value={form.title}
               onChange={handleChange}
@@ -125,10 +123,11 @@ export default function CreateSolutionPage() {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-steps" className="block font-semibold text-slate-700 mb-2">
               Étapes
             </label>
             <textarea
+              id="solution-steps"
               name="steps"
               maxLength={2000}
               value={form.steps}
@@ -142,10 +141,11 @@ export default function CreateSolutionPage() {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-difficulty" className="block font-semibold text-slate-700 mb-2">
               Difficulté
             </label>
             <select
+              id="solution-difficulty"
               name="difficulty"
               value={form.difficulty}
               onChange={handleChange}
@@ -160,10 +160,11 @@ export default function CreateSolutionPage() {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-time" className="block font-semibold text-slate-700 mb-2">
               Temps estimé
             </label>
             <select
+              id="solution-time"
               name="timeMinutes"
               value={form.timeMinutes}
               onChange={handleChange}
@@ -177,10 +178,11 @@ export default function CreateSolutionPage() {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-risk" className="block font-semibold text-slate-700 mb-2">
               Niveau de risque
             </label>
             <select
+              id="solution-risk"
               name="riskLevel"
               value={form.riskLevel}
               onChange={handleChange}
@@ -194,7 +196,7 @@ export default function CreateSolutionPage() {
             </select>
           </div>
 
-          {/* Section Vidéo YouTube interactive (Déployable) */}
+          {/* Section Vidéo YouTube */}
           <div className="pt-2">
             {!showVideoInput ? (
               <button
@@ -202,13 +204,13 @@ export default function CreateSolutionPage() {
                 onClick={() => setShowVideoInput(true)}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-200 transition cursor-pointer"
               >
-                <span className="text-lg leading-none">+</span>
+                <span className="text-lg leading-none" aria-hidden="true">+</span>
                 <span>Ajouter une vidéo explicative (YouTube)</span>
               </button>
             ) : (
               <div className="bg-slate-50/80 border border-slate-200 rounded-2xl p-4 space-y-3 transition-all">
                 <div className="flex items-center justify-between">
-                  <label className="block font-semibold text-slate-700 text-sm">
+                  <label htmlFor="solution-video" className="block font-semibold text-slate-700 text-sm">
                     🎬 Lien de la vidéo YouTube
                   </label>
                   <button
@@ -223,6 +225,7 @@ export default function CreateSolutionPage() {
                   </button>
                 </div>
                 <input
+                  id="solution-video"
                   type="url"
                   name="videoUrl"
                   value={form.videoUrl || ""}
@@ -238,12 +241,13 @@ export default function CreateSolutionPage() {
             )}
           </div>
 
-          {/* Champ d'upload des images */}
+          {/* Images */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-2">
+            <label htmlFor="solution-images" className="block font-semibold text-slate-700 mb-2">
               Images d'illustration (optionnel)
             </label>
             <input
+              id="solution-images"
               type="file"
               multiple
               accept="image/*"

@@ -53,7 +53,7 @@ export default function CategoriesPage() {
                 className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl p-2 bg-blue-50 border border-blue-100 rounded-xl">
+                  <span className="text-2xl p-2 bg-blue-50 border border-blue-100 rounded-xl" aria-hidden="true">
                     {cat.icon || "🏷️"}
                   </span>
                   <div>
@@ -67,7 +67,10 @@ export default function CategoriesPage() {
                 </div>
                 
                 <div className="flex items-center self-end md:self-center">
-                  <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
+                  <span 
+                    className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition"
+                    aria-label={`Explorer la catégorie ${cat.name}`}
+                  >
                     Explorer →
                   </span>
                 </div>

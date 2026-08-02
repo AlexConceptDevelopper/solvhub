@@ -72,7 +72,6 @@ export default function CreateProblemPage() {
     loadCategories();
   }, []);
 
-  // Chargement des marques lorsque la catégorie change
   useEffect(() => {
     const fetchBrands = async () => {
       if (form.idCategory) {
@@ -95,7 +94,6 @@ export default function CreateProblemPage() {
     fetchBrands();
   }, [form.idCategory]);
 
-  // Chargement des modèles lorsque la marque change
   useEffect(() => {
     const fetchModels = async () => {
       const activeBrand = selectedBrand === "OTHER" ? customBrand : selectedBrand;
@@ -116,7 +114,6 @@ export default function CreateProblemPage() {
     fetchModels();
   }, [selectedBrand, customBrand, form.idCategory]);
 
-  // Détection automatique des doublons en temps réel (Global sur le titre et la description)
   useEffect(() => {
     if (!form.title || form.title.trim().length < 3) {
       setAiChecked(false);
@@ -166,7 +163,7 @@ export default function CreateProblemPage() {
         return existing.idEquipment;
       }
     } catch (e) {
-      // Non trouvé, on crée
+      // Non trouvé
     }
 
     try {
@@ -234,10 +231,11 @@ export default function CreateProblemPage() {
         <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
           {/* Titre */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-2">
+            <label htmlFor="problem-title" className="block text-sm font-bold text-slate-800 mb-2">
               Titre du problème <span className="text-blue-600">*</span>
             </label>
             <input
+              id="problem-title"
               name="title"
               value={form.title}
               onChange={handleChange}
@@ -247,11 +245,11 @@ export default function CreateProblemPage() {
             />
           </div>
 
-          {/* BLOC DE DÉTECTION TOUJOURS VISIBLE (Incite à taper et guide l'user) */}
+          {/* BLOC DE DÉTECTION DOUBLONS */}
           <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider">
-                <span>🛡️ Vérification automatique des doublons</span>
+                <span aria-hidden="true">🛡️</span> Vérification automatique des doublons
               </h3>
               {checkingAI && (
                 <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
@@ -269,7 +267,7 @@ export default function CreateProblemPage() {
                 {aiSuggestions.length > 0 ? (
                   <div>
                     <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
-                      <span>⚠️ Un problème similaire existe déjà :</span>
+                      <span aria-hidden="true">⚠️</span> Un problème similaire existe déjà :
                     </p>
                     {aiSuggestions.map((item) => (
                       <div
@@ -287,6 +285,7 @@ export default function CreateProblemPage() {
                         <button
                           type="button"
                           onClick={() => navigate(`/problem/${item.idProblem}`)}
+                          aria-label={`Consulter le problème similaire : ${item.title}`}
                           className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                         >
                           Consulter →
@@ -296,7 +295,7 @@ export default function CreateProblemPage() {
                   </div>
                 ) : (
                   <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
-                    <span>✨ Aucun doublon trouvé. Le sujet est inédit !</span>
+                    <span aria-hidden="true">✨</span> Aucun doublon trouvé. Le sujet est inédit !
                   </p>
                 )}
               </div>
@@ -305,10 +304,11 @@ export default function CreateProblemPage() {
 
           {/* Catégorie */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-2">
+            <label htmlFor="problem-category" className="block text-sm font-bold text-slate-800 mb-2">
               Catégorie principale <span className="text-blue-600">*</span>
             </label>
             <select
+              id="problem-category"
               name="idCategory"
               value={form.idCategory}
               onChange={handleChange}
@@ -327,13 +327,14 @@ export default function CreateProblemPage() {
             </select>
           </div>
 
-          {/* SÉLECTION MARQUE & MODÈLE EN CASCADE AVEC OPTION "AUTRE" */}
+          {/* MARQUE & MODÈLE */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+              <label htmlFor="problem-brand" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                 Marque (Optionnel)
               </label>
               <select
+                id="problem-brand"
                 value={selectedBrand}
                 onChange={(e) => {
                   setSelectedBrand(e.target.value);
@@ -356,6 +357,7 @@ export default function CreateProblemPage() {
                   value={customBrand}
                   onChange={(e) => setCustomBrand(e.target.value)}
                   placeholder="Nom de la nouvelle marque"
+                  aria-label="Nom de la nouvelle marque"
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm"
                   required
                 />
@@ -363,11 +365,12 @@ export default function CreateProblemPage() {
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+              <label htmlFor="problem-model" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                 Modèle (Optionnel)
               </label>
               {(selectedBrand && selectedBrand !== "OTHER") || (selectedBrand === "OTHER" && customBrand) ? (
                 <select
+                  id="problem-model"
                   value={selectedModel}
                   onChange={(e) => {
                     setSelectedModel(e.target.value);
@@ -398,6 +401,7 @@ export default function CreateProblemPage() {
                   value={customModel}
                   onChange={(e) => setCustomModel(e.target.value)}
                   placeholder="Nom du nouveau modèle"
+                  aria-label="Nom du nouveau modèle"
                   className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mt-2"
                   required
                 />
@@ -407,10 +411,11 @@ export default function CreateProblemPage() {
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-bold text-slate-800 mb-2">
+            <label htmlFor="problem-description" className="block text-sm font-bold text-slate-800 mb-2">
               Description détaillée <span className="text-blue-600">*</span>
             </label>
             <textarea
+              id="problem-description"
               name="description"
               maxLength={1000}
               value={form.description}

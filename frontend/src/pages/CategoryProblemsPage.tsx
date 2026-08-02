@@ -39,7 +39,7 @@ export default function CategoryProblemsPage() {
 
   if (error) {
     return (
-      <div className="max-w-6xl px-4 md:px-6 mx-auto   mt-6">
+      <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6">
         <ErrorMessage
           message={error}
           onRetry={() => window.location.reload()}
@@ -68,7 +68,7 @@ export default function CategoryProblemsPage() {
       </div>
 
       <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-        {category && <span>{category.icon}</span>}
+        {category && <span aria-hidden="true">{category.icon}</span>}
         <span>{category ? category.name : "Catégorie"}</span>
       </h1>
 

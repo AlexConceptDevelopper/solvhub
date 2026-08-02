@@ -2,16 +2,16 @@ import BackButton from "../components/BackButton";
 
 export default function CGU() {
   return (
-    <div className="max-w-4xl mx-auto px-4 md:px-8 py-12 space-y-8 text-slate-700">
+    <main className="max-w-4xl mx-auto px-4 md:px-8 py-12 space-y-8 text-slate-700">
       <BackButton to="/" label="Retour à l'accueil" />
-      <div className="space-y-2 border-b border-slate-200 pb-6">
+      <header className="space-y-2 border-b border-slate-200 pb-6">
         <h1 className="text-3xl font-bold text-slate-900">
           Conditions Générales d'Utilisation (CGU)
         </h1>
         <p className="text-sm text-slate-500">
           Dernière mise à jour : Juillet 2026
         </p>
-      </div>
+      </header>
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold text-slate-900">1. Objet</h2>
@@ -72,6 +72,6 @@ export default function CGU() {
           solution ou d'un conseil trouvé sur le site.
         </p>
       </section>
-    </div>
+    </main>
   );
 }
