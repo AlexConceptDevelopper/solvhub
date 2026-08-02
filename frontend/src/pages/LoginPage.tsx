@@ -28,7 +28,7 @@ export default function LoginPage() {
     );
 
     if (data) {
-      const { token, idUsers, username, email, role } = data;
+      const { token, idUsers, username, email, role,  } = data;
       setAuth({
         token,
         user: { idUsers, username, email, role },
