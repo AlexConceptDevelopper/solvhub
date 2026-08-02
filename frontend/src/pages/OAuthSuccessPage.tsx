@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { apiFetch } from "../api/client";
@@ -8,8 +8,14 @@ export default function OAuthSuccessPage() {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  
+  // Empêche le double appel en mode StrictMode de React
+  const hasFetched = useRef(false);
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     const token = searchParams.get("token");
     if (!token) {
       navigate("/login", { replace: true });
@@ -20,23 +26,19 @@ export default function OAuthSuccessPage() {
 
     const fetchUserData = async () => {
       try {
-        // Adapte "/auth/me" si ton endpoint backend pour récupérer le profil connecté a un autre nom
         const userData = await apiFetch<any>("/auth/me");
 
         if (!userData) {
           throw new Error("Impossible de récupérer les données utilisateur.");
         }
 
-        // Structure similaire à ton LoginResponse (idUsers, username, email, role)
         const { idUsers, username, email, role } = userData;
 
-        // 3. Mettre à jour le contexte avec le token ET l'objet user complet
         setAuth({
           token,
           user: { idUsers, username, email, role },
         });
 
-        // 4. Redirection vers l'accueil après un court délai visuel
         setTimeout(() => {
           navigate("/", { replace: true });
         }, 1200);
@@ -49,7 +51,7 @@ export default function OAuthSuccessPage() {
     };
 
     fetchUserData();
-  }, [searchParams, navigate, setAuth]);
+  }, []); // Tableau vide : s'exécute STRICTEMENT une seule fois
 
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4">
