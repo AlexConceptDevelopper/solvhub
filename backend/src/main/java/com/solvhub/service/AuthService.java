@@ -100,4 +100,15 @@ public class AuthService {
                 user.getRole());
     }
 
+    public AuthResponseDTO buildAuthResponse(User user) {
+        String token = jwtUtil.generateToken(user.getIdUsers(), user.getEmail(), user.getRole());
+
+        return new AuthResponseDTO(
+                token,
+                user.getIdUsers(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole());
+    }
+
 }

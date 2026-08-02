@@ -1,11 +1,13 @@
 package com.solvhub.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.solvhub.dto.AuthResponseDTO;
 import com.solvhub.dto.LoginDTO;
 import com.solvhub.dto.RegisterDTO;
+import com.solvhub.model.User;
 import com.solvhub.dto.MessageResponse;
 import com.solvhub.service.AuthService;
 
@@ -35,5 +37,11 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponseDTO login(@RequestBody LoginDTO dto) {
         return authService.login(dto);
+    }
+
+    @GetMapping("/me")
+    public AuthResponseDTO getCurrentUser(@AuthenticationPrincipal User user) {
+        // Retourne un format similaire à AuthResponseDTO (token, idUsers, username, email, role)
+        return authService.buildAuthResponse(user); // Adapte selon ta méthode existante pour mapper l'User en DTO
     }
 }
