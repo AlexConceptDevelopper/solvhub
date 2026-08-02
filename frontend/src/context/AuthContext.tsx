@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import type { User } from "../types/user";
+import VITE_API_URL from "../api/client"; 
 
 interface AuthContextType {
   user: User | null;
@@ -51,16 +52,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     window.location.href = "/";
   };
 
-  const apiCall = async (url: string, options: RequestInit = {}) => {
+  const apiCall = async (url: string, options: RequestInit = {}): Promise<Response> => {
     const currentToken = localStorage.getItem("token");
+    const isFormData = options.body instanceof FormData;
 
     const headers = {
-      "Content-Type": "application/json",
+      ...(!isFormData ? { "Content-Type": "application/json" } : {}),
       ...(currentToken ? { Authorization: `Bearer ${currentToken}` } : {}),
       ...options.headers,
     };
 
-    const response = await fetch(`http://localhost:8080/api${url}`, {
+    const response = await fetch(`${VITE_API_URL}${url}`, {
       ...options,
       headers,
     });
@@ -82,7 +84,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      // On passe bien isAdmin ici pour qu'il soit accessible partout
       value={{ user, token, isAdmin, setAuth, updateUser, logout, loading, apiCall }}
     >
       {children}
