@@ -27,6 +27,7 @@ import RankingProblemPage from "./pages/RankingProblemPage";
 import LegalNotice from "./pages/LegalNotice";
 import CGU from "./pages/CGU";
 import Privacy from "./pages/Privacy";
+import OAuthSuccessPage from "./pages/OAuthSuccessPage";
 
 function AppRoutes() {
   return (
@@ -45,6 +46,7 @@ function AppRoutes() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/oauth-success" element={<OAuthSuccessPage />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="/problems" element={<ProblemsPage />} />
             <Route path="/problem/:id" element={<ProblemDetailPage />} />

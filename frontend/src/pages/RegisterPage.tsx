@@ -30,7 +30,7 @@ export default function RegisterPage() {
 
   // Simulation / Hook pour l'authentification Google (redirige vers ton endpoint backend OAuth ou gère le token)
   const handleGoogleLogin = () => {
-    // Redirige vers le point d'entrée OAuth2 de ton backend Spring Boot
+    
     window.location.href = "https://api.solvhub.fr/oauth2/authorization/google";
   };
 
