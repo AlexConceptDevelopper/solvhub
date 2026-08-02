@@ -9,7 +9,7 @@ import com.solvhub.exception.ResourceNotFoundException;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.UserRepository;
 import com.solvhub.repository.global.SolutionRepository;
-import com.solvhub.security.SecurityUtils;
+
 import com.solvhub.dto.ChangePasswordDTO;
 import com.solvhub.dto.UserDTO;
 import com.solvhub.mapper.UserMapper;
@@ -20,15 +20,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final SolutionRepository solutionRepository;
     private final UserMapper userMapper;
-    private final SecurityUtils securityUtils;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, SolutionRepository solutionRepository, UserMapper userMapper,
-            SecurityUtils securityUtils, PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.solutionRepository = solutionRepository;
         this.userMapper = userMapper;
-        this.securityUtils = securityUtils;
         this.passwordEncoder = passwordEncoder;
     }
 

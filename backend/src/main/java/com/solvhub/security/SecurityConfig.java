@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/problems/**", "/api/solutions/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/users/me").authenticated()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(oAuth2LoginSuccessHandler) 
