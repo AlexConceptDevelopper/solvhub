@@ -219,7 +219,7 @@ export default function CreateProblemPage() {
               Espace Communauté
             </span>
             <h1 className="text-3xl font-extrabold text-slate-900 mt-2">
-              Soumettre un problème technique
+              Partager un problème ou une panne
             </h1>
           </div>
           <BackButton to={backTo} label={backLabel} />
