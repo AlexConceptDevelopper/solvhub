@@ -39,8 +39,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    // Redirige vers l'endpoint de ton back-end gérant l'authentification Google
-    window.location.href = "http://localhost:3000/api/auth/google";
+    window.location.href = "https://api.solvhub.fr/api/auth/google";
   };
 
   return (
