@@ -22,21 +22,20 @@ public class UserController {
         this.userService = userService;
     }
 
-// Remplace la route principale /api/users pour qu'elle renvoie le DTO sécurisé
+    // Remplace la route principale /api/users pour qu'elle renvoie le DTO sécurisé
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsersDto());
     }
 
-    @PutMapping("/{id}")
-    public UserDTO updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
-        return userService.update(id, userDTO);
-    }
-
     @PutMapping("/me")
-    public UserDTO updateMyProfile(@RequestBody UserDTO userDTO, @AuthenticationPrincipal User currentUser) {
-        return userService.update(currentUser.getIdUsers(), userDTO);
+    public UserDTO updateMyProfile(
+            @RequestBody UserDTO userDTO,
+            org.springframework.security.core.Authentication authentication) {
+        String currentEmail = authentication.getName();
+
+        return userService.update(currentEmail, userDTO);
     }
 
     // --Top contributeur--

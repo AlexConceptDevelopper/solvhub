@@ -39,39 +39,20 @@ public class UserService {
                 .toList();
     }
 
-    public UserDTO update(Integer id, UserDTO dto) {
-        // 1. On cherche l'utilisateur à modifier en base
-        User userToModify = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + id));
+    public UserDTO update(String currentPrincipalEmail, UserDTO dto) {
 
-        // 2. Récupérer l'email de l'utilisateur connecté via le token JWT (le "sub")
-        String currentPrincipalEmail = org.springframework.security.core.context.SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
+        User userToModify = userRepository.findByEmail(currentPrincipalEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable."));
 
-        // 3. Vérifier si c'est bien le propriétaire du compte
-        boolean isOwner = userToModify.getEmail().equals(currentPrincipalEmail);
-
-        // 4. Vérifier si l'utilisateur connecté est ADMIN (en gérant le format "ADMIN"
-        // sans préfixe)
-        boolean isAdmin = org.springframework.security.core.context.SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMIN") || a.getAuthority().equals("ROLE_ADMIN"));
-
-        if (!isOwner && !isAdmin) {
-            throw new InvalidDataException("Action non autorisée : vous ne pouvez modifier que votre propre profil.");
-        }
-
-        // 5. Mise à jour des champs autorisés
-        if (dto.getUsername() != null) {
+        // 2. Mise à jour des champs autorisés
+        if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
             userToModify.setUsername(dto.getUsername());
         }
-        if (dto.getEmail() != null) {
+
+        if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
             userToModify.setEmail(dto.getEmail());
         }
+
         if (dto.getEmailNotificationsEnabled() != null) {
             userToModify.setEmailNotificationsEnabled(dto.getEmailNotificationsEnabled());
         }
