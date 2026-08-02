@@ -8,9 +8,7 @@ import com.solvhub.model.User;
 @Component
 public class UserMapper {
 
-
     public UserDTO toDTO(User user) {
-
         if (user == null) {
             return null;
         }
@@ -22,7 +20,8 @@ public class UserMapper {
                 null,
                 user.getBadge(),
                 user.getRole(),
-                user.getEmailNotificationsEnabled()
+                user.getEmailNotificationsEnabled(),
+                user.isGoogleAccount()
         );
     }
 
@@ -39,7 +38,8 @@ public class UserMapper {
                 solutionsCount, 
                 user.getBadge(),
                 user.getRole(),
-                user.getEmailNotificationsEnabled() 
+                user.getEmailNotificationsEnabled(),
+                user.isGoogleAccount()
         );
     }
 }

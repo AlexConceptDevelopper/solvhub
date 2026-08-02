@@ -15,4 +15,5 @@ public class UserDTO {
     private String badge;
     private String role;
     private Boolean emailNotificationsEnabled;
+    private Boolean googleAccount;
 }

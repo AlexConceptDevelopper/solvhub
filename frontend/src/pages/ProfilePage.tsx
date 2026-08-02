@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
-import { updateProfile, changePassword } from "../api/user.api";
+import { getMe, updateProfile, changePassword } from "../api/user.api";
 import { getProblemsByUser, deleteProblem } from "../api/problem.api"; 
 import { getSolutionsByUser, deleteSolution } from "../api/solution.api"; 
 import BackButton from "../components/BackButton";
@@ -57,6 +57,21 @@ export default function ProfilePage() {
     }
   }, [user]);
 
+  // Optionnel : si tu veux forcer un rafraîchissement des données via GET /users/me à l'arrivée sur la page
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      try {
+        const freshUser = await getMe();
+        if (freshUser) {
+          updateUser(freshUser);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du profil frais :", error);
+      }
+    };
+    fetchLatestProfile();
+  }, []);
+
   const fetchUserContent = async () => {
     if (!user?.idUsers) return;
     setContentLoading(true);
@@ -107,7 +122,6 @@ export default function ProfilePage() {
       return;
     }
 
-    // Appel via la nouvelle route /users/me (sans besoin d'ID dans l'URL)
     const result = await executeProfile(() =>
       updateProfile({ username, emailNotificationsEnabled }),
     );
@@ -197,9 +211,16 @@ export default function ProfilePage() {
         {activeTab === "info" && (
           <div className="space-y-8 animate-fadeIn">
             <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">
-                Informations personnelles
-              </h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-slate-900">
+                  Informations personnelles
+                </h2>
+                {user?.googleAccount && (
+                  <span className="text-xs px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-medium flex items-center gap-1.5">
+                    🌐 Compte Google
+                  </span>
+                )}
+              </div>
 
               {profileSuccess && (
                 <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm">
@@ -265,88 +286,91 @@ export default function ProfilePage() {
               </form>
             </div>
 
-            <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
-              <h2 className="text-lg font-semibold text-slate-900 mb-4">Sécurité</h2>
+            {/* --- Section Sécurité (Masquée si c'est un compte Google) --- */}
+            {!user?.googleAccount && (
+              <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
+                <h2 className="text-lg font-semibold text-slate-900 mb-4">Sécurité</h2>
 
-              {passwordSuccess && (
-                <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm">
-                  {passwordSuccess}
-                </div>
-              )}
+                {passwordSuccess && (
+                  <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm">
+                    {passwordSuccess}
+                  </div>
+                )}
 
-              {!showPasswordForm ? (
-                <button
-                  onClick={() => setShowPasswordForm(true)}
-                  className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors cursor-pointer"
-                >
-                  Changer mon mot de passe
-                </button>
-              ) : (
-                <form onSubmit={handlePasswordChange} className="space-y-4 mt-2">
-                  {displayPasswordError && (
-                    <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
-                      {displayPasswordError}
+                {!showPasswordForm ? (
+                  <button
+                    onClick={() => setShowPasswordForm(true)}
+                    className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors cursor-pointer"
+                  >
+                    Changer mon mot de passe
+                  </button>
+                ) : (
+                  <form onSubmit={handlePasswordChange} className="space-y-4 mt-2">
+                    {displayPasswordError && (
+                      <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                        {displayPasswordError}
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1">
+                        Ancien mot de passe
+                      </label>
+                      <input
+                        type="password"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                        required
+                        className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      />
                     </div>
-                  )}
-                  <div>
-                    <label className="block text-sm text-slate-600 mb-1">
-                      Ancien mot de passe
-                    </label>
-                    <input
-                      type="password"
-                      value={oldPassword}
-                      onChange={(e) => setOldPassword(e.target.value)}
-                      required
-                      className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-600 mb-1">
-                      Nouveau mot de passe
-                    </label>
-                    <input
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      required
-                      className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm text-slate-600 mb-1">
-                      Confirmer le nouveau mot de passe
-                    </label>
-                    <input
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                    />
-                  </div>
-                  <div className="flex items-center gap-3 pt-2">
-                    <PrimaryButton
-                      type="submit"
-                      loading={passwordLoading}
-                      loadingLabel="Modification..."
-                      className="px-5 py-2 text-sm"
-                    >
-                      Mettre à jour le mot de passe
-                    </PrimaryButton>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowPasswordForm(false);
-                        setLocalError(null);
-                      }}
-                      className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl transition-all cursor-pointer text-sm"
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1">
+                        Nouveau mot de passe
+                      </label>
+                      <input
+                        type="password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        required
+                        className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm text-slate-600 mb-1">
+                        Confirmer le nouveau mot de passe
+                      </label>
+                      <input
+                        type="password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        className="w-full bg-white border border-slate-300 rounded-xl px-4 py-2 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                    <div className="flex items-center gap-3 pt-2">
+                      <PrimaryButton
+                        type="submit"
+                        loading={passwordLoading}
+                        loadingLabel="Modification..."
+                        className="px-5 py-2 text-sm"
+                      >
+                        Mettre à jour le mot de passe
+                      </PrimaryButton>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowPasswordForm(false);
+                          setLocalError(null);
+                        }}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl transition-all cursor-pointer text-sm"
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
           </div>
         )}
 

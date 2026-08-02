@@ -1,6 +1,14 @@
 import { apiFetch } from "./client"; // Ajuste le chemin selon où se trouve ta fonction
 import type { User } from "../types/user";
 
+// Récupérer le profil de l'utilisateur connecté (avec son statut googleAccount)
+export async function getMe(): Promise<User> {
+  const result = await apiFetch<User>(`/users/me`, {
+    method: "GET",
+  });
+  return result!;
+}
+
 // Mettre à jour le profil
 export async function updateProfile(
   data: { username?: string; emailNotificationsEnabled?: boolean }

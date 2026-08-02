@@ -6,4 +6,5 @@ export interface User {
   solutionCount ?: number;
   badge?: string;
   emailNotificationsEnabled?: boolean;
+  googleAccount: boolean;
 }

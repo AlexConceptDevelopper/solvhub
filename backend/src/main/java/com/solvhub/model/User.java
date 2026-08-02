@@ -54,4 +54,9 @@ public class User {
 
     @Column(name = "email_notifications_enabled", nullable = false)
     private Boolean emailNotificationsEnabled = true;
+
+    @Transient 
+    public boolean isGoogleAccount() {
+        return this.passwordHash == null || this.passwordHash.trim().isEmpty();
+    }
 }

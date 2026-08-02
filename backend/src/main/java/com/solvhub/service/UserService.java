@@ -57,6 +57,12 @@ public class UserService {
         return userMapper.toDTO(savedUser);
     }
 
+    public UserDTO getUserDtoById(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + userId));
+        return userMapper.toDTO(user);
+    }
+
     public UserDTO getUserWithBadge(User user, Long solutionCount) {
         UserDTO dto = userMapper.toDTOWithSolutionsCount(user, solutionCount);
 

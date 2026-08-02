@@ -29,6 +29,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsersDto());
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getMyProfile(@AuthenticationPrincipal User currentUser) {
+        UserDTO userDTO = userService.getUserDtoById(currentUser.getIdUsers());
+        return ResponseEntity.ok(userDTO);
+    }
+
     @PutMapping("/me")
     public UserDTO updateMyProfile(
             @RequestBody UserDTO userDTO,
