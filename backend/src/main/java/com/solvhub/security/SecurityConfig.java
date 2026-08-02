@@ -23,9 +23,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
     }
 
     @Bean
@@ -33,15 +35,15 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-@Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // 1. PUBLIC : Authentification et toutes les lectures (GET) autorisées
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/login/**", "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET,
                                 "/api/categories/**",
                                 "/api/problems/**",
@@ -54,25 +56,18 @@ public class SecurityConfig {
                                 "/api/equipments/brands",
                                 "/api/equipments/models")
                         .permitAll()
-
-                        // contact form endpoint
                         .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
-
-                        // 2. ADMIN : Routes critiques et globales réservées exclusivement à l'Admin
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/equipments/**", "/api/categories/**")
-                        .hasRole("ADMIN") // 👈 /api/solutions/** a été retiré d'ici
-
-                        // 3. AUTHENTIFIÉ (Owner / User) : Création et modification/suppression gérées
-                        // finement par le service
+                        .requestMatchers(HttpMethod.DELETE, "/api/equipments/**", "/api/categories/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/api/problems/**", "/api/solutions/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/problems/**", "/api/solutions/**").authenticated()
-
-                        // 4. Tout le reste nécessite d'être authentifié
                         .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(oAuth2LoginSuccessHandler) 
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -83,10 +78,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // Autoriser ton front de dev ET ton front de production sur Railway
         configuration.setAllowedOrigins(List.of(
-            "http://localhost:5173", 
-            "https://solvhub.fr",
-            "https://www.solvhub.fr"
-        ));
+                "http://localhost:5173",
+                "https://solvhub.fr",
+                "https://www.solvhub.fr"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         configuration.setAllowCredentials(true);
