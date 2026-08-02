@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
-import VITE_API_URL, { apiFetch } from "../api/client";
+import { apiFetch } from "../api/client";
 import type { LoginResponse } from "../types/LoginResponse";
 import PrimaryButton from "../components/PrimaryButton";
 import BackButton from "../components/BackButton";
@@ -39,7 +39,7 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${VITE_API_URL}/auth/google`;
+    window.location.href = "https://api.solvhub.fr/oauth2/authorization/google";
   };
 
   return (

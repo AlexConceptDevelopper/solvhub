@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import VITE_API_URL, { apiFetch } from "../api/client";
+import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
 import PrimaryButton from "../components/PrimaryButton";
 import BackButton from "../components/BackButton";
@@ -29,8 +29,7 @@ export default function RegisterPage() {
   };
 
   const handleGoogleLogin = () => {
-    // Utilise dynamiquement VITE_API_URL ("https://api.solvhub.fr/api")
-    window.location.href = `${VITE_API_URL}/auth/google`;
+    window.location.href = "https://api.solvhub.fr/oauth2/authorization/google";
   };
 
   if (data) {
