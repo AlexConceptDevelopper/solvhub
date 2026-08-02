@@ -44,18 +44,16 @@ public class UserService {
         User userToModify = userRepository.findByEmail(currentPrincipalEmail)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable."));
 
-        // 2. Mise à jour des champs autorisés
+        // 1. Mise à jour du username uniquement si présent
         if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
             userToModify.setUsername(dto.getUsername());
         }
 
-        if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
-            userToModify.setEmail(dto.getEmail());
-        }
-
+        // 2. Mise à jour des notifications
         if (dto.getEmailNotificationsEnabled() != null) {
             userToModify.setEmailNotificationsEnabled(dto.getEmailNotificationsEnabled());
         }
+
 
         User savedUser = userRepository.save(userToModify);
         return userMapper.toDTO(savedUser);
