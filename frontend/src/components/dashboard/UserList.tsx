@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../api/client";
+import { deleteUser } from "../../api/user.api";
 import type { User } from "../../types/user";
-import ConfirmModal from "../ConfirmModal"; 
+import ConfirmModal from "../ConfirmModal";
 import Pagination from "../Pagination";
 
 interface UsersListProps {
@@ -26,7 +27,7 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
   const confirmDelete = async () => {
     if (userToDelete === null) return;
     try {
-      await apiFetch(`/users/${userToDelete}`, { method: "DELETE" });
+      await deleteUser(userToDelete);
       setUsers((prev) => prev.filter((u) => u.idUsers !== userToDelete));
     } catch (error) {
       console.error("Erreur suppression :", error);
@@ -54,21 +55,29 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
     if (!editingUser) return;
 
     try {
-      const updatedUser = await apiFetch<User>(`/users/${editingUser.idUsers}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          username: editUsername,
-          email: editEmail,
-          role: editRole,
-        }),
-      });
+      const updatedUser = await apiFetch<User>(
+        `/users/${editingUser.idUsers}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            username: editUsername,
+            email: editEmail,
+            role: editRole,
+          }),
+        },
+      );
 
       setUsers((prev) =>
         prev.map((u) =>
           u.idUsers === editingUser.idUsers
-            ? (updatedUser || { ...u, username: editUsername, email: editEmail, role: editRole })
-            : u
-        )
+            ? updatedUser || {
+                ...u,
+                username: editUsername,
+                email: editEmail,
+                role: editRole,
+              }
+            : u,
+        ),
       );
       closeEditModal();
     } catch (error) {
@@ -77,15 +86,19 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
   };
 
   // --- Filtrage par recherche ---
-  const filteredUsers = users.filter((u) => 
-    u.username?.toLowerCase().includes(search.toLowerCase()) || 
-    u.email?.toLowerCase().includes(search.toLowerCase())
+  const filteredUsers = users.filter(
+    (u) =>
+      u.username?.toLowerCase().includes(search.toLowerCase()) ||
+      u.email?.toLowerCase().includes(search.toLowerCase()),
   );
 
   // --- Calculs de la pagination ---
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+  const currentUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
@@ -96,7 +109,9 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
   return (
     <div className="space-y-6 relative">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-900">Gestion des Utilisateurs</h2>
+        <h2 className="text-2xl font-bold text-slate-900">
+          Gestion des Utilisateurs
+        </h2>
       </div>
 
       <p className="text-slate-500 text-sm">
@@ -112,13 +127,18 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
               <th className="p-4 text-slate-700 font-bold">Nom</th>
               <th className="p-4 text-slate-700 font-bold">Email</th>
               <th className="p-4 text-slate-700 font-bold">Rôle</th>
-              <th className="p-4 text-slate-700 font-bold text-right">Action</th>
+              <th className="p-4 text-slate-700 font-bold text-right">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-4 text-center text-slate-400 text-sm">
+                <td
+                  colSpan={5}
+                  className="p-4 text-center text-slate-400 text-sm"
+                >
                   Aucun utilisateur trouvé.
                 </td>
               </tr>
@@ -128,15 +148,23 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
                   key={user.idUsers}
                   className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors"
                 >
-                  <td className="p-4 text-slate-900 font-medium">{user.idUsers}</td>
-                  <td className="p-4 text-slate-900 font-medium">{user.username}</td>
-                  <td className="p-4 text-slate-900 font-medium">{user.email}</td>
+                  <td className="p-4 text-slate-900 font-medium">
+                    {user.idUsers}
+                  </td>
+                  <td className="p-4 text-slate-900 font-medium">
+                    {user.username}
+                  </td>
+                  <td className="p-4 text-slate-900 font-medium">
+                    {user.email}
+                  </td>
                   <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-lg border text-xs font-medium ${
-                      user.role === 'ADMIN' 
-                        ? 'bg-purple-50 text-purple-700 border-purple-100' 
-                        : 'bg-slate-100 text-slate-600 border-slate-200'
-                    }`}>
+                    <span
+                      className={`px-2.5 py-1 rounded-lg border text-xs font-medium ${
+                        user.role === "ADMIN"
+                          ? "bg-purple-50 text-purple-700 border-purple-100"
+                          : "bg-slate-100 text-slate-600 border-slate-200"
+                      }`}
+                    >
                       {user.role || "USER"}
                     </span>
                   </td>
@@ -190,7 +218,9 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
 
             <form onSubmit={saveEditing} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Nom d'utilisateur</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Nom d'utilisateur
+                </label>
                 <input
                   type="text"
                   value={editUsername}
@@ -201,7 +231,9 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Email
+                </label>
                 <input
                   type="email"
                   value={editEmail}
@@ -212,7 +244,9 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Rôle</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Rôle
+                </label>
                 <select
                   value={editRole}
                   onChange={(e) => setEditRole(e.target.value)}
