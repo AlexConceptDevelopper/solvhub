@@ -67,4 +67,11 @@ public class UserController {
         userService.changePassword(currentUser, dto);
         return new MessageResponse("Mot de passe mis à jour avec succès.");
     }
+
+    // Supprimer un utilisateur (réservé aux admins ou via l'admin panel)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> deleteUser(@PathVariable Integer id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new MessageResponse("Utilisateur supprimé avec succès."));
+    }
 }

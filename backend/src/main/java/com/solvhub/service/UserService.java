@@ -122,4 +122,15 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
+    public void deleteUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + userId));
+
+        // Optionnel : si tu veux gérer la suppression en cascade des
+        // solutions/commentaires avant,
+        // ou laisser la base de données le faire via des contraintes SQL (ON DELETE
+        // CASCADE)
+        userRepository.delete(user);
+    }
+
 }

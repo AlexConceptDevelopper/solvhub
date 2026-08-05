@@ -27,3 +27,9 @@ export async function changePassword(data: { oldPassword: string; newPassword: s
     body: JSON.stringify(data),
   });
 }
+
+export async function deleteUser(id: number): Promise<any> {
+  return await apiFetch(`/users/${id}`, {
+    method: "DELETE",
+  });
+}
