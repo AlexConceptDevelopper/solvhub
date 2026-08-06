@@ -9,11 +9,14 @@ import com.solvhub.repository.GenericRepository;
 public interface ProblemRepository extends GenericRepository<Problem, Integer> {
 
     @Query("SELECT p FROM Problem p " +
-           "LEFT JOIN Solution s ON s.problem.idProblem = p.idProblem " +
-           "LEFT JOIN Vote v ON v.solution.idSolution = s.idSolution " +
-           "GROUP BY p " +
-           "ORDER BY COUNT(v) DESC, p.createdAt DESC")
+            "LEFT JOIN Solution s ON s.problem.idProblem = p.idProblem " +
+            "LEFT JOIN Vote v ON v.solution.idSolution = s.idSolution " +
+            "GROUP BY p " +
+            "ORDER BY COUNT(v) DESC, p.createdAt DESC")
     List<Problem> findPopularProblems(Pageable pageable);
 
     List<Problem> findByUserIdUsers(Integer userId);
+
+    @Query("SELECT s.problem.idProblem, COUNT(s) FROM Solution s GROUP BY s.problem.idProblem")
+    List<Object[]> countSolutionsPerProblem();
 }

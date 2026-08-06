@@ -37,7 +37,6 @@ public class ProblemMapper {
         dto.setCategory(categoryMapper.toDTO(problem.getCategory()));
         dto.setCreatedAt(problem.getCreatedAt());
         dto.setUser(userMapper.toDTO(problem.getUser()));
-        dto.setNbSolutions(problem.getSolutions() != null ? problem.getSolutions().size() : 0); 
         
         // Mapper l'équipement si présent
         if (problem.getEquipment() != null) {

@@ -15,6 +15,7 @@ import com.solvhub.repository.global.*;
 
 import tools.jackson.databind.ObjectMapper;
 
+@SuppressWarnings("unused")
 @Component
 @Profile("dev")
 public class DataSeeder implements CommandLineRunner {

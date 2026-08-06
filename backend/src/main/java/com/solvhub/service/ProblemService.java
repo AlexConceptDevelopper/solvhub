@@ -58,13 +58,6 @@ public class ProblemService {
         this.securityUtils = securityUtils;
     }
 
-    public List<ProblemDTO> findAllDTO() {
-        return problemRepository.findAll()
-                .stream()
-                .map(problemMapper::toDTO)
-                .toList();
-    }
-
     public List<SolutionDTO> getSolutionsByProblem(Integer idProblem) {
         List<Solution> solutions = solutionRepository.findByProblemIdProblem(idProblem);
 
@@ -245,6 +238,25 @@ public class ProblemService {
         return problemRepository.findByUserIdUsers(userId)
                 .stream()
                 .map(problemMapper::toDTO)
+                .toList();
+    }
+
+    private java.util.Map<Integer, Integer> getSolutionCountsMap() {
+        return problemRepository.countSolutionsPerProblem().stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        row -> (Integer) row[0],
+                        row -> ((Long) row[1]).intValue()));
+    }
+
+    public List<ProblemDTO> findAllDTO() {
+        java.util.Map<Integer, Integer> counts = getSolutionCountsMap();
+        return problemRepository.findAll()
+                .stream()
+                .map(problem -> {
+                    ProblemDTO dto = problemMapper.toDTO(problem);
+                    dto.setNbSolutions(counts.getOrDefault(dto.getIdProblem(), 0));
+                    return dto;
+                })
                 .toList();
     }
 }
