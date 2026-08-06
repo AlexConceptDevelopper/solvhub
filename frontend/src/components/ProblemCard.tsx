@@ -40,7 +40,7 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
       "
     >
       <div>
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex justify-between items-start mb-4 gap-2">
           <div
             className="
               text-[11px]
@@ -62,6 +62,31 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
               {problem.category?.name || "Sans catégorie"}
             </span>
           </div>
+
+          {problem.solutionCount !== undefined && problem.solutionCount > 0 && (
+            <span
+              className="
+                shrink-0
+                inline-flex
+                items-center
+                gap-1
+                px-2.5
+                py-1
+                rounded-md
+                bg-emerald-50
+                border
+                border-emerald-200
+                text-emerald-700
+                text-[11px]
+                font-bold
+                uppercase
+                tracking-wider
+              "
+            >
+              ✅ {problem.solutionCount} solution
+              {problem.solutionCount > 1 ? "s" : ""}
+            </span>
+          )}
         </div>
 
         <h3 className="text-lg font-bold tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2 ">
