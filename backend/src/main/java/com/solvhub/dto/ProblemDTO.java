@@ -18,4 +18,5 @@ public class ProblemDTO {
     private UserDTO user;
     private Long voteCount;
     private EquipmentDTO equipment;
+    private Integer nbSolutions;
 }
