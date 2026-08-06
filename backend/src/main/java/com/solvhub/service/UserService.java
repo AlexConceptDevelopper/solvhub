@@ -66,7 +66,13 @@ public class UserService {
     public UserDTO getUserWithBadge(User user, Long solutionCount) {
         UserDTO dto = userMapper.toDTOWithSolutionsCount(user, solutionCount);
 
-        // Attribution dynamique du badge selon le nombre de solutions
+        // Badge spécial pour les comptes pionniers (IDs 4, 5, 6, 7 par exemple)
+        if (List.of(4, 5, 6, 7).contains(user.getIdUsers())) {
+            dto.setBadge("🚀 Pionnier");
+            return dto;
+        }
+
+        // Attribution dynamique classique selon le nombre de solutions
         if (solutionCount >= 100) {
             dto.setBadge("🏆 Maître SolvHub");
         } else if (solutionCount >= 50) {
