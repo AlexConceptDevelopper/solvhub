@@ -6,6 +6,7 @@ export interface Problem {
   title: string;
   description: string;
   voteCount?: number;
+  nbSolutions?: number;
   category: Category;
   equipment?: Equipment;
   createdAt?: string;

@@ -63,7 +63,7 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
             </span>
           </div>
 
-          {problem.solutionCount !== undefined && problem.solutionCount > 0 && (
+          {problem.nbSolutions !== undefined && problem.nbSolutions > 0 && (
             <span
               className="
                 shrink-0
@@ -83,8 +83,8 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
                 tracking-wider
               "
             >
-              ✅ {problem.solutionCount} solution
-              {problem.solutionCount > 1 ? "s" : ""}
+              ✅ {problem.nbSolutions} solution
+              {problem.nbSolutions > 1 ? "s" : ""}
             </span>
           )}
         </div>
