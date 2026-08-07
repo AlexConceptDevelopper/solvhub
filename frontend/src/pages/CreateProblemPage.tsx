@@ -167,6 +167,13 @@ export default function CreateProblemPage() {
     );
 
     const trimmedYear = year.trim();
+    
+    if (trimmedYear !== "" && (!finalBrand || !finalModel)) {
+      throw new Error(
+        "Impossible d'indiquer une année sans avoir renseigné la marque et le modèle de l'équipement.",
+      );
+    }
+
     if (
       trimmedYear !== "" &&
       (trimmedYear.length !== 4 || isNaN(Number(trimmedYear)))
@@ -478,7 +485,7 @@ export default function CreateProblemPage() {
                 maxLength={4}
                 value={year}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, ""); // N'autorise que les chiffres
+                  const val = e.target.value.replace(/\D/g, ""); 
                   if (val.length <= 4) setYear(val);
                 }}
                 placeholder="Ex : 2022"
