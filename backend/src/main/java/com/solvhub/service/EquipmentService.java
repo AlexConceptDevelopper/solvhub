@@ -42,10 +42,13 @@ public class EquipmentService {
     }
 
     public EquipmentDTO findByCategoryAndBrandAndModel(Integer categoryId, String brand, String model) {
+        String cleanBrand = brand != null ? brand.trim() : "";
+        String cleanModel = model != null ? model.trim() : "";
+
         return equipmentRepository
-                .findByCategory_IdCategoryAndBrandAndModel(categoryId, brand, model)
+                .findByCriteriaIgnoreCase(categoryId, cleanBrand, cleanModel)
                 .map(equipmentMapper::toDTO)
-                .orElse(null); // 🟢 Retourne null proprement au lieu de lever une exception 404
+                .orElse(null); 
     }
 
     public List<String> getBrandsByCategoryId(Integer categoryId) {
@@ -57,22 +60,24 @@ public class EquipmentService {
     }
 
     public EquipmentDTO createEquipment(Integer idCategory, String brand, String model) {
-        // 1. On vérifie si l'équipement existe déjà en base
-        var existingEquipment = equipmentRepository.findByCategory_IdCategoryAndBrandAndModel(idCategory, brand, model);
+        String cleanBrand = brand != null ? brand.trim() : "";
+        String cleanModel = model != null ? model.trim() : "";
+
+        // 1. On vérifie si l'équipement existe déjà en base (insensible à la casse & trim)
+        var existingEquipment = equipmentRepository.findByCriteriaIgnoreCase(idCategory, cleanBrand, cleanModel);
 
         if (existingEquipment.isPresent()) {
-            // S'il existe déjà, on le renvoie directement sans planter !
             return equipmentMapper.toDTO(existingEquipment.get());
         }
 
-        // 2. S'il n'existe pas, on le crée
+        // 2. S'il n'existe pas, on le crée proprement
         Category category = categoryRepository.findById(idCategory)
                 .orElseThrow(() -> new ResourceNotFoundException("Catégorie introuvable avec l'id : " + idCategory));
 
         Equipment equipment = new Equipment();
         equipment.setCategory(category);
-        equipment.setBrand(brand);
-        equipment.setModel(model);
+        equipment.setBrand(cleanBrand);
+        equipment.setModel(cleanModel);
 
         Equipment savedEquipment = equipmentRepository.save(equipment);
         return equipmentMapper.toDTO(savedEquipment);
@@ -86,8 +91,8 @@ public class EquipmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Catégorie introuvable avec l'id : " + categoryId));
 
         equipment.setCategory(category);
-        equipment.setBrand(brand);
-        equipment.setModel(model);
+        equipment.setBrand(brand != null ? brand.trim() : "");
+        equipment.setModel(model != null ? model.trim() : "");
 
         Equipment updatedEquipment = equipmentRepository.save(equipment);
         return equipmentMapper.toDTO(updatedEquipment);

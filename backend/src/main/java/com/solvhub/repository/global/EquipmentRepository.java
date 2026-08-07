@@ -20,5 +20,10 @@ public interface EquipmentRepository extends GenericRepository<Equipment, Intege
     @Query("SELECT e.model FROM Equipment e WHERE e.category.idCategory = :categoryId AND e.brand = :brand ORDER BY e.model")
     List<String> findModelsByCategoryIdAndBrand(@Param("categoryId") Integer categoryId, @Param("brand") String brand);
 
-    Optional<Equipment> findByCategory_IdCategoryAndBrandAndModel(Integer idCategory, String brand, String model);
+    @Query("SELECT e FROM Equipment e WHERE e.category.idCategory = :categoryId AND LOWER(TRIM(e.brand)) = LOWER(TRIM(:brand)) AND LOWER(TRIM(e.model)) = LOWER(TRIM(:model))")
+    Optional<Equipment> findByCriteriaIgnoreCase(
+        @Param("categoryId") Integer categoryId, 
+        @Param("brand") String brand, 
+        @Param("model") String model
+    );
 }

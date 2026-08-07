@@ -151,9 +151,11 @@ export default function CreateProblemPage() {
     });
   };
 
+  const normalize = (str: string) => str.trim();
+
   const resolveOrCreateIndex = async (): Promise<number | undefined> => {
-    const finalBrand = selectedBrand === "OTHER" ? customBrand.trim() : selectedBrand;
-    const finalModel = selectedModel === "OTHER" ? customModel.trim() : selectedModel;
+    const finalBrand = normalize(selectedBrand === "OTHER" ? customBrand : selectedBrand);
+    const finalModel = normalize(selectedModel === "OTHER" ? customModel : selectedModel);
 
     if (!finalBrand || !finalModel) return undefined;
 
@@ -163,7 +165,7 @@ export default function CreateProblemPage() {
         return existing.idEquipment;
       }
     } catch (e) {
-      // Non trouvé
+      // Non trouvé, on passe à la création
     }
 
     try {
@@ -173,7 +175,7 @@ export default function CreateProblemPage() {
         model: finalModel,
       });
 
-      if (!newEq || !newEq.idEquipment) {
+      if (!newEq || typeof newEq.idEquipment === "undefined") {
         throw new Error("Erreur lors de la création de l'équipement");
       }
 
