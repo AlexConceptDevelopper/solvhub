@@ -11,4 +11,5 @@ public class EquipmentDTO {
     private CategoryDTO category;
     private String brand;
     private String model;
+    private Integer year;
 }

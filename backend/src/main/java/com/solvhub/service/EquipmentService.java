@@ -48,7 +48,7 @@ public class EquipmentService {
         return equipmentRepository
                 .findByCriteriaIgnoreCase(categoryId, cleanBrand, cleanModel)
                 .map(equipmentMapper::toDTO)
-                .orElse(null); 
+                .orElse(null);
     }
 
     public List<String> getBrandsByCategoryId(Integer categoryId) {
@@ -59,18 +59,22 @@ public class EquipmentService {
         return equipmentRepository.findModelsByCategoryIdAndBrand(categoryId, brand);
     }
 
-    public EquipmentDTO createEquipment(Integer idCategory, String brand, String model) {
+
+    public EquipmentDTO createEquipment(Integer idCategory, String brand, String model, Integer year) {
         String cleanBrand = brand != null ? brand.trim() : "";
         String cleanModel = model != null ? model.trim() : "";
 
-        // 1. On vérifie si l'équipement existe déjà en base (insensible à la casse & trim)
+        // Note: Si tu veux que l'année soit prise en compte dans la recherche de
+        // doublon,
+        // il faudra aussi adapter ton Repository pour inclure l'année.
+        // Si tu laisses findByCriteriaIgnoreCase, ça cherchera juste par catégorie,
+        // marque et modèle.
         var existingEquipment = equipmentRepository.findByCriteriaIgnoreCase(idCategory, cleanBrand, cleanModel);
 
         if (existingEquipment.isPresent()) {
             return equipmentMapper.toDTO(existingEquipment.get());
         }
 
-        // 2. S'il n'existe pas, on le crée proprement
         Category category = categoryRepository.findById(idCategory)
                 .orElseThrow(() -> new ResourceNotFoundException("Catégorie introuvable avec l'id : " + idCategory));
 
@@ -78,9 +82,26 @@ public class EquipmentService {
         equipment.setCategory(category);
         equipment.setBrand(cleanBrand);
         equipment.setModel(cleanModel);
+        equipment.setYear(year); // 🟢 Enregistrement de l'année
 
         Equipment savedEquipment = equipmentRepository.save(equipment);
         return equipmentMapper.toDTO(savedEquipment);
+    }
+
+    public EquipmentDTO updateEquipment(Integer id, Integer categoryId, String brand, String model, Integer year) {
+        Equipment equipment = equipmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Équipement introuvable avec l'id : " + id));
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Catégorie introuvable avec l'id : " + categoryId));
+
+        equipment.setCategory(category);
+        equipment.setBrand(brand != null ? brand.trim() : "");
+        equipment.setModel(model != null ? model.trim() : "");
+        equipment.setYear(year); // 🟢 Mise à jour de l'année
+
+        Equipment updatedEquipment = equipmentRepository.save(equipment);
+        return equipmentMapper.toDTO(updatedEquipment);
     }
 
     public EquipmentDTO updateEquipment(Integer id, Integer categoryId, String brand, String model) {

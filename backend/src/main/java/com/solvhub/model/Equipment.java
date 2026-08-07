@@ -24,4 +24,7 @@ public class Equipment {
 
     @Column(nullable = false)
     private String model;
+
+    @Column(name = "year")
+    private Integer year;
 }

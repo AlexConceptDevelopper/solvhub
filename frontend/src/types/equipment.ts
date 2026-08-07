@@ -5,6 +5,7 @@ export interface Equipment {
   category: Category;
   brand: string;
   model: string;
+  year?: number;
 }
 
 // Si besoin plus tard :
@@ -14,4 +15,5 @@ export interface EquipmentCreate {
   };
   brand: string;
   model: string;
+  year?: number;
 }

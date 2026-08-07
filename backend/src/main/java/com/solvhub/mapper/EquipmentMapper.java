@@ -24,6 +24,7 @@ public class EquipmentMapper {
         dto.setCategory(categoryMapper.toDTO(equipment.getCategory()));
         dto.setBrand(equipment.getBrand());
         dto.setModel(equipment.getModel());
+        dto.setYear(equipment.getYear());
 
         return dto;
     }
@@ -38,7 +39,8 @@ public class EquipmentMapper {
         equipment.setCategory(categoryMapper.toEntity(dto.getCategory()));
         equipment.setBrand(dto.getBrand());
         equipment.setModel(dto.getModel());
-
+        equipment.setYear(dto.getYear());
+        
         return equipment;
     }
 }

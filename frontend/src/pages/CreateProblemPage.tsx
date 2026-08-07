@@ -35,6 +35,7 @@ export default function CreateProblemPage() {
   const [customBrand, setCustomBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [customModel, setCustomModel] = useState<string>("");
+  const [year, setYear] = useState<string>(""); // 🟢 État pour l'année (4 chiffres max)
 
   const [aiChecked, setAiChecked] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<Problem[]>([]);
@@ -156,10 +157,12 @@ export default function CreateProblemPage() {
   const resolveOrCreateIndex = async (): Promise<number | undefined> => {
     const finalBrand = normalize(selectedBrand === "OTHER" ? customBrand : selectedBrand);
     const finalModel = normalize(selectedModel === "OTHER" ? customModel : selectedModel);
+    const parsedYear = year.trim() !== "" ? parseInt(year, 10) : undefined;
 
     if (!finalBrand || !finalModel) return undefined;
 
     try {
+      // On recherche uniquement par Catégorie, Marque et Modèle (pas par année)
       const existing = await findEquipmentByCriteria(form.idCategory, finalBrand, finalModel);
       if (existing && existing.idEquipment) {
         return existing.idEquipment;
@@ -169,10 +172,12 @@ export default function CreateProblemPage() {
     }
 
     try {
+      // Lors de la création, on transmet l'année si elle a été renseignée
       const newEq = await createEquipment({
         category: { idCategory: form.idCategory },
         brand: finalBrand,
         model: finalModel,
+        year: parsedYear,
       });
 
       if (!newEq || typeof newEq.idEquipment === "undefined") {
@@ -329,8 +334,9 @@ export default function CreateProblemPage() {
             </select>
           </div>
 
-          {/* MARQUE & MODÈLE */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+          {/* MARQUE, MODÈLE & ANNÉE */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+            {/* Marque */}
             <div>
               <label htmlFor="problem-brand" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                 Marque (Optionnel)
@@ -366,6 +372,7 @@ export default function CreateProblemPage() {
               )}
             </div>
 
+            {/* Modèle */}
             <div>
               <label htmlFor="problem-model" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
                 Modèle (Optionnel)
@@ -408,6 +415,25 @@ export default function CreateProblemPage() {
                   required
                 />
               )}
+            </div>
+
+            {/* Année (Conditionnée à 4 chiffres max) */}
+            <div>
+              <label htmlFor="problem-year" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+                Année (Optionnel)
+              </label>
+              <input
+                type="text"
+                id="problem-year"
+                maxLength={4}
+                value={year}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, ""); // N'autorise que les chiffres
+                  if (val.length <= 4) setYear(val);
+                }}
+                placeholder="Ex : 2022"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm"
+              />
             </div>
           </div>
 

@@ -28,10 +28,11 @@ public class EquipmentController {
 
     @PostMapping
     public ResponseEntity<EquipmentDTO> createEquipment(@RequestBody EquipmentDTO dto) {
-        // Extraction cohérente via getIdCategory()
         Integer idCategory = dto.getCategory() != null ? dto.getCategory().getIdCategory() : null;
 
-        EquipmentDTO created = equipmentService.createEquipment(idCategory, dto.getBrand(), dto.getModel());
+        // 🟢 On passe bien l'année (dto.getYear()) au service
+        EquipmentDTO created = equipmentService.createEquipment(idCategory, dto.getBrand(), dto.getModel(),
+                dto.getYear());
         return ResponseEntity.ok(created);
     }
 
@@ -70,9 +71,9 @@ public class EquipmentController {
             @RequestParam("categoryId") Integer categoryId,
             @RequestParam("brand") String brand,
             @RequestParam("model") String model) {
-        
+
         EquipmentDTO equipment = equipmentService.findByCategoryAndBrandAndModel(categoryId, brand, model);
-        
-        return ResponseEntity.ok(equipment); 
+
+        return ResponseEntity.ok(equipment);
     }
 }
