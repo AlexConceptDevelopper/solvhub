@@ -30,7 +30,7 @@ export default function CreateProblemPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [models, setModels] = useState<string[]>([]);
-  
+
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [customBrand, setCustomBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
@@ -52,13 +52,13 @@ export default function CreateProblemPage() {
     error: submitError,
     execute: submitExecute,
   } = useAsync<Problem>();
-  
+
   const {
     loading: loadingCats,
     error: catError,
     execute: fetchCatsExecute,
   } = useAsync<Category[]>();
-  
+
   const { loading: checkingAI, execute: checkDuplicatesExecute } =
     useAsync<Problem[]>();
 
@@ -97,10 +97,14 @@ export default function CreateProblemPage() {
 
   useEffect(() => {
     const fetchModels = async () => {
-      const activeBrand = selectedBrand === "OTHER" ? customBrand : selectedBrand;
+      const activeBrand =
+        selectedBrand === "OTHER" ? customBrand : selectedBrand;
       if (form.idCategory && activeBrand && selectedBrand !== "OTHER") {
         try {
-          const modelList = await getModelsByCategoryAndBrand(form.idCategory, activeBrand);
+          const modelList = await getModelsByCategoryAndBrand(
+            form.idCategory,
+            activeBrand,
+          );
           setModels(modelList);
         } catch (err) {
           console.error("Erreur chargement modèles", err);
@@ -155,15 +159,35 @@ export default function CreateProblemPage() {
   const normalize = (str: string) => str.trim();
 
   const resolveOrCreateIndex = async (): Promise<number | undefined> => {
-    const finalBrand = normalize(selectedBrand === "OTHER" ? customBrand : selectedBrand);
-    const finalModel = normalize(selectedModel === "OTHER" ? customModel : selectedModel);
-    const parsedYear = year.trim() !== "" ? parseInt(year, 10) : undefined;
+    const finalBrand = normalize(
+      selectedBrand === "OTHER" ? customBrand : selectedBrand,
+    );
+    const finalModel = normalize(
+      selectedModel === "OTHER" ? customModel : selectedModel,
+    );
+
+    const trimmedYear = year.trim();
+    if (
+      trimmedYear !== "" &&
+      (trimmedYear.length !== 4 || isNaN(Number(trimmedYear)))
+    ) {
+      throw new Error(
+        "L'année de l'équipement doit comporter exactement 4 chiffres (ex: 2024).",
+      );
+    }
+
+    const parsedYear =
+      trimmedYear !== "" ? parseInt(trimmedYear, 10) : undefined;
 
     if (!finalBrand || !finalModel) return undefined;
 
     try {
       // On recherche uniquement par Catégorie, Marque et Modèle (pas par année)
-      const existing = await findEquipmentByCriteria(form.idCategory, finalBrand, finalModel);
+      const existing = await findEquipmentByCriteria(
+        form.idCategory,
+        finalBrand,
+        finalModel,
+      );
       if (existing && existing.idEquipment) {
         return existing.idEquipment;
       }
@@ -198,7 +222,11 @@ export default function CreateProblemPage() {
     let equipmentId = undefined;
     try {
       equipmentId = await resolveOrCreateIndex();
-    } catch (err) {
+    } catch (err: any) {
+      // 🟢 On transmet l'erreur au hook useAsync de soumission pour qu'elle s'affiche dans <ErrorMessage />
+      submitExecute(async () => {
+        throw err;
+      });
       return;
     }
 
@@ -231,14 +259,19 @@ export default function CreateProblemPage() {
 
         {(submitError || catError) && (
           <div className="mb-6">
-            <ErrorMessage message={submitError || catError || "Une erreur est survenue"} />
+            <ErrorMessage
+              message={submitError || catError || "Une erreur est survenue"}
+            />
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
           {/* Titre */}
           <div>
-            <label htmlFor="problem-title" className="block text-sm font-bold text-slate-800 mb-2">
+            <label
+              htmlFor="problem-title"
+              className="block text-sm font-bold text-slate-800 mb-2"
+            >
               Titre du problème <span className="text-blue-600">*</span>
             </label>
             <input
@@ -256,7 +289,8 @@ export default function CreateProblemPage() {
           <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider">
-                <span aria-hidden="true">🛡️</span> Vérification automatique des doublons
+                <span aria-hidden="true">🛡️</span> Vérification automatique des
+                doublons
               </h3>
               {checkingAI && (
                 <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
@@ -265,16 +299,18 @@ export default function CreateProblemPage() {
               )}
             </div>
 
-            {(!form.title || form.title.trim().length < 3) ? (
+            {!form.title || form.title.trim().length < 3 ? (
               <p className="text-xs text-slate-500 italic">
-                Commencez à saisir un titre ci-dessus pour vérifier si ce problème n'a pas déjà été résolu par la communauté.
+                Commencez à saisir un titre ci-dessus pour vérifier si ce
+                problème n'a pas déjà été résolu par la communauté.
               </p>
             ) : aiChecked ? (
               <div className="pt-2 border-t border-slate-200/60 space-y-2">
                 {aiSuggestions.length > 0 ? (
                   <div>
                     <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
-                      <span aria-hidden="true">⚠️</span> Un problème similaire existe déjà :
+                      <span aria-hidden="true">⚠️</span> Un problème similaire
+                      existe déjà :
                     </p>
                     {aiSuggestions.map((item) => (
                       <div
@@ -302,7 +338,8 @@ export default function CreateProblemPage() {
                   </div>
                 ) : (
                   <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
-                    <span aria-hidden="true">✨</span> Aucun doublon trouvé. Le sujet est inédit !
+                    <span aria-hidden="true">✨</span> Aucun doublon trouvé. Le
+                    sujet est inédit !
                   </p>
                 )}
               </div>
@@ -311,7 +348,10 @@ export default function CreateProblemPage() {
 
           {/* Catégorie */}
           <div>
-            <label htmlFor="problem-category" className="block text-sm font-bold text-slate-800 mb-2">
+            <label
+              htmlFor="problem-category"
+              className="block text-sm font-bold text-slate-800 mb-2"
+            >
               Catégorie principale <span className="text-blue-600">*</span>
             </label>
             <select
@@ -338,7 +378,10 @@ export default function CreateProblemPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
             {/* Marque */}
             <div>
-              <label htmlFor="problem-brand" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+              <label
+                htmlFor="problem-brand"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
+              >
                 Marque (Optionnel)
               </label>
               <select
@@ -374,10 +417,14 @@ export default function CreateProblemPage() {
 
             {/* Modèle */}
             <div>
-              <label htmlFor="problem-model" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+              <label
+                htmlFor="problem-model"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
+              >
                 Modèle (Optionnel)
               </label>
-              {(selectedBrand && selectedBrand !== "OTHER") || (selectedBrand === "OTHER" && customBrand) ? (
+              {(selectedBrand && selectedBrand !== "OTHER") ||
+              (selectedBrand === "OTHER" && customBrand) ? (
                 <select
                   id="problem-model"
                   value={selectedModel}
@@ -419,7 +466,10 @@ export default function CreateProblemPage() {
 
             {/* Année (Conditionnée à 4 chiffres max) */}
             <div>
-              <label htmlFor="problem-year" className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+              <label
+                htmlFor="problem-year"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
+              >
                 Année (Optionnel)
               </label>
               <input
@@ -439,7 +489,10 @@ export default function CreateProblemPage() {
 
           {/* Description */}
           <div>
-            <label htmlFor="problem-description" className="block text-sm font-bold text-slate-800 mb-2">
+            <label
+              htmlFor="problem-description"
+              className="block text-sm font-bold text-slate-800 mb-2"
+            >
               Description détaillée <span className="text-blue-600">*</span>
             </label>
             <textarea
