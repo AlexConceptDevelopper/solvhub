@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider, Helmet } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
@@ -32,6 +33,12 @@ import OAuthSuccessPage from "./pages/OAuthSuccessPage";
 function AppRoutes() {
   return (
     <BrowserRouter>
+      {/* Titre et meta par défaut global pour tout le site */}
+      <Helmet>
+        <title>SolvHub - L'entraide qui répare tout</title>
+        <meta name="description" content="Plateforme communautaire. Des solutions pour chaque problème. Trouvez de l'aide et partagez vos expériences." />
+      </Helmet>
+
       <ScrollToTop />
       
       {/* Conteneur global en colonne pour forcer le footer en bas */}
@@ -91,9 +98,11 @@ function AppRoutes() {
 
 function App() {
   return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 
