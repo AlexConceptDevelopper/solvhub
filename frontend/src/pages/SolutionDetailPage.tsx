@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 
 import { getSolutionById } from "../api/solution.api";
 import { getSolutionStats } from "../api/solutionStats.api";
@@ -57,6 +56,7 @@ export default function SolutionDetailPage() {
     execute: executeVote,
   } = useAsync<Vote>();
 
+  // --- Fonction utilitaire pour transformer une URL YouTube classique/partage en lien embed ---
   const getYoutubeEmbedUrl = (rawUrl?: string) => {
     if (!rawUrl) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
@@ -110,6 +110,7 @@ export default function SolutionDetailPage() {
     loadSolution();
   }, [id, user]);
 
+  // AJOUT SEO : Injection des données structurées Schema.org (TechArticle) pour Google
   useEffect(() => {
     if (!solution) return;
 
@@ -202,130 +203,126 @@ export default function SolutionDetailPage() {
   const youtubeEmbedUrl = videoMedia ? getYoutubeEmbedUrl(videoMedia.url) : null;
 
   return (
-    <>
-      <Helmet>
-        <title>{`${solution.title} | Solution SolvHub`}</title>
-        <meta name="description" content={solution.steps ? solution.steps.slice(0, 150) + "..." : "Consultez cette solution technique et donnez votre avis sur SolvHub."} />
-      </Helmet>
+    <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">
+      <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
+        
+        {/* EN-TÊTE : Titre et Bouton retour proprement séparés pour éviter le bug des lignes */}
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 wrap-break-word flex-1">
+            {solution.title}
+          </h1>
+          <div className="self-start sm:self-auto">
+            <BackButton
+              to={`/problem/${solution.problemId}`}
+              label="Retour au problème"
+              replace
+              state={
+                state?.originTo
+                  ? { returnTo: state.originTo, returnLabel: state.originLabel }
+                  : undefined
+              }
+            />
+          </div>
+        </div>
 
-      <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">
-        <section className="relative bg-white rounded-xl p-5 md:p-8 z-10 space-y-4 shadow-sm border border-slate-100">
-          
-          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 wrap-break-word flex-1">
-              {solution.title}
-            </h1>
-            <div className="self-start sm:self-auto">
-              <BackButton
-                to={`/problem/${solution.problemId}`}
-                label="Retour au problème"
-                replace
-                state={
-                  state?.originTo
-                    ? { returnTo: state.originTo, returnLabel: state.originLabel }
-                    : undefined
-                }
+        <p className="text-slate-700 leading-relaxed whitespace-pre-line text-sm md:text-base">{solution.steps}</p>
+
+        {/* --- Affichage de la vidéo si présente dans les médias --- */}
+        {youtubeEmbedUrl && (
+          <div className="space-y-2 pt-2">
+            <h3 className="text-sm font-semibold text-slate-700">
+              🎬 Vidéo explicative :
+            </h3>
+            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+              <iframe
+                src={youtubeEmbedUrl}
+                title="Vidéo explicative de la solution"
+                className="absolute top-0 left-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
               />
             </div>
           </div>
+        )}
 
-          <p className="text-slate-700 leading-relaxed whitespace-pre-line text-sm md:text-base">{solution.steps}</p>
-
-          {youtubeEmbedUrl && (
-            <div className="space-y-2 pt-2">
-              <h3 className="text-sm font-semibold text-slate-700">
-                🎬 Vidéo explicative :
-              </h3>
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm border border-slate-200">
-                <iframe
-                  src={youtubeEmbedUrl}
-                  title="Vidéo explicative de la solution"
-                  className="absolute top-0 left-0 w-full h-full border-0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+        {/* --- Affichage des images associées --- */}
+        {imageMedias.length > 0 && (
+          <div className="space-y-2 pt-2">
+            <h3 className="text-sm font-semibold text-slate-700">
+              Images associées :
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              {imageMedias.map((media) => (
+                <a
+                  key={media.idMedia}
+                  href={media.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block overflow-hidden rounded-xl border border-slate-200 hover:opacity-95 transition"
+                >
+                  <img
+                    src={media.url}
+                    alt="Illustration de la solution"
+                    className="h-32 w-32 object-cover"
+                  />
+                </a>
+              ))}
             </div>
-          )}
-
-          {imageMedias.length > 0 && (
-            <div className="space-y-2 pt-2">
-              <h3 className="text-sm font-semibold text-slate-700">
-                Images associées :
-              </h3>
-              <div className="flex flex-wrap gap-4">
-                {imageMedias.map((media) => (
-                  <a
-                    key={media.idMedia}
-                    href={media.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block overflow-hidden rounded-xl border border-slate-200 hover:opacity-95 transition"
-                  >
-                    <img
-                      src={media.url}
-                      alt="Illustration de la solution"
-                      className="h-32 w-32 object-cover"
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-wrap gap-3 text-xs md:text-sm text-slate-500 pt-2">
-            <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Difficulté : {solution.difficulty}/5</span>
-            <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Temps : {solution.timeMinutes} min</span>
-            <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Risque : {solution.riskLevel}/5</span>
           </div>
-        </section>
+        )}
 
-        {stats && <SolutionStatsCard stats={stats} />}
+        <div className="flex flex-wrap gap-3 text-xs md:text-sm text-slate-500 pt-2">
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Difficulté : {solution.difficulty}/5</span>
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Temps : {solution.timeMinutes} min</span>
+          <span className="bg-slate-50 border border-slate-200 px-3 py-1 rounded-lg">Risque : {solution.riskLevel}/5</span>
+        </div>
+      </section>
 
-        <section className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Votre avis</h2>
+      {stats && <SolutionStatsCard stats={stats} />}
 
-          {!user && (
-            <p className="mb-4 text-sm text-amber-600">
-              Vous devez être connecté pour voter.
-            </p>
-          )}
+      <section className="bg-white rounded-xl border border-slate-100 shadow-sm p-6">
+        <h2 className="text-xl font-bold text-slate-900 mb-4">Votre avis</h2>
 
-          {alreadyVoted && (
-            <p className="mb-4 text-sm text-slate-500">
-              Vous avez déjà donné votre avis sur cette solution.
-            </p>
-          )}
+        {!user && (
+          <p className="mb-4 text-sm text-amber-600">
+            Vous devez être connecté pour voter.
+          </p>
+        )}
 
-          <div className="mt-6 flex gap-3 flex-wrap">
-            <button
-              disabled={alreadyVoted || voting || !user}
-              onClick={() => handleVote("SUCCESS")}
-              className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 text-white font-semibold hover:bg-green-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {voting ? "Envoi..." : "👍 Réussie"}
-            </button>
+        {alreadyVoted && (
+          <p className="mb-4 text-sm text-slate-500">
+            Vous avez déjà donné votre avis sur cette solution.
+          </p>
+        )}
 
-            <button
-              disabled={alreadyVoted || voting || !user}
-              onClick={() => handleVote("PARTIAL")}
-              className="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-white font-semibold hover:bg-amber-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {voting ? "Envoi..." : "😐 Partielle"}
-            </button>
+        <div className="mt-6 flex gap-3 flex-wrap">
+          <button
+            disabled={alreadyVoted || voting || !user}
+            onClick={() => handleVote("SUCCESS")}
+            className="flex-1 rounded-xl bg-green-500 px-4 py-2.5 text-white font-semibold hover:bg-green-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            {voting ? "Envoi..." : "👍 Réussie"}
+          </button>
 
-            <button
-              disabled={alreadyVoted || voting || !user}
-              onClick={() => handleVote("FAILURE")}
-              className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-white font-semibold hover:bg-red-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-            >
-              {voting ? "Envoi..." : "👎 Échec"}
-            </button>
-          </div>
-        </section>
+          <button
+            disabled={alreadyVoted || voting || !user}
+            onClick={() => handleVote("PARTIAL")}
+            className="flex-1 rounded-xl bg-amber-500 px-4 py-2.5 text-white font-semibold hover:bg-amber-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            {voting ? "Envoi..." : "😐 Partielle"}
+          </button>
 
-        <VoteList votes={votes} />
-      </div>
-    </>
+          <button
+            disabled={alreadyVoted || voting || !user}
+            onClick={() => handleVote("FAILURE")}
+            className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 text-white font-semibold hover:bg-red-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+          >
+            {voting ? "Envoi..." : "👎 Échec"}
+          </button>
+        </div>
+      </section>
+
+      <VoteList votes={votes} />
+    </div>
   );
 }

@@ -1,279 +1,350 @@
-import { useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import RecentProblems from "../components/RecentProblems";
+import { Link, useNavigate } from "react-router-dom";
+import type { Category } from "../types/category";
+import { getCategoriesWithCount } from "../api/category.api";
+import { useEffect, useState, type FormEvent } from "react";
+import useAsync from "../hooks/useAsync";
 
-import { createSolution } from "../api/solution.api";
-
-import type { SolutionCreate } from "../types/solutionCreate";
-import ErrorMessage from "../components/ErrorMessage";
-import BackButton from "../components/BackButton";
-import PrimaryButton from "../components/PrimaryButton";
-
-export default function CreateSolutionPage() {
+export default function HomePage() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const fromAdmin = location.state?.fromAdmin;
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { problemId } = useParams();
-  const [error, setError] = useState<string | null>(null);
-  const [images, setImages] = useState<FileList | null>(null);
-  const [showVideoInput, setShowVideoInput] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { execute } = useAsync<Category[]>();
 
-  const [form, setForm] = useState<SolutionCreate & { videoUrl?: string }>({
-    title: "",
-    steps: "",
-    difficulty: 1,
-    timeMinutes: 5,
-    riskLevel: 1,
-    problemId: Number(problemId),
-    videoUrl: "",
-  });
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await execute(() => getCategoriesWithCount());
+      if (data) {
+        const sorted = [...data].sort(
+          (a, b) => b.problemCount - a.problemCount,
+        );
+        setCategories(sorted);
+      }
+    };
+    loadCategories();
+  }, []);
 
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value, type } = e.target;
-    setForm({
-      ...form,
-      [name]:
-        type === "number"
-          ? Number(value)
-          : Number.isNaN(Number(value))
-            ? value
-            : Number(value),
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // Gestion de la recherche au clic sur "Rechercher" ou touche Entrée (Reste en navigate car c'est une action/soumission de formulaire)
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const formData = new FormData();
-      formData.append("title", form.title);
-      formData.append("steps", form.steps);
-      formData.append("difficulty", form.difficulty.toString());
-      formData.append("timeMinutes", form.timeMinutes.toString());
-      formData.append("riskLevel", form.riskLevel.toString());
-      formData.append("problemId", form.problemId.toString());
-
-      if (form.videoUrl) {
-        formData.append("videoUrl", form.videoUrl);
-      }
-
-      if (images) {
-        for (let i = 0; i < images.length; i++) {
-          formData.append("images", images[i]);
-        }
-      }
-
-      const created = await createSolution(formData);
-
-      navigate(`/solution/${created.idSolution}`);
-    } catch (error) {
-      console.error(error);
-      setError("Impossible de créer la solution");
-    } finally {
-      setLoading(false);
-    }
+    if (!searchQuery.trim()) return;
+    navigate(`/problems?search=${encodeURIComponent(searchQuery)}`);
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Proposer une solution | SolvHub</title>
-        <meta name="description" content="Partagez votre solution pour aider la communauté SolvHub à résoudre cette panne." />
-      </Helmet>
+    <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-12 mt-6 mb-16">
+      {/* HERO SECTION AVEC RECHERCHE */}
+      <section
+        className="
+          relative
+          overflow-visible
+          rounded-3xl
+          bg-linear-to-b
+          from-slate-50
+          to-white
+          text-slate-900
+          p-8
+          md:p-16
+          shadow-sm
+          border
+          border-slate-200
+        "
+      >
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white/85 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold text-slate-800">
-              Proposer une solution
-            </h1>
-            <BackButton 
-              to={fromAdmin ? "/admin" : `/problem/${problemId}`}
-              state={fromAdmin ? { activeTab: "problems" } : undefined}
-              label={fromAdmin ? "Retour à l'admin" : "Retour au problème"} 
-            />
-          </div>
-
-          {error && (
-            <ErrorMessage message={error} onRetry={() => setError(null)} />
-          )}
-
-          <form
-            onSubmit={handleSubmit}
-            className="mt-8 space-y-6"
-            autoComplete="off"
+        <div className="relative max-w-3xl z-10">
+          <span
+            className="
+              inline-flex
+              items-center
+              gap-2
+              px-3
+              py-1
+              rounded-full
+              bg-blue-50
+              border
+              border-blue-200
+              text-blue-700
+              text-xs
+              font-semibold
+              uppercase
+              tracking-wider
+              mb-6
+            "
           >
-            <div>
-              <label htmlFor="solution-title" className="block font-semibold text-slate-700 mb-2">
-                Titre
-              </label>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            Plateforme communautaire
+          </span>
+
+          <h1
+            className="
+              text-4xl
+              md:text-6xl
+              font-black
+              tracking-tight
+              leading-tight
+              text-slate-900
+            "
+          >
+            Des solutions pour <br />
+            chaque{" "}
+            <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              problème
+            </span>
+            .
+          </h1>
+
+          <p
+            className="
+              mt-6
+              text-slate-600
+              text-base
+              md:text-lg
+              leading-relaxed
+              max-w-xl
+            "
+          >
+            Trouvez de l'aide, partagez vos expériences et améliorez les
+            solutions ensemble avec la communauté{" "}
+            <span className="text-slate-900 font-semibold">SolvHub</span>.
+          </p>
+
+          <form onSubmit={handleSearch} className="mt-8 flex flex-col sm:flex-row items-center gap-3 max-w-xl">
+            <div className="relative w-full">
+              <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                🔍
+              </span>
               <input
-                id="solution-title"
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                placeholder="Ex : Redémarrer le service en mode sans échec"
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
-                required
-                autoComplete="off"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher un problème, un mot-clé..."
+                className="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
               />
             </div>
 
-            <div>
-              <label htmlFor="solution-steps" className="block font-semibold text-slate-700 mb-2">
-                Étapes
-              </label>
-              <textarea
-                id="solution-steps"
-                name="steps"
-                maxLength={2000}
-                value={form.steps}
-                onChange={handleChange}
-                placeholder="Décrivez les étapes...(max 2000 caractères)"
-                rows={6}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs"
-                required
-                autoComplete="off"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="solution-difficulty" className="block font-semibold text-slate-700 mb-2">
-                Difficulté
-              </label>
-              <select
-                id="solution-difficulty"
-                name="difficulty"
-                value={form.difficulty}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
-              >
-                <option value={1}>1 - Très facile</option>
-                <option value={2}>2 - Facile</option>
-                <option value={3}>3 - Moyen</option>
-                <option value={4}>4 - Difficile</option>
-                <option value={5}>5 - Très difficile</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="solution-time" className="block font-semibold text-slate-700 mb-2">
-                Temps estimé
-              </label>
-              <select
-                id="solution-time"
-                name="timeMinutes"
-                value={form.timeMinutes}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
-              >
-                <option value={5}>Moins de 10 minutes</option>
-                <option value={15}>10 à 30 minutes</option>
-                <option value={45}>30 minutes à 1 heure</option>
-                <option value={120}>Plus d'une heure</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="solution-risk" className="block font-semibold text-slate-700 mb-2">
-                Niveau de risque
-              </label>
-              <select
-                id="solution-risk"
-                name="riskLevel"
-                value={form.riskLevel}
-                onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition shadow-2xs"
-              >
-                <option value={1}>1 - Aucun risque</option>
-                <option value={2}>2 - Faible risque</option>
-                <option value={3}>3 - Risque modéré</option>
-                <option value={4}>4 - Risque important</option>
-                <option value={5}>5 - Danger élevé</option>
-              </select>
-            </div>
-
-            {/* Section Vidéo YouTube */}
-            <div className="pt-2">
-              {!showVideoInput ? (
-                <button
-                  type="button"
-                  onClick={() => setShowVideoInput(true)}
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-200 transition cursor-pointer"
-                >
-                  <span className="text-lg leading-none" aria-hidden="true">+</span>
-                  <span>Ajouter une vidéo explicative (YouTube)</span>
-                </button>
-              ) : (
-                <div className="bg-slate-50/80 border border-slate-200 rounded-2xl p-4 space-y-3 transition-all">
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="solution-video" className="block font-semibold text-slate-700 text-sm">
-                      🎬 Lien de la vidéo YouTube
-                    </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowVideoInput(false);
-                        setForm({ ...form, videoUrl: "" });
-                      }}
-                      className="text-xs text-slate-400 hover:text-slate-600 font-medium cursor-pointer"
-                    >
-                      Retirer la vidéo
-                    </button>
-                  </div>
-                  <input
-                    id="solution-video"
-                    type="url"
-                    name="videoUrl"
-                    value={form.videoUrl || ""}
-                    onChange={handleChange}
-                    placeholder="Ex : https://www.youtube.com/watch?v=..."
-                    className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-800 placeholder-slate-400 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition shadow-2xs text-sm"
-                    autoComplete="off"
-                  />
-                  <p className="text-xs text-slate-500">
-                    La vidéo s'affichera directement sous forme de lecteur intégré dans votre solution.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Images */}
-            <div>
-              <label htmlFor="solution-images" className="block font-semibold text-slate-700 mb-2">
-                Images d'illustration (optionnel)
-              </label>
-              <input
-                id="solution-images"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => setImages(e.target.files)}
-                className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition cursor-pointer"
-              />
-            </div>
-
-            <PrimaryButton
+            <button
               type="submit"
-              loading={loading}
-              loadingLabel="Création..."
-              className="w-full"
+              className="w-full sm:w-auto bg-blue-600 text-white px-6 py-3.5 rounded-2xl font-bold text-sm shadow-md shadow-blue-600/20 hover:bg-blue-700 hover:shadow-lg transition-all duration-200 cursor-pointer shrink-0"
             >
-              Créer la solution
-            </PrimaryButton>
+              Rechercher
+            </button>
           </form>
+
+          <div className="flex flex-wrap items-center gap-4 mt-6">
+            <Link
+              to="/problems"
+              className="text-xs font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+            >
+              Ou parcourir tous les problèmes →
+            </Link>
+
+            <span className="text-slate-300">•</span>
+
+            <Link
+              to="/problem/create"
+              state={{ returnTo: "/", returnLabel: "Retour à l'accueil" }}
+              className="text-xs font-semibold text-blue-600 hover:underline cursor-pointer"
+            >
+              + Poser un problème
+            </Link>
+          </div>
         </div>
-      </div>
-    </>
+      </section>
+
+      {/* SECTION DES DERNIERS PROBLÈMES */}
+      <section
+        className="
+          bg-slate-50/80
+          border
+          border-slate-100
+          rounded-3xl
+          p-6
+          md:p-10
+          shadow-sm
+        "
+      >
+        <RecentProblems returnTo="/" returnLabel="Retour à l'accueil" />
+
+        <div className="flex justify-center mt-10">
+          <Link
+            to="/problems"
+            className="
+              text-sm
+              font-bold
+              text-slate-700
+              hover:text-blue-600
+              flex
+              items-center
+              gap-1.5
+              group
+              cursor-pointer
+              bg-white
+              border
+              border-slate-200
+              px-5
+              py-2.5
+              rounded-xl
+              shadow-xs
+              hover:border-blue-200
+              hover:bg-blue-50/20
+              hover:shadow-sm
+              transition-all
+            "
+          >
+            Voir tous les problèmes{" "}
+            <span className="transform group-hover:translate-x-1 transition-transform">
+              →
+            </span>
+          </Link>
+        </div>
+      </section>
+
+      {/* CATEGORIES POPULAIRES */}
+      <section
+        className="
+          bg-slate-50/80
+          border
+          border-slate-100
+          rounded-3xl
+          p-6
+          md:p-10
+          shadow-sm
+        "
+      >
+        <div className="max-w-xl mb-10">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+            Exploration
+          </span>
+          <h2 className="text-2xl md:text-3xl font-black tracking-tight text-slate-900 mt-3">
+            Catégories populaires
+          </h2>
+          <p className="text-slate-500 text-sm md:text-base mt-2">
+            Naviguez par thématique pour cibler les solutions de la communauté.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {categories.slice(0, 6).map((category) => (
+            <Link
+              key={category.idCategory}
+              to={`/categories/${category.idCategory}`}
+              state={{ returnTo: "/", returnLabel: "Retour à l'accueil" }}
+              className="
+                group
+                relative
+                bg-white
+                rounded-2xl
+                p-8
+                border
+                border-slate-200
+                hover:border-blue-300
+                hover:-translate-y-1.5
+                transition-all
+                duration-300
+                cursor-pointer
+                flex
+                flex-col
+                items-center
+                justify-center
+                text-center
+                overflow-hidden
+                shadow-sm
+                hover:shadow-[0_0_25px_rgba(59,130,246,0.12)]
+              "
+            >
+              <div className="absolute inset-0 bg-linear-to-b from-blue-500/0 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+              <div
+                className="
+                  text-3xl
+                  w-16
+                  h-16
+                  rounded-2xl
+                  bg-blue-50
+                  border
+                  border-blue-100
+                  group-hover:border-blue-300
+                  group-hover:scale-110
+                  flex
+                  items-center
+                  justify-center
+                  transition-all
+                  duration-300
+                "
+              >
+                {category.icon}
+              </div>
+
+              <h3 className="text-lg font-bold tracking-tight mt-5 text-slate-900 group-hover:text-blue-600 transition-colors">
+                {category.name}
+              </h3>
+
+              <span
+                className="
+                  mt-4
+                  inline-flex
+                  items-center
+                  px-3
+                  py-1
+                  rounded-full
+                  bg-slate-100
+                  border
+                  border-slate-200
+                  text-slate-500
+                  text-xs
+                  font-bold
+                  group-hover:bg-blue-50
+                  group-hover:text-blue-600
+                  group-hover:border-blue-200
+                  transition-all
+                  duration-300
+                "
+              >
+                {category.problemCount} problème
+                {category.problemCount > 1 ? "s" : ""}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {categories.length > 6 && (
+          <div className="flex justify-center mt-10">
+            <Link
+              to="/categories"
+              className="
+                text-sm
+                font-bold
+                text-slate-700
+                hover:text-blue-600
+                flex
+                items-center
+                gap-1.5
+                group
+                cursor-pointer
+                bg-white
+                border
+                border-slate-200
+                px-5
+                py-2.5
+                rounded-xl
+                shadow-xs
+                hover:border-blue-200
+                hover:bg-blue-50/20
+                hover:shadow-sm
+                transition-all
+              "
+            >
+              Toutes les catégories{" "}
+              <span className="transform group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </Link>
+          </div>
+        )}
+      </section>
+    </div>
   );
 }
