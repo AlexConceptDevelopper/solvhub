@@ -39,7 +39,7 @@ export default function RankingContributorPage() {
     <>
       <Helmet>
         <title>Top Contributeurs | SolvHub</title>
-        <meta name="description" content="Découvrez les membres les plus actifs et les meilleurs dépanneurs de la communauté SolvHub[cite: 30]." />
+        <meta name="description" content="Découvrez les membres les plus actifs et les meilleurs dépanneurs de la communauté SolvHub." />
       </Helmet>
 
       <div className="max-w-4xl mx-auto py-10 px-4 space-y-10">
@@ -49,7 +49,7 @@ export default function RankingContributorPage() {
               Top Contributeurs
             </h1>
             <p className="text-slate-600 text-sm mt-1">
-              Les membres les plus actifs et dépanneurs de la communauté[cite: 30].
+              Les membres les plus actifs et dépanneurs de la communauté.
             </p>
           </div>
           <BackButton to="/ranking" label="Retour aux classements" />
@@ -61,7 +61,7 @@ export default function RankingContributorPage() {
           </p>
         ) : userList.length === 0 ? (
           <p className="text-center text-slate-500 py-12">
-            Aucun contributeur pour le moment[cite: 30].
+            Aucun contributeur pour le moment.
           </p>
         ) : (
           <div className="space-y-10">
@@ -80,7 +80,7 @@ export default function RankingContributorPage() {
                       {top3[1].badge || "⚡ Actif"}
                     </span>
                     <p className="text-xs text-blue-600 font-medium">
-                      {top3[1].solutionCount || 0} résolutions[cite: 30]
+                      {top3[1].solutionCount || 0} résolutions
                     </p>
                   </div>
                 )}
@@ -98,7 +98,7 @@ export default function RankingContributorPage() {
                       {top3[0].badge || "⚡ Actif"}
                     </span>
                     <p className="text-xs text-amber-600 font-medium">
-                      {top3[0].solutionCount || 0} résolutions[cite: 30]
+                      {top3[0].solutionCount || 0} résolutions
                     </p>
                   </div>
                 )}
@@ -116,7 +116,7 @@ export default function RankingContributorPage() {
                       {top3[2].badge || "⚡ Actif"}
                     </span>
                     <p className="text-xs text-blue-600 font-medium">
-                      {top3[2].solutionCount || 0} résolutions[cite: 30]
+                      {top3[2].solutionCount || 0} résolutions
                     </p>
                   </div>
                 )}
@@ -151,7 +151,7 @@ export default function RankingContributorPage() {
                         </div>
                       </div>
                       <span className="text-xs text-blue-600 font-medium shrink-0">
-                        {user.solutionCount || 0} résolutions[cite: 30]
+                        {user.solutionCount || 0} résolutions
                       </span>
                     </div>
                   ))}

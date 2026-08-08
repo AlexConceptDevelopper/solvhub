@@ -3,226 +3,90 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
-import type { Solution } from "../types/solution";
-import type { User } from "../types/user";
 import type { Problem } from "../types/problem";
 
-export default function RankingHubPage() {
+export default function RankingProblemPage() {
   const navigate = useNavigate();
 
   const {
-    data: solutions,
-    loading: loadingSolutions,
-    execute: fetchSolutions,
-  } = useAsync<Solution[]>();
-  
-  const {
-    data: topUsers,
-    loading: loadingUsers,
-    execute: fetchUsers,
-  } = useAsync<User[]>();
-
-  const {
     data: problems,
-    loading: loadingProblems,
+    loading,
     execute: fetchProblems,
   } = useAsync<Problem[]>();
 
   useEffect(() => {
-    fetchSolutions(() =>
-      apiFetch<Solution[] | null>("/ranking/top3").then((res) => res ?? []),
-    );
-    fetchUsers(() =>
-      apiFetch<User[] | null>("/users/top-contributors/top3").then(
-        (res) => res ?? [],
-      ),
-    );
     fetchProblems(() =>
-      apiFetch<Problem[] | null>("/problems/dto/popular/top3").then(
+      apiFetch<Problem[] | null>("/problems/dto/popular").then(
         (res) => res ?? [],
       ),
     );
   }, []);
 
-  const topSolutions = solutions?.slice(0, 3) || [];
-  const top3Users = topUsers?.slice(0, 3) || [];
-  const top3Problems = problems?.slice(0, 3) || [];
-  
-  const loading = loadingSolutions || loadingUsers || loadingProblems;
-
   return (
     <>
       <Helmet>
-        <title>Classements de la communauté | SolvHub</title>
-        <meta name="description" content="Découvrez les tops contributeurs, les solutions les plus utiles et les problèmes qui font le plus parler sur SolvHub[cite: 31]." />
+        <title>Classement des Problèmes Populaires | SolvHub</title>
+        <meta name="description" content="Découvrez les sujets qui génèrent le plus d'engagement et de votes sur leurs solutions sur SolvHub." />
       </Helmet>
 
-      <div className="max-w-6xl mx-auto py-10 px-4 space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <h1 className="text-4xl font-bold text-slate-900">
-            Classements de la communauté
-          </h1>
-          <p className="text-slate-600 text-sm">
-            Découvrez les tops contributeurs, les solutions les plus utiles et les
-            problèmes qui font le plus parler[cite: 31].
-          </p>
+      <div className="max-w-4xl mx-auto py-10 px-4 space-y-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+              <span>🔥</span> Classement des Problèmes Populaires
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">
+              Les sujets qui génèrent le plus d'engagement et de votes sur leurs solutions.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate("/ranking")}
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer"
+          >
+            ← Retour au hub
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* SECTION SOLUTIONS */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <span>💡</span> Meilleures Solutions
-              </h2>
-              {loading ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Chargement...[cite: 31]
-                </p>
-              ) : topSolutions.length === 0 ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Aucune solution pour l'instant[cite: 31].
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {topSolutions.map((sol, index) => {
-                    const scorePercentage = sol.score !== null && sol.score !== undefined 
-                      ? Math.round(sol.score * 100) 
-                      : null;
-
-                    return (
-                      <div
-                        key={sol.idSolution}
-                        onClick={() => navigate(`/solution/${sol.idSolution}`)}
-                        className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-300 transition"
-                      >
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <span className="font-bold text-sm text-amber-500 w-4 text-center shrink-0">
-                            {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
-                          </span>
-                          <div className="overflow-hidden">
-                            <h4 className="font-semibold text-slate-800 text-xs truncate">
-                              {sol.title}
-                            </h4>
-                            <p className="text-[10px] text-slate-500">
-                              Par {sol.user?.username || "Anonyme"}[cite: 31]
-                            </p>
-                          </div>
-                        </div>
-
-                        {scorePercentage !== null && (
-                          <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full shrink-0">
-                            {scorePercentage}%[cite: 31]
-                          </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => navigate("/ranking/solutions")}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
-            >
-              Voir tout le classement →[cite: 31]
-            </button>
-          </div>
-
-          {/* SECTION UTILISATEURS */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <span>👥</span> Top Contributeurs
-              </h2>
-              {loading ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Chargement...[cite: 31]
-                </p>
-              ) : top3Users.length === 0 ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Aucun contributeur pour l'instant[cite: 31].
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {top3Users.map((user, index) => (
-                    <div
-                      key={user.idUsers}
-                      onClick={() => navigate(`/user/${user.idUsers}`)} 
-                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer hover:border-slate-300 transition"
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="font-bold text-sm">
-                          {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
-                        </span>
-                        <span className="font-semibold text-slate-800 text-xs">
-                          {user.username}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-blue-600 font-medium">
-                        {user.solutionCount || 0} résolutions[cite: 31]
-                      </span>
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-md p-6">
+          {loading ? (
+            <p className="text-sm text-slate-400 py-12 text-center">
+              Chargement du classement...
+            </p>
+          ) : !problems || problems.length === 0 ? (
+            <p className="text-sm text-slate-400 py-12 text-center">
+              Aucun problème pour l'instant.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {problems.map((prob, index) => (
+                <div
+                  key={prob.idProblem}
+                  onClick={() => navigate(`/problem/${prob.idProblem}`)}
+                  className="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer transition"
+                >
+                  <div className="flex items-center gap-4 overflow-hidden">
+                    <span className="font-bold text-base text-amber-500 w-6 text-center">
+                      {index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `#${index + 1}`}
+                    </span>
+                    <div className="overflow-hidden">
+                      <h3 className="font-semibold text-slate-800 text-sm truncate">
+                        {prob.title}
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Par {prob.user?.username || "Anonyme"} • <span className="text-blue-600 font-medium">{prob.category?.name || "Général"}</span>
+                      </p>
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-xs font-semibold bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100">
+                      {prob.voteCount !== undefined ? `${prob.voteCount} votes` : "Populaire 🔥"}
+                    </span>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
-
-            <button
-              onClick={() => navigate("/ranking/contributors")}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
-            >
-              Voir tout le classement →[cite: 31]
-            </button>
-          </div>
-
-          {/* SECTION PROBLÈMES POPULAIRES */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between space-y-6 shadow-md">
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                <span>🔥</span> Problèmes Populaires
-              </h2>
-              {loading ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Chargement...[cite: 31]
-                </p>
-              ) : top3Problems.length === 0 ? (
-                <p className="text-xs text-slate-400 py-6 text-center">
-                  Aucun problème pour l'instant[cite: 31].
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  {top3Problems.map((prob, index) => (
-                    <div
-                      key={prob.idProblem}
-                      onClick={() => navigate(`/problem/${prob.idProblem}`)}
-                      className="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 cursor-pointer hover:border-slate-300 transition"
-                    >
-                      <span className="font-bold text-sm text-amber-500 w-4 text-center">
-                        {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
-                      </span>
-                      <div className="overflow-hidden">
-                        <h4 className="font-semibold text-slate-800 text-xs truncate">
-                          {prob.title}
-                        </h4>
-                        <p className="text-[10px] text-slate-500">
-                          Par {prob.user?.username || "Anonyme"} • {prob.category?.name || "Général"}[cite: 31]
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => navigate("/ranking/problems")}
-              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition cursor-pointer"
-            >
-              Voir tous les problèmes →[cite: 31]
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </>
