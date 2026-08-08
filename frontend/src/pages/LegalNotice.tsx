@@ -35,7 +35,9 @@ export default function LegalNotice() {
           </p>
 
           <h2 className="text-xl font-semibold text-slate-800">Hébergement</h2>
-          <p>Le site est hébergé par : Railway.</p>
+          <p>
+            Le site est hébergé par : <strong>Railway</strong> (railway.com).
+          </p>
         </div>
       </div>
     </>
