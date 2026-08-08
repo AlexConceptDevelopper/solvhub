@@ -4,11 +4,17 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.solvhub.exception.InvalidDataException;
 import com.solvhub.exception.ResourceNotFoundException;
+import com.solvhub.model.Problem;
+import com.solvhub.model.Solution;
 import com.solvhub.model.User;
 import com.solvhub.repository.global.UserRepository;
 import com.solvhub.repository.global.SolutionRepository;
+import com.solvhub.repository.global.ProblemRepository;
+import com.solvhub.repository.global.VoteRepository;
 
 import com.solvhub.dto.ChangePasswordDTO;
 import com.solvhub.dto.UserDTO;
@@ -19,13 +25,22 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final SolutionRepository solutionRepository;
+    private final ProblemRepository problemRepository;
+    private final VoteRepository voteRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, SolutionRepository solutionRepository, UserMapper userMapper,
+    public UserService(
+            UserRepository userRepository,
+            SolutionRepository solutionRepository,
+            ProblemRepository problemRepository,
+            VoteRepository voteRepository,
+            UserMapper userMapper,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.solutionRepository = solutionRepository;
+        this.problemRepository = problemRepository;
+        this.voteRepository = voteRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -46,6 +61,11 @@ public class UserService {
         // Mise à jour du username
         if (dto.getUsername() != null && !dto.getUsername().trim().isEmpty()) {
             userToModify.setUsername(dto.getUsername());
+        }
+
+        // Mise à jour du rôle
+        if (dto.getRole() != null && !dto.getRole().trim().isEmpty()) {
+            userToModify.setRole(dto.getRole());
         }
 
         // Mise à jour des notifications
@@ -128,14 +148,36 @@ public class UserService {
         userRepository.save(currentUser);
     }
 
+    @Transactional
     public void deleteUser(Integer userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Utilisateur introuvable avec l'ID : " + userId));
 
-        // Optionnel : si tu veux gérer la suppression en cascade des
-        // solutions/commentaires avant,
-        // ou laisser la base de données le faire via des contraintes SQL (ON DELETE
-        // CASCADE)
+        // 1. Supprimer les votes que CET utilisateur a donnés sur les solutions des autres
+        voteRepository.deleteByUserIdUsers(userId);
+
+        // 2. Pour chaque solution créée par l'utilisateur : supprimer d'abord les votes reçus dessus
+        List<Solution> userSolutions = solutionRepository.findByUser(user);
+        for (Solution solution : userSolutions) {
+            voteRepository.deleteBySolutionIdSolution(solution.getIdSolution());
+        }
+        // Puis supprimer les solutions elles-mêmes
+        // (cascade déjà gérée vers SolutionStats/SolutionMedia via CascadeType.ALL)
+        solutionRepository.deleteAll(userSolutions);
+
+        // 3. Pour chaque problème créé par l'utilisateur : même chose pour ses solutions restantes
+        List<Problem> userProblems = problemRepository.findByUserIdUsers(userId);
+        for (Problem problem : userProblems) {
+            List<Solution> problemSolutions = solutionRepository.findByProblemIdProblem(problem.getIdProblem());
+            for (Solution solution : problemSolutions) {
+                voteRepository.deleteBySolutionIdSolution(solution.getIdSolution());
+            }
+            // La suppression du problem cascade déjà vers ses solutions restantes
+            // (CascadeType.REMOVE, orphanRemoval = true sur Problem.solutions)
+        }
+        problemRepository.deleteAll(userProblems);
+
+        // 4. Enfin, supprimer le compte utilisateur lui-même
         userRepository.delete(user);
     }
 

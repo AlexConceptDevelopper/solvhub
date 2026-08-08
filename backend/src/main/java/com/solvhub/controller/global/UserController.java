@@ -69,7 +69,16 @@ public class UserController {
         return new MessageResponse("Mot de passe mis à jour avec succès.");
     }
 
-    // Supprimer un utilisateur (réservé aux admins ou via l'admin panel)
+    // Suppression de SON PROPRE compte, accessible à tout utilisateur connecté
+    @DeleteMapping("/me")
+    public ResponseEntity<MessageResponse> deleteMyAccount(
+            @AuthenticationPrincipal User currentUser) {
+        userService.deleteUser(currentUser.getIdUsers());
+        return ResponseEntity.ok(new MessageResponse("Votre compte a été supprimé avec succès."));
+    }
+
+    // Suppression et modification (2 méthodes) de N'IMPORTE QUEL compte par ID, réservé aux admins
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);

@@ -2,9 +2,15 @@ import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useAuth } from "../context/AuthContext";
 import useAsync from "../hooks/useAsync";
-import { getMe, updateProfile, changePassword } from "../api/user.api";
-import { getProblemsByUser, deleteProblem } from "../api/problem.api"; 
-import { getSolutionsByUser, deleteSolution } from "../api/solution.api"; 
+import {
+  getMe,
+  updateProfile,
+  changePassword,
+  deleteMyAccount,
+} from "../api/user.api";
+import { useNavigate } from "react-router-dom";
+import { getProblemsByUser, deleteProblem } from "../api/problem.api";
+import { getSolutionsByUser, deleteSolution } from "../api/solution.api";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import type { Problem } from "../types/problem";
@@ -18,7 +24,8 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<TabType>("info");
 
   const [username, setUsername] = useState("");
-  const [emailNotificationsEnabled, setEmailNotificationsEnabled] = useState(true);
+  const [emailNotificationsEnabled, setEmailNotificationsEnabled] =
+    useState(true);
   const [profileSuccess, setProfileSuccess] = useState("");
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -32,6 +39,11 @@ export default function ProfilePage() {
   const [userProblems, setUserProblems] = useState<Problem[]>([]);
   const [userSolutions, setUserSolutions] = useState<Solution[]>([]);
   const [contentLoading, setContentLoading] = useState(true);
+
+  const navigate = useNavigate();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const { loading: deleteAccountLoading, execute: executeDeleteAccount } =
+    useAsync<any>();
 
   const {
     loading: profileLoading,
@@ -62,7 +74,10 @@ export default function ProfilePage() {
           updateUser(freshUser);
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération du profil frais :", error);
+        console.error(
+          "Erreur lors de la récupération du profil frais :",
+          error,
+        );
       }
     };
     fetchLatestProfile();
@@ -79,7 +94,10 @@ export default function ProfilePage() {
       setUserProblems(problemsData);
       setUserSolutions(solutionsData);
     } catch (error) {
-      console.error("Erreur lors du chargement du contenu utilisateur :", error);
+      console.error(
+        "Erreur lors du chargement du contenu utilisateur :",
+        error,
+      );
     } finally {
       setContentLoading(false);
     }
@@ -97,7 +115,9 @@ export default function ProfilePage() {
   const handleDeleteUserSolution = async (idSolution: number) => {
     try {
       await deleteSolution(idSolution);
-      setUserSolutions((prev) => prev.filter((s) => s.idSolution !== idSolution));
+      setUserSolutions((prev) =>
+        prev.filter((s) => s.idSolution !== idSolution),
+      );
     } catch (error) {
       console.error("Erreur lors de la suppression de la solution :", error);
     }
@@ -139,7 +159,9 @@ export default function ProfilePage() {
     }
 
     if (newPassword.length < 6) {
-      setLocalError("Le nouveau mot de passe doit faire au moins 6 caractères.");
+      setLocalError(
+        "Le nouveau mot de passe doit faire au moins 6 caractères.",
+      );
       return;
     }
 
@@ -156,6 +178,14 @@ export default function ProfilePage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const result = await executeDeleteAccount(() => deleteMyAccount());
+    if (result) {
+      localStorage.removeItem("token"); // déconnexion
+      navigate("/");
+    }
+  };
+
   const displayProfileError = profileError || profileAsyncError;
   const displayPasswordError = localError || passwordAsyncError;
 
@@ -163,7 +193,10 @@ export default function ProfilePage() {
     <>
       <Helmet>
         <title>Mon Profil | SolvHub</title>
-        <meta name="description" content="Gérez vos informations personnelles, vos problèmes et vos solutions sur SolvHub." />
+        <meta
+          name="description"
+          content="Gérez vos informations personnelles, vos problèmes et vos solutions sur SolvHub."
+        />
       </Helmet>
 
       <div className="min-h-screen p-6 md:p-12">
@@ -261,14 +294,21 @@ export default function ProfilePage() {
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200 rounded-xl">
                     <div>
-                      <h4 className="font-semibold text-slate-900 text-sm">Notifications par e-mail</h4>
-                      <p className="text-xs text-slate-500">Recevoir une alerte lorsqu'une solution est proposée à l'un de mes problèmes.</p>
+                      <h4 className="font-semibold text-slate-900 text-sm">
+                        Notifications par e-mail
+                      </h4>
+                      <p className="text-xs text-slate-500">
+                        Recevoir une alerte lorsqu'une solution est proposée à
+                        l'un de mes problèmes.
+                      </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                      <input 
-                        type="checkbox" 
-                        checked={emailNotificationsEnabled} 
-                        onChange={(e) => setEmailNotificationsEnabled(e.target.checked)}
+                      <input
+                        type="checkbox"
+                        checked={emailNotificationsEnabled}
+                        onChange={(e) =>
+                          setEmailNotificationsEnabled(e.target.checked)
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -288,7 +328,9 @@ export default function ProfilePage() {
 
               {!user?.googleAccount && (
                 <div className="bg-white border border-slate-200 shadow-xs p-6 rounded-2xl">
-                  <h2 className="text-lg font-semibold text-slate-900 mb-4">Sécurité</h2>
+                  <h2 className="text-lg font-semibold text-slate-900 mb-4">
+                    Sécurité
+                  </h2>
 
                   {passwordSuccess && (
                     <div className="mb-4 p-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm">
@@ -304,7 +346,10 @@ export default function ProfilePage() {
                       Changer mon mot de passe
                     </button>
                   ) : (
-                    <form onSubmit={handlePasswordChange} className="space-y-4 mt-2">
+                    <form
+                      onSubmit={handlePasswordChange}
+                      className="space-y-4 mt-2"
+                    >
                       {displayPasswordError && (
                         <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
                           {displayPasswordError}
@@ -370,6 +415,51 @@ export default function ProfilePage() {
                   )}
                 </div>
               )}
+
+              <div className="bg-white border border-red-200 shadow-xs p-6 rounded-2xl">
+                <h2 className="text-lg font-semibold text-red-700 mb-2">
+                  Zone dangereuse
+                </h2>
+                <p className="text-sm text-slate-500 mb-4">
+                  La suppression de votre compte est définitive et
+                  irréversible. Vos problèmes et solutions publiés seront
+                  également supprimés.
+                </p>
+
+                {!showDeleteConfirm ? (
+                  <button
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="text-red-600 hover:text-red-700 font-medium text-sm transition-colors cursor-pointer"
+                  >
+                    Supprimer mon compte
+                  </button>
+                ) : (
+                  <div className="space-y-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+                    <p className="text-sm text-red-800 font-medium">
+                      Es-tu vraiment sûr ? Cette action ne peut pas être
+                      annulée.
+                    </p>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={handleDeleteAccount}
+                        disabled={deleteAccountLoading}
+                        className="px-4 py-2 font-semibold text-white bg-red-600 hover:bg-red-700 rounded-xl text-sm cursor-pointer transition disabled:opacity-50"
+                      >
+                        {deleteAccountLoading
+                          ? "Suppression..."
+                          : "Oui, supprimer définitivement"}
+                      </button>
+                      <button
+                        onClick={() => setShowDeleteConfirm(false)}
+                        disabled={deleteAccountLoading}
+                        className="px-4 py-2 font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl text-sm cursor-pointer transition"
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -380,23 +470,36 @@ export default function ProfilePage() {
               </h2>
 
               {contentLoading ? (
-                <p className="text-slate-400 text-sm italic">Chargement de vos problèmes...</p>
+                <p className="text-slate-400 text-sm italic">
+                  Chargement de vos problèmes...
+                </p>
               ) : userProblems.length === 0 ? (
-                <p className="text-slate-400 text-sm">Vous n'avez posté aucun problème pour le moment.</p>
+                <p className="text-slate-400 text-sm">
+                  Vous n'avez posté aucun problème pour le moment.
+                </p>
               ) : (
                 <div className="divide-y divide-slate-100">
                   {userProblems.map((prob) => (
-                    <div key={prob.idProblem} className="py-4 flex justify-between items-center">
+                    <div
+                      key={prob.idProblem}
+                      className="py-4 flex justify-between items-center"
+                    >
                       <div>
-                        <h4 className="font-semibold text-slate-900 text-sm">{prob.title}</h4>
-                        <p className="text-xs text-slate-500 line-clamp-1">{prob.description}</p>
+                        <h4 className="font-semibold text-slate-900 text-sm">
+                          {prob.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 line-clamp-1">
+                          {prob.description}
+                        </p>
                       </div>
                       <div className="flex items-center gap-3">
                         <span className="text-xs px-2.5 py-1 bg-slate-100 font-medium text-slate-600 rounded-lg">
                           {prob.category?.name || "Général"}
                         </span>
                         <button
-                          onClick={() => handleDeleteUserProblem(prob.idProblem)}
+                          onClick={() =>
+                            handleDeleteUserProblem(prob.idProblem)
+                          }
                           className="text-red-600 hover:text-red-700 text-xs font-semibold px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg transition cursor-pointer"
                         >
                           Supprimer
@@ -416,24 +519,39 @@ export default function ProfilePage() {
               </h2>
 
               {contentLoading ? (
-                <p className="text-slate-400 text-sm italic">Chargement de vos solutions...</p>
+                <p className="text-slate-400 text-sm italic">
+                  Chargement de vos solutions...
+                </p>
               ) : userSolutions.length === 0 ? (
-                <p className="text-slate-400 text-sm">Vous n'avez posté aucune solution pour le moment.</p>
+                <p className="text-slate-400 text-sm">
+                  Vous n'avez posté aucune solution pour le moment.
+                </p>
               ) : (
                 <div className="divide-y divide-slate-100">
                   {userSolutions.map((sol) => (
-                    <div key={sol.idSolution} className="py-4 flex justify-between items-center">
+                    <div
+                      key={sol.idSolution}
+                      className="py-4 flex justify-between items-center"
+                    >
                       <div>
-                        <h4 className="font-semibold text-slate-900 text-sm">{sol.title}</h4>
-                        <p className="text-xs text-slate-500 line-clamp-1">{sol.steps}</p>
+                        <h4 className="font-semibold text-slate-900 text-sm">
+                          {sol.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 line-clamp-1">
+                          {sol.steps}
+                        </p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-slate-500">⏱️ {sol.timeMinutes} min</span>
+                        <span className="text-xs text-slate-500">
+                          ⏱️ {sol.timeMinutes} min
+                        </span>
                         <span className="text-xs px-2.5 py-1 bg-blue-50 font-medium text-blue-700 rounded-lg">
                           Difficulté: {sol.difficulty}/5
                         </span>
                         <button
-                          onClick={() => handleDeleteUserSolution(sol.idSolution)}
+                          onClick={() =>
+                            handleDeleteUserSolution(sol.idSolution)
+                          }
                           className="text-red-600 hover:text-red-700 text-xs font-semibold px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg transition cursor-pointer"
                         >
                           Supprimer

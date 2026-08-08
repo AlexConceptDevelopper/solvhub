@@ -28,8 +28,16 @@ export async function changePassword(data: { oldPassword: string; newPassword: s
   });
 }
 
+//delete pour l'admin, peut delete tout le monde
 export async function deleteUser(id: number): Promise<any> {
   return await apiFetch(`/users/${id}`, {
+    method: "DELETE",
+  });
+}
+
+//delete sur l'user lui même, contraint à son id
+export async function deleteMyAccount(): Promise<any> {
+  return await apiFetch(`/users/me`, {
     method: "DELETE",
   });
 }
