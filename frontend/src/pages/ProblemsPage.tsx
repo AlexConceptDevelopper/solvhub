@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { getProblems } from "../api/problem.api";
 import { getCategoriesWithCount } from "../api/category.api";
 import type { Problem } from "../types/problem";
@@ -321,221 +322,228 @@ export default function ProblemsPage() {
   }
 
   return (
-    <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
-      <div>
-        <BackButton to="/" label="Retour à l'accueil" />
-      </div>
+    <>
+      <Helmet>
+        <title>Tous les problèmes et pannes résolus | SolvHub</title>
+        <meta name="description" content="Parcourez l'ensemble des problèmes techniques et pannes répertoriés sur SolvHub pour trouver des solutions adaptées." />
+      </Helmet>
 
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            Tous les problèmes
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Consultez les difficultés rencontrées par la communauté ou proposez
-            vos solutions.
-          </p>
+          <BackButton to="/" label="Retour à l'accueil" />
         </div>
 
-        <PrimaryButton
-          onClick={() =>
-            navigate("/problem/create", {
-              state: {
-                returnTo: "/problems",
-                returnLabel: "Retour aux problèmes",
-              },
-            })
-          }
-          className="w-fit"
-        >
-          + Poser un problème
-        </PrimaryButton>
-      </div>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+              Tous les problèmes
+            </h1>
+            <p className="text-sm text-slate-500 mt-1">
+              Consultez les difficultés rencontrées par la communauté ou proposez
+              vos solutions.
+            </p>
+          </div>
 
-      <div className="relative">
-        <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-          🔍
-        </span>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Rechercher par mot-clé (ex: écran, broute, batterie)..."
-          className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-800 text-sm shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => {
-              searchParams.delete("search");
-              setSearchParams(searchParams);
-              setCurrentPage(1);
-            }}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-semibold text-slate-400 hover:text-slate-600 cursor-pointer"
+          <PrimaryButton
+            onClick={() =>
+              navigate("/problem/create", {
+                state: {
+                  returnTo: "/problems",
+                  returnLabel: "Retour aux problèmes",
+                },
+              })
+            }
+            className="w-fit"
           >
-            Effacer
-          </button>
+            + Poser un problème
+          </PrimaryButton>
+        </div>
+
+        <div className="relative">
+          <span className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+            🔍
+          </span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Rechercher par mot-clé (ex: écran, broute, batterie)..."
+            className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-800 text-sm shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => {
+                searchParams.delete("search");
+                setSearchParams(searchParams);
+                setCurrentPage(1);
+              }}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-xs font-semibold text-slate-400 hover:text-slate-600 cursor-pointer"
+            >
+              Effacer
+            </button>
+          )}
+        </div>
+
+        {searchQuery && (
+          <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
+            <span>
+              Résultats pour : <strong className="font-semibold">"{searchQuery}"</strong>
+            </span>
+            <span className="text-xs font-medium text-blue-600">
+              {filteredProblems.length} trouvé(s)
+            </span>
+          </div>
         )}
-      </div>
 
-      {searchQuery && (
-        <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
-          <span>
-            Résultats pour : <strong className="font-semibold">"{searchQuery}"</strong>
-          </span>
-          <span className="text-xs font-medium text-blue-600">
-            {filteredProblems.length} trouvé(s)
-          </span>
-        </div>
-      )}
+        <SearchFilterBar
+          category={category}
+          setCategory={handleCategoryChange}
+          uniqueCategories={uniqueCategories}
+        />
 
-      <SearchFilterBar
-        category={category}
-        setCategory={handleCategoryChange}
-        uniqueCategories={uniqueCategories}
-      />
-
-      {category === "Automobile" && (
-        <div className="flex flex-col sm:flex-row gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-          <div className="flex-1">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">
-              Marque
-            </label>
-            <select
-              value={selectedBrand}
-              onChange={(e) => {
-                setSelectedBrand(e.target.value);
-                setSelectedModel("Toutes");
-                setCurrentPage(1);
-              }}
-              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="Toutes">Toutes les marques</option>
-              {uniqueBrands.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex-1">
-            <label className="block text-xs font-semibold text-slate-600 mb-1">
-              Modèle
-            </label>
-            <select
-              value={selectedModel}
-              onChange={(e) => {
-                setSelectedModel(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="Toutes">Tous les modèles</option>
-              {uniqueModels.map((model) => (
-                <option key={model} value={model}>
-                  {model}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-
-      <div className="flex justify-between items-center text-sm text-slate-500 px-1">
-        <span>{filteredProblems.length} problème(s) au total</span>
-      </div>
-
-      {filteredProblems.length === 0 ? (
-        <EmptyState
-          title={
-            problems.length === 0
-              ? "Aucun problème disponible pour le moment."
-              : "Aucun problème ne correspond à votre recherche."
-          }
-          action={
-            problems.length > 0 && (
-              <button
-                onClick={() => {
-                  searchParams.delete("search");
-                  setSearchParams(searchParams);
-                  setCategory("Toutes");
-                  setSelectedBrand("Toutes");
+        {category === "Automobile" && (
+          <div className="flex flex-col sm:flex-row gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
+                Marque
+              </label>
+              <select
+                value={selectedBrand}
+                onChange={(e) => {
+                  setSelectedBrand(e.target.value);
                   setSelectedModel("Toutes");
                   setCurrentPage(1);
                 }}
-                className="text-blue-600 font-semibold hover:underline cursor-pointer text-sm"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                Réinitialiser les filtres
-              </button>
-            )
-          }
-        />
-      ) : (
-        <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
-            {paginatedProblems.map((problem) => (
-              <Link
-                key={problem.idProblem || Math.random()}
-                to={`/problem/${problem.idProblem}`}
-                state={{
-                  returnTo: "/problems",
-                  returnLabel: "Retour aux problèmes",
+                <option value="Toutes">Toutes les marques</option>
+                {uniqueBrands.map((brand) => (
+                  <option key={brand} value={brand}>
+                    {brand}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-slate-600 mb-1">
+                Modèle
+              </label>
+              <select
+                value={selectedModel}
+                onChange={(e) => {
+                  setSelectedModel(e.target.value);
+                  setCurrentPage(1);
                 }}
-                className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-3 text-xs flex-wrap">
-                    {problem.category && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
-                        <span>{problem.category.icon || "🏷️"}</span>
-                        <span>{problem.category.name}</span>
-                      </span>
-                    )}
-                    {problem.equipment && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-100">
-                        <span>🚗</span>
-                        <span>
-                          {problem.equipment.brand} {problem.equipment.model}
+                <option value="Toutes">Tous les modèles</option>
+                {uniqueModels.map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-between items-center text-sm text-slate-500 px-1">
+          <span>{filteredProblems.length} problème(s) au total</span>
+        </div>
+
+        {filteredProblems.length === 0 ? (
+          <EmptyState
+            title={
+              problems.length === 0
+                ? "Aucun problème disponible pour le moment."
+                : "Aucun problème ne correspond à votre recherche."
+            }
+            action={
+              problems.length > 0 && (
+                <button
+                  onClick={() => {
+                    searchParams.delete("search");
+                    setSearchParams(searchParams);
+                    setCategory("Toutes");
+                    setSelectedBrand("Toutes");
+                    setSelectedModel("Toutes");
+                    setCurrentPage(1);
+                  }}
+                  className="text-blue-600 font-semibold hover:underline cursor-pointer text-sm"
+                >
+                  Réinitialiser les filtres
+                </button>
+              )
+            }
+          />
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
+              {paginatedProblems.map((problem) => (
+                <Link
+                  key={problem.idProblem || Math.random()}
+                  to={`/problem/${problem.idProblem}`}
+                  state={{
+                    returnTo: "/problems",
+                    returnLabel: "Retour aux problèmes",
+                  }}
+                  className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                >
+                  <div className="space-y-2 flex-1">
+                    <div className="flex items-center gap-3 text-xs flex-wrap">
+                      {problem.category && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
+                          <span>{problem.category.icon || "🏷️"}</span>
+                          <span>{problem.category.name}</span>
                         </span>
-                      </span>
-                    )}
-                    {problem.createdAt && (
-                      <span className="text-slate-400">
-                        {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
-                      </span>
-                    )}
+                      )}
+                      {problem.equipment && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-100">
+                          <span>🚗</span>
+                          <span>
+                            {problem.equipment.brand} {problem.equipment.model}
+                          </span>
+                        </span>
+                      )}
+                      {problem.createdAt && (
+                        <span className="text-slate-400">
+                          {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
+                      {problem.title}
+                    </h2>
+
+                    <p className="text-sm text-slate-600 line-clamp-2">
+                      {problem.description}
+                    </p>
                   </div>
 
-                  <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
-                    {problem.title}
-                  </h2>
+                  <div className="flex items-center self-end md:self-center">
+                    <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
+                      Voir les solutions →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
 
-                  <p className="text-sm text-slate-600 line-clamp-2">
-                    {problem.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center self-end md:self-center">
-                  <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
-                    Voir les solutions →
-                  </span>
-                </div>
-              </Link>
-            ))}
+            {/* Composant de pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
           </div>
-
-          {/* Composant de pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => {
-              setCurrentPage(page);
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-          />
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
