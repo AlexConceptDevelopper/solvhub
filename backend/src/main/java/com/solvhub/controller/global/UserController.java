@@ -3,6 +3,7 @@ package com.solvhub.controller.global;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import com.solvhub.model.User;
@@ -75,6 +76,7 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse("Utilisateur supprimé avec succès."));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<UserDTO> updateUser(
             @PathVariable Integer id,
