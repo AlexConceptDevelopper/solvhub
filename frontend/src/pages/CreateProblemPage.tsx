@@ -35,7 +35,7 @@ export default function CreateProblemPage() {
   const [customBrand, setCustomBrand] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [customModel, setCustomModel] = useState<string>("");
-  const [year, setYear] = useState<string>(""); // 🟢 État pour l'année (4 chiffres max)
+  const [year, setYear] = useState<string>("");
 
   const [aiChecked, setAiChecked] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<Problem[]>([]);
@@ -167,13 +167,15 @@ export default function CreateProblemPage() {
     );
 
     const trimmedYear = year.trim();
-    
+
+    // Règle 1 : Si on renseigne une année, la marque et le modèle deviennent obligatoires
     if (trimmedYear !== "" && (!finalBrand || !finalModel)) {
       throw new Error(
         "Impossible d'indiquer une année sans avoir renseigné la marque et le modèle de l'équipement.",
       );
     }
 
+    // Règle 2 : L'année doit faire exactement 4 chiffres valides si elle est renseignée
     if (
       trimmedYear !== "" &&
       (trimmedYear.length !== 4 || isNaN(Number(trimmedYear)))
@@ -186,10 +188,10 @@ export default function CreateProblemPage() {
     const parsedYear =
       trimmedYear !== "" ? parseInt(trimmedYear, 10) : undefined;
 
+    // Si aucun équipement n'est renseigné du tout, on retourne undefined (problème sans équipement autorisé)
     if (!finalBrand || !finalModel) return undefined;
 
     try {
-      // On recherche uniquement par Catégorie, Marque et Modèle (pas par année)
       const existing = await findEquipmentByCriteria(
         form.idCategory,
         finalBrand,
@@ -203,7 +205,6 @@ export default function CreateProblemPage() {
     }
 
     try {
-      // Lors de la création, on transmet l'année si elle a été renseignée
       const newEq = await createEquipment({
         category: { idCategory: form.idCategory },
         brand: finalBrand,
@@ -230,7 +231,6 @@ export default function CreateProblemPage() {
     try {
       equipmentId = await resolveOrCreateIndex();
     } catch (err: any) {
-      // 🟢 On transmet l'erreur au hook useAsync de soumission pour qu'elle s'affiche dans <ErrorMessage />
       submitExecute(async () => {
         throw err;
       });
@@ -471,7 +471,7 @@ export default function CreateProblemPage() {
               )}
             </div>
 
-            {/* Année (Conditionnée à 4 chiffres max) */}
+            {/* Année */}
             <div>
               <label
                 htmlFor="problem-year"
@@ -485,7 +485,7 @@ export default function CreateProblemPage() {
                 maxLength={4}
                 value={year}
                 onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, ""); 
+                  const val = e.target.value.replace(/\D/g, "");
                   if (val.length <= 4) setYear(val);
                 }}
                 placeholder="Ex : 2022"
