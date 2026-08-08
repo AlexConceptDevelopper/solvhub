@@ -74,4 +74,11 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.ok(new MessageResponse("Utilisateur supprimé avec succès."));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable Integer id,
+            @RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.update(id, userDTO));
+    }
 }
