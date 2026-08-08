@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import ScrollToTop from "./components/ScrollToTop";
@@ -8,7 +9,7 @@ import { PrivateRoute, AdminRoute } from "./components/ProtectedRoute";
 
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
-import ProblemDetailPage from "./pages/ProblemsDetailPage"; 
+import ProblemDetailPage from "./pages/ProblemDetailPage";
 import CreateProblemPage from "./pages/CreateProblemPage";
 import SolutionDetailPage from "./pages/SolutionDetailPage";
 import CreateSolutionPage from "./pages/CreateSolutionPage";
@@ -33,13 +34,16 @@ function AppRoutes() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+
+      <Helmet>
+        <title>SolvHub | Résolution de pannes et problèmes techniques</title>
+        <meta name="description" content="Trouvez et partagez des solutions à vos problèmes techniques, matériels ou informatiques sur SolvHub." />
+      </Helmet>
       
-      {/* Conteneur global en colonne pour forcer le footer en bas */}
       <div className="min-h-screen flex flex-col bg-linear-to-br from-slate-100 via-blue-50 to-indigo-100">
         
         <Navbar />
 
-        {/* Le contenu principal grandit (flex-1) pour repousser le footer si la page est courte */}
         <main className="flex-1 px-4 md:px-8 py-8 max-w-7xl mx-auto w-full">
           <Routes>
             {/* Routes Publiques */}

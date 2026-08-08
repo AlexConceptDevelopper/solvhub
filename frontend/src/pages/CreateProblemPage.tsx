@@ -1,532 +1,109 @@
-import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-
-import { createProblem, checkDuplicates } from "../api/problem.api";
-import { getCategories } from "../api/category.api";
-import {
-  getBrandsByCategory,
-  getModelsByCategoryAndBrand,
-  findEquipmentByCriteria,
-  createEquipment,
-} from "../api/equipment.api";
-
-import type { ProblemCreate, Problem } from "../types/problem";
-import type { Category } from "../types/category";
+import { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import { getProblems } from "../api/problem.api";
+import type { Problem } from "../types/problem";
+import ProblemCard from "../components/ProblemCard";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
-import PrimaryButton from "../components/PrimaryButton";
 
-export default function CreateProblemPage() {
-  const navigate = useNavigate();
+export default function CategoryProblemsPage() {
+  const { idCategory } = useParams();
   const location = useLocation();
   const state = location.state as {
     returnTo?: string;
     returnLabel?: string;
   } | null;
-  const backTo = state?.returnTo ?? "/";
-  const backLabel = state?.returnLabel ?? "Retour à l'accueil";
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [brands, setBrands] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-
-  const [selectedBrand, setSelectedBrand] = useState<string>("");
-  const [customBrand, setCustomBrand] = useState<string>("");
-  const [selectedModel, setSelectedModel] = useState<string>("");
-  const [customModel, setCustomModel] = useState<string>("");
-  const [year, setYear] = useState<string>("");
-
-  const [aiChecked, setAiChecked] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<Problem[]>([]);
-
-  const [form, setForm] = useState<ProblemCreate>({
-    title: "",
-    description: "",
-    idCategory: 0,
-    idEquipment: undefined,
-  });
-
-  const {
-    loading: submitting,
-    error: submitError,
-    execute: submitExecute,
-  } = useAsync<Problem>();
-
-  const {
-    loading: loadingCats,
-    error: catError,
-    execute: fetchCatsExecute,
-  } = useAsync<Category[]>();
-
-  const { loading: checkingAI, execute: checkDuplicatesExecute } =
-    useAsync<Problem[]>();
+  const backTo = state?.returnTo ?? "/categories";
+  const backLabel = state?.returnLabel ?? "Retour aux catégories";
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const { loading, error, execute } = useAsync<Problem[]>();
 
   useEffect(() => {
-    const loadCategories = async () => {
-      const data = await fetchCatsExecute(() => getCategories());
-      if (data && data.length > 0) {
-        setCategories(data);
-        setForm((prev) => ({ ...prev, idCategory: data[0].idCategory }));
+    const loadProblems = async () => {
+      const data = await execute(() => getProblems());
+      if (data) {
+        setProblems(data);
       }
     };
-    loadCategories();
+    loadProblems();
   }, []);
 
-  useEffect(() => {
-    const fetchBrands = async () => {
-      if (form.idCategory) {
-        try {
-          const brandList = await getBrandsByCategory(form.idCategory);
-          setBrands(brandList);
-        } catch (err) {
-          console.error("Erreur chargement marques", err);
-          setBrands([]);
-        }
-      } else {
-        setBrands([]);
-      }
-      setSelectedBrand("");
-      setCustomBrand("");
-      setModels([]);
-      setSelectedModel("");
-      setCustomModel("");
-    };
-    fetchBrands();
-  }, [form.idCategory]);
-
-  useEffect(() => {
-    const fetchModels = async () => {
-      const activeBrand =
-        selectedBrand === "OTHER" ? customBrand : selectedBrand;
-      if (form.idCategory && activeBrand && selectedBrand !== "OTHER") {
-        try {
-          const modelList = await getModelsByCategoryAndBrand(
-            form.idCategory,
-            activeBrand,
-          );
-          setModels(modelList);
-        } catch (err) {
-          console.error("Erreur chargement modèles", err);
-          setModels([]);
-        }
-      } else if (selectedBrand !== "OTHER") {
-        setModels([]);
-      }
-      setSelectedModel("");
-      setCustomModel("");
-    };
-    fetchModels();
-  }, [selectedBrand, customBrand, form.idCategory]);
-
-  useEffect(() => {
-    if (!form.title || form.title.trim().length < 3) {
-      setAiChecked(false);
-      setAiSuggestions([]);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      const duplicates = await checkDuplicatesExecute(() =>
-        checkDuplicates({
-          title: form.title,
-          description: form.description,
-        }),
-      );
-
-      if (duplicates) {
-        setAiSuggestions(duplicates);
-        setAiChecked(true);
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [form.title, form.description]);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-
-    setForm({
-      ...form,
-      [name]: name === "idCategory" ? parseInt(value, 10) : value,
-    });
-  };
-
-  const normalize = (str: string) => str.trim();
-
-  const resolveOrCreateIndex = async (): Promise<number | undefined> => {
-    const finalBrand = normalize(
-      selectedBrand === "OTHER" ? customBrand : selectedBrand,
+  if (loading) {
+    return (
+      <div className="max-w-6xl px-4 md:px-6 mx-auto text-center py-20 text-slate-500 font-medium">
+        Chargement...
+      </div>
     );
-    const finalModel = normalize(
-      selectedModel === "OTHER" ? customModel : selectedModel,
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6">
+        <ErrorMessage
+          message={error}
+          onRetry={() => window.location.reload()}
+        />
+      </div>
     );
+  }
 
-    const trimmedYear = year.trim();
-
-    // Règle 1 : Si on renseigne une année, la marque et le modèle deviennent obligatoires
-    if (trimmedYear !== "" && (!finalBrand || !finalModel)) {
-      throw new Error(
-        "Impossible d'indiquer une année sans avoir renseigné la marque et le modèle de l'équipement.",
+  const categoryProblems = problems.filter((problem) => {
+    if (!problem.category) {
+      console.warn(
+        `Problème #${problem.idProblem} sans catégorie détecté`,
+        problem,
       );
+      return false;
     }
+    return problem.category?.idCategory === Number(idCategory);
+  });
 
-    // Règle 2 : L'année doit faire exactement 4 chiffres valides si elle est renseignée
-    if (
-      trimmedYear !== "" &&
-      (trimmedYear.length !== 4 || isNaN(Number(trimmedYear)))
-    ) {
-      throw new Error(
-        "L'année de l'équipement doit comporter exactement 4 chiffres (ex: 2024).",
-      );
-    }
-
-    const parsedYear =
-      trimmedYear !== "" ? parseInt(trimmedYear, 10) : undefined;
-
-    // Si aucun équipement n'est renseigné du tout, on retourne undefined (problème sans équipement autorisé)
-    if (!finalBrand || !finalModel) return undefined;
-
-    try {
-      const existing = await findEquipmentByCriteria(
-        form.idCategory,
-        finalBrand,
-        finalModel,
-      );
-      if (existing && existing.idEquipment) {
-        return existing.idEquipment;
-      }
-    } catch (e) {
-      // Non trouvé, on passe à la création
-    }
-
-    try {
-      const newEq = await createEquipment({
-        category: { idCategory: form.idCategory },
-        brand: finalBrand,
-        model: finalModel,
-        year: parsedYear,
-      });
-
-      if (!newEq || typeof newEq.idEquipment === "undefined") {
-        throw new Error("Erreur lors de la création de l'équipement");
-      }
-
-      return newEq.idEquipment;
-    } catch (err) {
-      console.error("Erreur création équipement", err);
-      throw new Error("Impossible de créer l'équipement associé.");
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (form.idCategory === 0) return;
-
-    let equipmentId = undefined;
-    try {
-      equipmentId = await resolveOrCreateIndex();
-    } catch (err: any) {
-      submitExecute(async () => {
-        throw err;
-      });
-      return;
-    }
-
-    const payload: ProblemCreate = {
-      ...form,
-      idEquipment: equipmentId,
-    };
-
-    const created = await submitExecute(() => createProblem(payload));
-
-    if (created) {
-      navigate(`/problem/${created.idProblem}`);
-    }
-  };
+  const category = categoryProblems[0]?.category;
 
   return (
-    <div className="max-w-3xl mx-auto pb-12">
-      <div className="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-200/80 shadow-xl p-8 md:p-10">
-        <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-100">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
-              Espace Communauté
-            </span>
-            <h1 className="text-3xl font-extrabold text-slate-900 mt-2">
-              Partager un problème ou une panne
-            </h1>
-          </div>
+    <>
+      <Helmet>
+        <title>{category ? `${category.name} | SolvHub` : "Catégorie | SolvHub"}</title>
+        <meta name="description" content={`Découvrez les problèmes et pannes de la catégorie ${category?.name || ""} sur SolvHub.`} />
+      </Helmet>
+
+      <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-8">
+        <div className="flex items-center justify-between">
           <BackButton to={backTo} label={backLabel} />
         </div>
 
-        {(submitError || catError) && (
-          <div className="mb-6">
-            <ErrorMessage
-              message={submitError || catError || "Une erreur est survenue"}
-            />
+        <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+          {category && <span aria-hidden="true">{category.icon}</span>}
+          <span>{category ? category.name : "Catégorie"}</span>
+        </h1>
+
+        <p className="text-slate-500 -mt-4">
+          {categoryProblems.length} problème(s) trouvé(s)
+        </p>
+
+        {categoryProblems.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-8 text-center">
+            <p className="text-slate-500">
+              Aucun problème disponible pour cette catégorie pour le moment.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categoryProblems.map((problem) => (
+              <ProblemCard
+                key={problem.idProblem}
+                problem={problem}
+                originTo={`/categories/${idCategory}`}
+                originLabel={
+                  category ? `Retour à ${category.name}` : "Retour à la catégorie"
+                }
+              />
+            ))}
           </div>
         )}
-
-        <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
-          {/* Titre */}
-          <div>
-            <label
-              htmlFor="problem-title"
-              className="block text-sm font-bold text-slate-800 mb-2"
-            >
-              Titre du problème <span className="text-blue-600">*</span>
-            </label>
-            <input
-              id="problem-title"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Ex : Panne de compresseur d'air sur ligne 2 ou voyant moteur allumé..."
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-slate-900 bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium"
-              required
-            />
-          </div>
-
-          {/* BLOC DE DÉTECTION DOUBLONS */}
-          <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 space-y-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider">
-                <span aria-hidden="true">🛡️</span> Vérification automatique des
-                doublons
-              </h3>
-              {checkingAI && (
-                <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
-                  Recherche...
-                </span>
-              )}
-            </div>
-
-            {!form.title || form.title.trim().length < 3 ? (
-              <p className="text-xs text-slate-500 italic">
-                Commencez à saisir un titre ci-dessus pour vérifier si ce
-                problème n'a pas déjà été résolu par la communauté.
-              </p>
-            ) : aiChecked ? (
-              <div className="pt-2 border-t border-slate-200/60 space-y-2">
-                {aiSuggestions.length > 0 ? (
-                  <div>
-                    <p className="text-xs font-bold text-amber-800 mb-2 flex items-center gap-1.5">
-                      <span aria-hidden="true">⚠️</span> Un problème similaire
-                      existe déjà :
-                    </p>
-                    {aiSuggestions.map((item) => (
-                      <div
-                        key={item.idProblem}
-                        className="bg-white p-3 rounded-xl border border-amber-200/80 flex items-center justify-between gap-3 shadow-xs mb-1.5 hover:border-amber-400 transition-colors"
-                      >
-                        <div className="min-w-0">
-                          <p className="text-xs font-bold text-slate-900 truncate">
-                            {item.title}
-                          </p>
-                          <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                            {item.description}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`/problem/${item.idProblem}`)}
-                          aria-label={`Consulter le problème similaire : ${item.title}`}
-                          className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                        >
-                          Consulter →
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
-                    <span aria-hidden="true">✨</span> Aucun doublon trouvé. Le
-                    sujet est inédit !
-                  </p>
-                )}
-              </div>
-            ) : null}
-          </div>
-
-          {/* Catégorie */}
-          <div>
-            <label
-              htmlFor="problem-category"
-              className="block text-sm font-bold text-slate-800 mb-2"
-            >
-              Catégorie principale <span className="text-blue-600">*</span>
-            </label>
-            <select
-              id="problem-category"
-              name="idCategory"
-              value={form.idCategory}
-              onChange={handleChange}
-              disabled={loadingCats}
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 bg-slate-50/50 focus:bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium cursor-pointer"
-            >
-              {loadingCats ? (
-                <option>Chargement des catégories...</option>
-              ) : (
-                categories.map((cat) => (
-                  <option key={cat.idCategory} value={cat.idCategory}>
-                    {cat.name}
-                  </option>
-                ))
-              )}
-            </select>
-          </div>
-
-          {/* MARQUE, MODÈLE & ANNÉE */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
-            {/* Marque */}
-            <div>
-              <label
-                htmlFor="problem-brand"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
-              >
-                Marque (Optionnel)
-              </label>
-              <select
-                id="problem-brand"
-                value={selectedBrand}
-                onChange={(e) => {
-                  setSelectedBrand(e.target.value);
-                  if (e.target.value !== "OTHER") setCustomBrand("");
-                }}
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mb-2"
-              >
-                <option value="">-- Choisir une marque --</option>
-                {brands.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-                <option value="OTHER">➕ Autre (Créer une marque)</option>
-              </select>
-
-              {selectedBrand === "OTHER" && (
-                <input
-                  type="text"
-                  value={customBrand}
-                  onChange={(e) => setCustomBrand(e.target.value)}
-                  placeholder="Nom de la nouvelle marque"
-                  aria-label="Nom de la nouvelle marque"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm"
-                  required
-                />
-              )}
-            </div>
-
-            {/* Modèle */}
-            <div>
-              <label
-                htmlFor="problem-model"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
-              >
-                Modèle (Optionnel)
-              </label>
-              {(selectedBrand && selectedBrand !== "OTHER") ||
-              (selectedBrand === "OTHER" && customBrand) ? (
-                <select
-                  id="problem-model"
-                  value={selectedModel}
-                  onChange={(e) => {
-                    setSelectedModel(e.target.value);
-                    if (e.target.value !== "OTHER") setCustomModel("");
-                  }}
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mb-2"
-                >
-                  <option value="">-- Choisir un modèle --</option>
-                  {models.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                  <option value="OTHER">➕ Autre (Créer un modèle)</option>
-                </select>
-              ) : (
-                <input
-                  type="text"
-                  disabled
-                  placeholder="Sélectionnez d'abord une marque"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-slate-100 text-slate-400 cursor-not-allowed shadow-2xs text-sm"
-                />
-              )}
-
-              {(selectedModel === "OTHER" || selectedBrand === "OTHER") && (
-                <input
-                  type="text"
-                  value={customModel}
-                  onChange={(e) => setCustomModel(e.target.value)}
-                  placeholder="Nom du nouveau modèle"
-                  aria-label="Nom du nouveau modèle"
-                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-slate-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm mt-2"
-                  required
-                />
-              )}
-            </div>
-
-            {/* Année */}
-            <div>
-              <label
-                htmlFor="problem-year"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2"
-              >
-                Année (Optionnel)
-              </label>
-              <input
-                type="text"
-                id="problem-year"
-                maxLength={4}
-                value={year}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, "");
-                  if (val.length <= 4) setYear(val);
-                }}
-                placeholder="Ex : 2022"
-                className="w-full rounded-xl border border-slate-200 px-4 py-3 bg-white text-slate-900 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <label
-              htmlFor="problem-description"
-              className="block text-sm font-bold text-slate-800 mb-2"
-            >
-              Description détaillée <span className="text-blue-600">*</span>
-            </label>
-            <textarea
-              id="problem-description"
-              name="description"
-              maxLength={1000}
-              value={form.description}
-              onChange={handleChange}
-              rows={6}
-              placeholder="Décrivez les symptômes, le contexte d'apparition et les vérifications déjà effectuées..."
-              className="w-full rounded-2xl border border-slate-200 px-4 py-3.5 text-slate-900 bg-slate-50/50 focus:bg-white resize-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all shadow-2xs font-medium"
-              required
-            />
-          </div>
-
-          <div className="pt-2">
-            <PrimaryButton
-              type="submit"
-              loading={submitting || loadingCats}
-              loadingLabel="Publication en cours..."
-              className="w-full py-4 text-base font-bold shadow-lg shadow-blue-500/25"
-            >
-              Publier le problème
-            </PrimaryButton>
-          </div>
-        </form>
       </div>
-    </div>
+    </>
   );
 }
