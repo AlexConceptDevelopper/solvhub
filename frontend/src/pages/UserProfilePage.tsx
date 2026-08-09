@@ -27,7 +27,7 @@ export default function UserProfilePage() {
     <>
       <Helmet>
         <title>{user ? `${user.username} | Profil SolvHub` : "Profil Utilisateur | SolvHub"}</title>
-        <meta name="description" content="Consultez le profil public et les contributions de l'utilisateur sur SolvHub[cite: 36]." />
+        <meta name="description" content="Consultez le profil public et les contributions de l'utilisateur sur SolvHub." />
       </Helmet>
 
       <div className="max-w-4xl mx-auto py-10 px-4 space-y-8">
@@ -45,14 +45,14 @@ export default function UserProfilePage() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-slate-900">{user.username}</h1>
-                <p className="text-xs text-slate-500">Membre de la communauté[cite: 36]</p>
+                <p className="text-xs text-slate-500">Membre de la communauté</p>
               </div>
             </div>
 
             <div className="border-t border-slate-100 pt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <span className="text-xs text-slate-500 block">
-                  Résolutions validées[cite: 36]
+                  Résolutions validées
                 </span>
                 <span className="text-xl font-bold text-blue-600 mt-1 block">
                   {user.solutionCount || 0}
