@@ -33,8 +33,11 @@ export const createSolution = async (
 
   const result = await apiFetch<Solution | null>("/solutions", {
     method: "POST",
-    headers: isFormData ? headers : { ...headers, "Content-Type": "application/json" },
-    body: isFormData ? solutionData : JSON.stringify(solutionData),
+    headers: isFormData
+      ? headers
+      : { ...headers, "Content-Type": "application/json" },
+    // On indique explicitement à TypeScript que le body est un BodyInit valide
+    body: (isFormData ? solutionData : JSON.stringify(solutionData)) as BodyInit,
   });
 
   if (!result) {
