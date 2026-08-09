@@ -1,5 +1,9 @@
 package com.solvhub.dto;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.*;
 
 @Getter
@@ -20,4 +24,7 @@ public class SolutionCreateDTO {
 
     private Integer problemId;
 
+    private String videoUrl;
+
+    private List<MultipartFile> images;
 }
