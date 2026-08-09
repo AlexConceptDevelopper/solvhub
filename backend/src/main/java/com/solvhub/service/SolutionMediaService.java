@@ -23,13 +23,13 @@ public class SolutionMediaService {
     }
 
     public SolutionMedia uploadAndSaveMedia(MultipartFile file, Solution solution) throws IOException {
-        // Envoi du fichier vers Cloudinary
         Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
         String secureUrl = (String) uploadResult.get("secure_url");
+        String publicId = (String) uploadResult.get("public_id"); // 🆕
 
-        // Création et sauvegarde du média lié à la solution
         SolutionMedia media = new SolutionMedia();
         media.setUrl(secureUrl);
+        media.setPublicId(publicId); // 🆕
         media.setType("IMAGE");
         media.setSolution(solution);
 
@@ -43,5 +43,17 @@ public class SolutionMediaService {
         media.setSolution(solution);
 
         return mediaRepository.save(media);
+    }
+
+    public void deleteMedia(SolutionMedia media) {
+        if ("IMAGE".equals(media.getType()) && media.getPublicId() != null) {
+            try {
+                cloudinary.uploader().destroy(media.getPublicId(), ObjectUtils.emptyMap());
+            } catch (IOException e) {
+                // On log l'erreur mais on ne bloque pas la suppression en base pour autant
+                System.err.println("Erreur lors de la suppression Cloudinary : " + e.getMessage());
+            }
+        }
+        mediaRepository.delete(media);
     }
 }

@@ -18,15 +18,17 @@ public class SolutionMedia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, length = 500)
     private String url; // L'URL Cloudinary
 
+    @Column(name = "public_id", length = 255)
+    private String publicId; // identifiant Cloudinary nécessaire pour la suppression
+
     @Column(nullable = false)
     private String type; // "IMAGE" (et plus tard "VIDEO")
 
-    // Relation Many-to-One vers ta Solution existante
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "solution_id", nullable = false)
     private Solution solution;
