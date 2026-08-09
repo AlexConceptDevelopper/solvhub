@@ -3,6 +3,7 @@ import { apiFetch } from "../../api/client";
 import type { Category } from "../../types/category";
 import ConfirmModal from "../ConfirmModal"; 
 import Pagination from "../Pagination";
+import ErrorMessage from "../ErrorMessage"; // Import du composant d'erreur
 
 interface CategoriesListProps {
   categories: Category[];
@@ -12,6 +13,7 @@ interface CategoriesListProps {
 
 export default function CategoriesList({ categories, setCategories, search }: CategoriesListProps) {
   const [categoryToDelete, setCategoryToDelete] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour l'erreur visuelle
 
   // --- États pour la modale de modification ---
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -24,12 +26,16 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
 
   const confirmDelete = async () => {
     if (categoryToDelete === null) return;
+    setErrorMessage(null); // Réinitialiser l'erreur
+
     try {
       await apiFetch(`/categories/${categoryToDelete}`, { method: "DELETE" });
       setCategories((prev) => prev.filter((c) => c.idCategory !== categoryToDelete));
-    } catch (error) {
-      console.error("Erreur suppression catégorie :", error);
-    } finally {
+      setCategoryToDelete(null);
+    } catch (error: any) {
+      // Récupération propre du message renvoyé par l'API
+      const message = error?.message || "Impossible de supprimer cette catégorie car elle est rattachée à des éléments.";
+      setErrorMessage(message);
       setCategoryToDelete(null);
     }
   };
@@ -39,6 +45,7 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
     setEditingCategory(cat);
     setEditName(cat.name);
     setEditIcon(cat.icon || "");
+    setErrorMessage(null);
   };
 
   const closeEditModal = () => {
@@ -49,6 +56,7 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingCategory) return;
+    setErrorMessage(null);
 
     try {
       const updatedCategory = await apiFetch<Category>(`/categories/${editingCategory.idCategory}`, {
@@ -67,8 +75,9 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
         )
       );
       closeEditModal();
-    } catch (error) {
-      console.error("Erreur modification catégorie :", error);
+    } catch (error: any) {
+      const message = error?.message || "Erreur lors de la modification de la catégorie.";
+      setErrorMessage(message);
     }
   };
 
@@ -94,6 +103,14 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-slate-900">Gestion des Catégories</h2>
       </div>
+
+      {/* Affichage de l'alerte d'erreur si la suppression ou modif échoue */}
+      {errorMessage && (
+        <ErrorMessage 
+          message={errorMessage} 
+          onRetry={() => setErrorMessage(null)} 
+        />
+      )}
 
       <p className="text-slate-500 text-sm">
         {filteredCategories.length} catégorie(s) trouvée(s)
@@ -135,7 +152,10 @@ export default function CategoriesList({ categories, setCategories, search }: Ca
                         Modifier
                       </button>
                       <button
-                        onClick={() => setCategoryToDelete(cat.idCategory)}
+                        onClick={() => {
+                          setErrorMessage(null);
+                          setCategoryToDelete(cat.idCategory);
+                        }}
                         className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded shadow-sm cursor-pointer text-xs transition"
                       >
                         Supprimer

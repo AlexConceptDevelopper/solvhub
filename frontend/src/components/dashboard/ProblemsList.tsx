@@ -6,6 +6,7 @@ import type { Problem } from "../../types/problem";
 import SearchFilterBar from "../SearchFilterBar";
 import ConfirmModal from "../ConfirmModal";
 import Pagination from "../Pagination";
+import ErrorMessage from "../ErrorMessage"; // Import du composant d'erreur
 
 interface ProblemsListProps {
   problems: Problem[];
@@ -26,6 +27,7 @@ export default function ProblemsList({
 }: ProblemsListProps) {
   const [category, setCategory] = useState("Toutes");
   const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour l'erreur visuelle
   const navigate = useNavigate();
 
   const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
@@ -54,14 +56,18 @@ export default function ProblemsList({
 
   const confirmDelete = async () => {
     if (problemToDelete === null) return;
+    setErrorMessage(null); // Réinitialiser l'erreur
+
     try {
       await deleteProblem(problemToDelete);
       setProblems((prev) =>
         prev.filter((p) => p.idProblem !== problemToDelete),
       );
-    } catch (error) {
-      console.error("Erreur suppression problème :", error);
-    } finally {
+      setProblemToDelete(null);
+    } catch (error: any) {
+      // Récupération propre du message renvoyé par l'API
+      const message = error?.message || "Impossible de supprimer ce problème car il est lié à des solutions.";
+      setErrorMessage(message);
       setProblemToDelete(null);
     }
   };
@@ -71,6 +77,7 @@ export default function ProblemsList({
     setEditTitle(problem.title);
     setEditDescription(problem.description || "");
     setEditCategoryName(problem.category?.name || "");
+    setErrorMessage(null);
   };
 
   const closeEditModal = () => {
@@ -80,6 +87,7 @@ export default function ProblemsList({
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProblem) return;
+    setErrorMessage(null);
 
     const selectedCategory = allCategories.find(
       (cat) => cat.name === editCategoryName
@@ -107,8 +115,9 @@ export default function ProblemsList({
         ),
       );
       closeEditModal();
-    } catch (error) {
-      console.error("Erreur modification problème :", error);
+    } catch (error: any) {
+      const message = error?.message || "Erreur lors de la modification du problème.";
+      setErrorMessage(message);
     }
   };
 
@@ -170,6 +179,14 @@ export default function ProblemsList({
           + Créer un problème
         </button>
       </div>
+
+      {/* Affichage de l'alerte d'erreur si la suppression ou modif échoue */}
+      {errorMessage && (
+        <ErrorMessage 
+          message={errorMessage} 
+          onRetry={() => setErrorMessage(null)} 
+        />
+      )}
 
       <SearchFilterBar
         category={category}
@@ -249,7 +266,10 @@ export default function ProblemsList({
                         Modifier
                       </button>
                       <button
-                        onClick={() => setProblemToDelete(problem.idProblem)}
+                        onClick={() => {
+                          setErrorMessage(null);
+                          setProblemToDelete(problem.idProblem);
+                        }}
                         className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded text-xs cursor-pointer shadow-sm transition"
                       >
                         Supprimer

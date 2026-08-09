@@ -5,6 +5,7 @@ import useAsync from "../../hooks/useAsync";
 import type { User } from "../../types/user";
 import ConfirmModal from "../ConfirmModal"; 
 import Pagination from "../Pagination";
+import ErrorMessage from "../ErrorMessage"; // Import du composant d'erreur
 
 interface UsersListProps {
   users: User[];
@@ -14,9 +15,10 @@ interface UsersListProps {
 
 export default function UsersList({ users, setUsers, search }: UsersListProps) {
   const [userToDelete, setUserToDelete] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour l'erreur visuelle
 
-  // --- Hook useAsync pour gérer les états de chargement des actions ---
-  const { execute: executeDelete, loading: deleteLoading } = useAsync<void>();
+  // --- Hook useAsync avec récupération de l'erreur de suppression ---
+  const { execute: executeDelete, loading: deleteLoading, error: deleteError } = useAsync<void>();
   const { execute: executeUpdate, loading: updateLoading } = useAsync<User>();
 
   // --- États pour la modale de modification globale ---
@@ -31,9 +33,15 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
 
   const confirmDelete = async () => {
     if (userToDelete === null) return;
+    setErrorMessage(null); // Réinitialiser l'erreur
+
+    const result = await executeDelete(() => deleteUser(userToDelete));
+
+    // Si executeDelete ne renvoie pas null, c'est que la suppression a réussi
+    if (result !== null) {
+      setUsers((prev) => prev.filter((u) => u.idUsers !== userToDelete));
+    }
     
-    await executeDelete(() => deleteUser(userToDelete));
-    setUsers((prev) => prev.filter((u) => u.idUsers !== userToDelete));
     setUserToDelete(null);
   };
 
@@ -43,6 +51,7 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
     setEditUsername(user.username);
     setEditEmail(user.email);
     setEditRole(user.role || "USER");
+    setErrorMessage(null);
   };
 
   // Fermer la modale
@@ -54,6 +63,7 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
+    setErrorMessage(null);
 
     const updatedUser = await executeUpdate(() =>
       apiFetch<User>(`/users/${editingUser.idUsers}`, {
@@ -100,6 +110,14 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-slate-900">Gestion des Utilisateurs</h2>
       </div>
+
+      {/* Affichage de l'alerte d'erreur si la suppression ou modif échoue */}
+      {(errorMessage || deleteError) && (
+        <ErrorMessage 
+          message={errorMessage || deleteError || ""} 
+          onRetry={() => setErrorMessage(null)} 
+        />
+      )}
 
       <p className="text-slate-500 text-sm">
         {filteredUsers.length} utilisateur(s) trouvé(s)
@@ -151,7 +169,10 @@ export default function UsersList({ users, setUsers, search }: UsersListProps) {
                         Modifier
                       </button>
                       <button
-                        onClick={() => setUserToDelete(user.idUsers)}
+                        onClick={() => {
+                          setErrorMessage(null);
+                          setUserToDelete(user.idUsers);
+                        }}
                         className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded shadow-sm cursor-pointer text-xs transition"
                       >
                         Supprimer

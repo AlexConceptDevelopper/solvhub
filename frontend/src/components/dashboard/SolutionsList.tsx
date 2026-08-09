@@ -4,6 +4,7 @@ import type { Solution } from "../../types/solution";
 import type { SolutionMedia } from "../../types/SolutionMedia";
 import ConfirmModal from "../ConfirmModal"; 
 import Pagination from "../Pagination";
+import ErrorMessage from "../ErrorMessage"; // Import de ton composant d'erreur
 
 interface SolutionsListProps {
   solutions: Solution[];
@@ -13,6 +14,7 @@ interface SolutionsListProps {
 
 export default function SolutionsList({ solutions, setSolutions, search }: SolutionsListProps) {
   const [solutionToDelete, setSolutionToDelete] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour l'erreur visuelle
 
   const [editingSolution, setEditingSolution] = useState<Solution | null>(null);
   const [editTitle, setEditTitle] = useState("");
@@ -29,12 +31,16 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
 
   const confirmDelete = async () => {
     if (solutionToDelete === null) return;
+    setErrorMessage(null); // Réinitialiser l'erreur
+
     try {
       await deleteSolution(solutionToDelete);
       setSolutions(solutions.filter((s) => s.idSolution !== solutionToDelete));
-    } catch (error) {
-      console.error("Erreur suppression solution :", error);
-    } finally {
+      setSolutionToDelete(null);
+    } catch (error: any) {
+      // On récupère le message d'erreur propre de apiFetch
+      const message = error?.message || "Impossible de supprimer cette solution car elle est liée à d'autres éléments.";
+      setErrorMessage(message);
       setSolutionToDelete(null);
     }
   };
@@ -47,6 +53,7 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
     setEditTimeMinutes(sol.timeMinutes || 10);
     setEditRiskLevel(sol.riskLevel || 1);
     setMediasToDelete([]);
+    setErrorMessage(null);
 
     try {
       const mediaData = await getSolutionMedias(sol.idSolution);
@@ -71,6 +78,7 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingSolution) return;
+    setErrorMessage(null);
 
     try {
       const updatedSolution = await updateSolution(editingSolution.idSolution, {
@@ -100,8 +108,9 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
         )
       );
       closeEditModal();
-    } catch (error) {
-      console.error("Erreur modification solution :", error);
+    } catch (error: any) {
+      const message = error?.message || "Erreur lors de la modification de la solution.";
+      setErrorMessage(message);
     }
   };
 
@@ -124,6 +133,14 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-slate-900">Gestion des Solutions</h2>
       </div>
+
+      {/* Affichage de l'alerte d'erreur si la suppression ou modif échoue */}
+      {errorMessage && (
+        <ErrorMessage 
+          message={errorMessage} 
+          onRetry={() => setErrorMessage(null)} 
+        />
+      )}
 
       <p className="text-slate-500 text-sm">
         {filteredSolutions.length} solution(s) trouvée(s)
@@ -168,7 +185,10 @@ export default function SolutionsList({ solutions, setSolutions, search }: Solut
                         Modifier
                       </button>
                       <button
-                        onClick={() => setSolutionToDelete(sol.idSolution)}
+                        onClick={() => {
+                          setErrorMessage(null);
+                          setSolutionToDelete(sol.idSolution);
+                        }}
                         className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded shadow-sm cursor-pointer text-xs transition"
                       >
                         Supprimer
