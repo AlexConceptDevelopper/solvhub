@@ -9,6 +9,9 @@ import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 
+const MAX_FILE_SIZE_MB = 8; // marge de sécurité sous la limite serveur de 10MB
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 export default function CreateSolutionPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +19,7 @@ export default function CreateSolutionPage() {
 
   const { problemId } = useParams();
   const [error, setError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
   const [images, setImages] = useState<FileList | null>(null);
   const [showVideoInput, setShowVideoInput] = useState(false);
 
@@ -48,8 +52,56 @@ export default function CreateSolutionPage() {
     });
   };
 
+  const formatSize = (bytes: number) => {
+    return (bytes / (1024 * 1024)).toFixed(1);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    setImageError(null);
+
+    if (!files || files.length === 0) {
+      setImages(null);
+      return;
+    }
+
+    // Vérifie chaque fichier individuellement
+    const oversizedFiles = Array.from(files).filter(
+      (file) => file.size > MAX_FILE_SIZE_BYTES,
+    );
+
+    if (oversizedFiles.length > 0) {
+      const names = oversizedFiles
+        .map((f) => `${f.name} (${formatSize(f.size)} Mo)`)
+        .join(", ");
+      setImageError(
+        `Image(s) trop volumineuse(s) : ${names}. La taille maximale autorisée par image est de ${MAX_FILE_SIZE_MB} Mo.`,
+      );
+      setImages(null);
+      e.target.value = ""; // reset le champ pour éviter d'envoyer un fichier invalide
+      return;
+    }
+
+    // Vérifie aussi la taille cumulée de toutes les images
+    const totalSize = Array.from(files).reduce((sum, f) => sum + f.size, 0);
+    if (totalSize > MAX_FILE_SIZE_BYTES * 2) {
+      setImageError(
+        `La taille totale des images (${formatSize(totalSize)} Mo) dépasse la limite autorisée. Réduisez le nombre ou la taille des images.`,
+      );
+      setImages(null);
+      e.target.value = "";
+      return;
+    }
+
+    setImages(files);
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (imageError) {
+      return; // bloque la soumission tant que l'erreur d'image n'est pas résolue
+    }
 
     try {
       setLoading(true);
@@ -78,7 +130,9 @@ export default function CreateSolutionPage() {
       navigate(`/solution/${created.idSolution}`);
     } catch (error) {
       console.error(error);
-      setError("Impossible de créer la solution");
+      setError(
+        "Impossible de créer la solution. Si vous avez ajouté des images, vérifiez qu'elles ne dépassent pas la taille autorisée.",
+      );
     } finally {
       setLoading(false);
     }
@@ -256,15 +310,29 @@ export default function CreateSolutionPage() {
                 type="file"
                 multiple
                 accept="image/*"
-                onChange={(e) => setImages(e.target.files)}
+                onChange={handleImageChange}
                 className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition cursor-pointer"
               />
+              <p className="text-xs text-slate-500 mt-1.5">
+                Taille maximale : {MAX_FILE_SIZE_MB} Mo par image.
+              </p>
+              {imageError && (
+                <p className="text-xs text-red-600 font-medium mt-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  ⚠️ {imageError}
+                </p>
+              )}
+              {images && images.length > 0 && !imageError && (
+                <p className="text-xs text-emerald-700 font-medium mt-2">
+                  ✓ {images.length} image{images.length > 1 ? "s" : ""} sélectionnée{images.length > 1 ? "s" : ""}
+                </p>
+              )}
             </div>
 
             <PrimaryButton
               type="submit"
               loading={loading}
               loadingLabel="Création..."
+              disabled={!!imageError}
               className="w-full"
             >
               Créer la solution
