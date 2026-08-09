@@ -35,6 +35,7 @@ export default function RankingContributorPage() {
     }
   };
 
+
   return (
     <>
       <Helmet>
@@ -145,9 +146,6 @@ export default function RankingContributorPage() {
                               {user.badge || "⚡ Actif"}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-500">
-                            {user.email}
-                          </p>
                         </div>
                       </div>
                       <span className="text-xs text-blue-600 font-medium shrink-0">
