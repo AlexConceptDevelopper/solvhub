@@ -41,8 +41,9 @@ public class EquipmentController {
             @RequestBody EquipmentDTO dto) {
         Integer idCategory = dto.getCategory() != null ? dto.getCategory().getIdCategory() : null;
 
+        // ✅ Correction : On passe bien dto.getYear() ici !
         EquipmentDTO updated = equipmentService.updateEquipment(idEquipment, idCategory, dto.getBrand(),
-                dto.getModel());
+                dto.getModel(), dto.getYear());
         return ResponseEntity.ok(updated);
     }
 
