@@ -54,7 +54,10 @@ public class GlobalExceptionHandler {
                                 .body(error);
         }
 
-        // Gestion unifiée de toutes les violations SQL (Doublons = 409, Taille trop longue = 400)
+        // Gestion unifiée de toutes les violations SQL (Doublons = 409, Taille trop
+        // longue = 400)
+        // Gestion unifiée de toutes les violations SQL (Doublons = 409, Clés étrangères
+        // = 409, Taille trop longue = 400)
         @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
         public ResponseEntity<ApiError> handleDataIntegrityViolation(
                         org.springframework.dao.DataIntegrityViolationException ex) {
@@ -62,14 +65,20 @@ public class GlobalExceptionHandler {
                 String message = "Une erreur est survenue lors de l'enregistrement des données.";
                 HttpStatus status = HttpStatus.BAD_REQUEST;
 
-                if (ex.getMessage() != null) {
-                        if (ex.getMessage().contains("Unique index") || ex.getMessage().contains("duplicate key")) {
-                                message = "Cette valeur existe déjà (doublon détecté).";
-                                status = HttpStatus.CONFLICT; // 409
-                        } else if (ex.getMessage().contains("character varying")) {
-                                message = "L'un des champs saisis dépasse la taille maximale autorisée.";
-                                status = HttpStatus.BAD_REQUEST; // 400
-                        }
+                // On récupère le message racine pour être sûr d'analyser l'erreur SQL brute
+                String rootMessage = ex.getMostSpecificCause() != null && ex.getMostSpecificCause().getMessage() != null
+                                ? ex.getMostSpecificCause().getMessage().toLowerCase()
+                                : "";
+
+                if (rootMessage.contains("unique") || rootMessage.contains("duplicate key")) {
+                        message = "Cette valeur existe déjà (doublon détecté).";
+                        status = HttpStatus.CONFLICT; // 409
+                } else if (rootMessage.contains("foreign key") || rootMessage.contains("constraint")) {
+                        message = "Impossible de supprimer ou modifier cet élément car il est rattaché à d'autres données.";
+                        status = HttpStatus.CONFLICT; // 409
+                } else if (rootMessage.contains("character varying") || rootMessage.contains("too long")) {
+                        message = "L'un des champs saisis dépasse la taille maximale autorisée.";
+                        status = HttpStatus.BAD_REQUEST; // 400
                 }
 
                 ApiError error = new ApiError(Instant.now(), status.value(), message);
