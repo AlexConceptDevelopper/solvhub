@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../api/client";
-import { createEquipment, updateEquipment, deleteEquipment } from "../../api/equipment.api.ts"; // Import depuis ton fichier API
+import { createEquipment, updateEquipment, deleteEquipment } from "../../api/equipment.api.ts";
 import useAsync from "../../hooks/useAsync";
 import ConfirmModal from "../ConfirmModal";
 import Pagination from "../Pagination";
@@ -27,11 +27,13 @@ export default function EquipmentsList({
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newBrand, setNewBrand] = useState("");
   const [newModel, setNewModel] = useState("");
+  const [newYear, setNewYear] = useState<number | "">("");
   const [newCategoryId, setNewCategoryId] = useState<number | string>("");
 
   const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
   const [editBrand, setEditBrand] = useState("");
   const [editModel, setEditModel] = useState("");
+  const [editYear, setEditYear] = useState<number | "">("");
   const [editCategoryId, setEditCategoryId] = useState<number | string>("");
 
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
@@ -59,7 +61,7 @@ export default function EquipmentsList({
     if (equipmentToDelete === null) return;
 
     await executeDelete(async () => {
-      await deleteEquipment(equipmentToDelete); // Utilisation de l'API centralisée
+      await deleteEquipment(equipmentToDelete);
       setEquipments((prev) => prev.filter((eq) => eq.idEquipment !== equipmentToDelete));
     });
 
@@ -72,16 +74,18 @@ export default function EquipmentsList({
       category: { idCategory: Number(newCategoryId) },
       brand: newBrand,
       model: newModel,
+      year: newYear !== "" ? Number(newYear) : undefined,
     };
 
     const created = await executeCreate(async () => {
-      return await createEquipment(payload); // Utilisation de l'API centralisée
+      return await createEquipment(payload);
     });
 
     if (created) {
       setEquipments((prev) => [created, ...prev]);
       setNewBrand("");
       setNewModel("");
+      setNewYear("");
       setNewCategoryId("");
       setIsCreateModalOpen(false);
     }
@@ -91,6 +95,7 @@ export default function EquipmentsList({
     setEditingEquipment(eq);
     setEditBrand(eq.brand || "");
     setEditModel(eq.model || "");
+    setEditYear(eq.year ?? "");
     setEditCategoryId(eq.category?.idCategory ? Number(eq.category.idCategory) : "");
   };
 
@@ -98,6 +103,7 @@ export default function EquipmentsList({
     setEditingEquipment(null);
     setEditBrand("");
     setEditModel("");
+    setEditYear("");
     setEditCategoryId("");
   };
 
@@ -105,15 +111,15 @@ export default function EquipmentsList({
     e.preventDefault();
     if (!editingEquipment?.idEquipment) return;
 
-    // CORRECTION : Utilisation de editBrand, editModel et editCategoryId (et non "new...")
     const payload: EquipmentCreate = {
       category: { idCategory: Number(editCategoryId) },
       brand: editBrand,
       model: editModel,
+      year: editYear !== "" ? Number(editYear) : undefined,
     };
 
     const updatedEquipment = await executeUpdate(async () => {
-      return await updateEquipment(editingEquipment.idEquipment, payload); // Utilisation de l'API centralisée
+      return await updateEquipment(editingEquipment.idEquipment, payload);
     });
 
     if (updatedEquipment) {
@@ -128,8 +134,9 @@ export default function EquipmentsList({
     if (!eq) return false;
     const brand = eq.brand?.toLowerCase() || "";
     const model = eq.model?.toLowerCase() || "";
+    const yearStr = eq.year ? String(eq.year) : "";
     const searchLower = search.toLowerCase();
-    return brand.includes(searchLower) || model.includes(searchLower);
+    return brand.includes(searchLower) || model.includes(searchLower) || yearStr.includes(searchLower);
   });
 
   const totalPages = Math.ceil(filteredEquipments.length / itemsPerPage);
@@ -164,6 +171,7 @@ export default function EquipmentsList({
               <th className="p-4 text-slate-700 font-bold">ID</th>
               <th className="p-4 text-slate-700 font-bold">Marque</th>
               <th className="p-4 text-slate-700 font-bold">Modèle</th>
+              <th className="p-4 text-slate-700 font-bold">Année</th>
               <th className="p-4 text-slate-700 font-bold">Catégorie</th>
               <th className="p-4 text-slate-700 font-bold text-right">Actions</th>
             </tr>
@@ -171,7 +179,7 @@ export default function EquipmentsList({
           <tbody>
             {currentEquipments.length === 0 ? (
               <tr>
-                <td colSpan={5} className="p-4 text-center text-slate-400 text-sm">
+                <td colSpan={6} className="p-4 text-center text-slate-400 text-sm">
                   Aucun équipement trouvé.
                 </td>
               </tr>
@@ -181,6 +189,7 @@ export default function EquipmentsList({
                   <td className="p-4 text-slate-900 font-medium">{eq.idEquipment}</td>
                   <td className="p-4 text-slate-900 font-medium">{eq.brand}</td>
                   <td className="p-4 text-slate-900 font-medium">{eq.model}</td>
+                  <td className="p-4 text-slate-700">{eq.year || "-"}</td>
                   <td className="p-4 text-slate-700">
                     <span className="px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-full text-xs font-medium">
                       {eq.category?.icon ? `${eq.category.icon} ` : ""}
@@ -249,6 +258,17 @@ export default function EquipmentsList({
                   onChange={(e) => setNewModel(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Année (optionnel)</label>
+                <input
+                  type="number"
+                  value={newYear}
+                  onChange={(e) => setNewYear(e.target.value ? Number(e.target.value) : "")}
+                  placeholder="ex: 2024"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                 />
               </div>
 
@@ -327,6 +347,17 @@ export default function EquipmentsList({
                   onChange={(e) => setEditModel(e.target.value)}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                   required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">Année (optionnel)</label>
+                <input
+                  type="number"
+                  value={editYear}
+                  onChange={(e) => setEditYear(e.target.value ? Number(e.target.value) : "")}
+                  placeholder="ex: 2024"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                 />
               </div>
 
