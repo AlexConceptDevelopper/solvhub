@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { apiFetch } from "../../api/client";
-import { createEquipment, updateEquipment, deleteEquipment } from "../../api/equipment.api.ts";
+import {
+  createEquipment,
+  updateEquipment,
+  deleteEquipment,
+} from "../../api/equipment.api.ts";
 import useAsync from "../../hooks/useAsync";
 import ConfirmModal from "../ConfirmModal";
 import Pagination from "../Pagination";
@@ -21,9 +25,15 @@ export default function EquipmentsList({
 }: EquipmentsListProps) {
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const { execute: executeCategories } = useAsync<Category[]>();
-  const { execute: executeDelete, loading: isDeleting } = useAsync<void>();
-  const { execute: executeCreate, loading: isCreating } = useAsync<Equipment | null>();
-  const { execute: executeUpdate, loading: isUpdating } = useAsync<Equipment | null>();
+  const {
+    execute: executeDelete,
+    loading: isDeleting,
+    error: deleteError,
+  } = useAsync<void>();
+  const { execute: executeCreate, loading: isCreating } =
+    useAsync<Equipment | null>();
+  const { execute: executeUpdate, loading: isUpdating } =
+    useAsync<Equipment | null>();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [newBrand, setNewBrand] = useState("");
@@ -31,13 +41,17 @@ export default function EquipmentsList({
   const [newYear, setNewYear] = useState<number | "">("");
   const [newCategoryId, setNewCategoryId] = useState<number | string>("");
 
-  const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(null);
+  const [editingEquipment, setEditingEquipment] = useState<Equipment | null>(
+    null,
+  );
   const [editBrand, setEditBrand] = useState("");
   const [editModel, setEditModel] = useState("");
   const [editYear, setEditYear] = useState<number | "">("");
   const [editCategoryId, setEditCategoryId] = useState<number | string>("");
 
-  const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
+  const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(
+    null,
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour stocker l'erreur visuelle
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -61,21 +75,21 @@ export default function EquipmentsList({
 
   const confirmDelete = async () => {
     if (equipmentToDelete === null) return;
-    setErrorMessage(null); // Réinitialiser l'erreur précédente
+    setErrorMessage(null); // Réinitialiser l'erreur locale
 
-    try {
-      await executeDelete(async () => {
-        await deleteEquipment(equipmentToDelete);
-        setEquipments((prev) => prev.filter((eq) => eq.idEquipment !== equipmentToDelete));
-      });
-      setEquipmentToDelete(null);
-    } catch (err: any) {
-      // Capture de l'erreur renvoyée par l'API (ex: contrainte de clé étrangère)
-      setErrorMessage(
-        "Impossible de supprimer cet équipement car il est rattaché à un ou plusieurs problèmes. Veuillez d'abord supprimer ou réassigner les problèmes associés."
+    // On lance la suppression via le hook
+    const result = await executeDelete(async () => {
+      await deleteEquipment(equipmentToDelete);
+    });
+
+    // Si le résultat n'est pas null, c'est que ça a fonctionné !
+    if (result !== null) {
+      setEquipments((prev) =>
+        prev.filter((eq) => eq.idEquipment !== equipmentToDelete),
       );
-      setEquipmentToDelete(null);
     }
+
+    setEquipmentToDelete(null);
   };
 
   const handleCreateEquipment = async (e: React.FormEvent) => {
@@ -111,7 +125,9 @@ export default function EquipmentsList({
     setEditBrand(eq.brand || "");
     setEditModel(eq.model || "");
     setEditYear(eq.year ?? "");
-    setEditCategoryId(eq.category?.idCategory ? Number(eq.category.idCategory) : "");
+    setEditCategoryId(
+      eq.category?.idCategory ? Number(eq.category.idCategory) : "",
+    );
   };
 
   const closeEditModal = () => {
@@ -141,7 +157,11 @@ export default function EquipmentsList({
 
       if (updatedEquipment) {
         setEquipments((prev) =>
-          prev.map((eq) => (eq.idEquipment === editingEquipment.idEquipment ? updatedEquipment : eq))
+          prev.map((eq) =>
+            eq.idEquipment === editingEquipment.idEquipment
+              ? updatedEquipment
+              : eq,
+          ),
         );
         closeEditModal();
       }
@@ -156,12 +176,19 @@ export default function EquipmentsList({
     const model = eq.model?.toLowerCase() || "";
     const yearStr = eq.year ? String(eq.year) : "";
     const searchLower = search.toLowerCase();
-    return brand.includes(searchLower) || model.includes(searchLower) || yearStr.includes(searchLower);
+    return (
+      brand.includes(searchLower) ||
+      model.includes(searchLower) ||
+      yearStr.includes(searchLower)
+    );
   });
 
   const totalPages = Math.ceil(filteredEquipments.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentEquipments = filteredEquipments.slice(startIndex, startIndex + itemsPerPage);
+  const currentEquipments = filteredEquipments.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   useEffect(() => {
     if (currentPage > totalPages && totalPages > 0) {
@@ -172,7 +199,9 @@ export default function EquipmentsList({
   return (
     <div className="space-y-6 relative">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-900">Gestion des Équipements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">
+          Gestion des Équipements
+        </h2>
         <button
           type="button"
           onClick={() => setIsCreateModalOpen(true)}
@@ -183,14 +212,16 @@ export default function EquipmentsList({
       </div>
 
       {/* Affichage de l'alerte d'erreur si un problème survient */}
-      {errorMessage && (
-        <ErrorMessage 
-          message={errorMessage} 
-          onRetry={() => setErrorMessage(null)} 
+      {(errorMessage || deleteError) && (
+        <ErrorMessage
+          message={errorMessage || deleteError || ""}
+          onRetry={() => setErrorMessage(null)}
         />
       )}
 
-      <p className="text-slate-500 text-sm">{filteredEquipments.length} équipement(s) trouvé(s)</p>
+      <p className="text-slate-500 text-sm">
+        {filteredEquipments.length} équipement(s) trouvé(s)
+      </p>
 
       <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full text-left border-collapse">
@@ -201,20 +232,30 @@ export default function EquipmentsList({
               <th className="p-4 text-slate-700 font-bold">Modèle</th>
               <th className="p-4 text-slate-700 font-bold">Année</th>
               <th className="p-4 text-slate-700 font-bold">Catégorie</th>
-              <th className="p-4 text-slate-700 font-bold text-right">Actions</th>
+              <th className="p-4 text-slate-700 font-bold text-right">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {currentEquipments.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-4 text-center text-slate-400 text-sm">
+                <td
+                  colSpan={6}
+                  className="p-4 text-center text-slate-400 text-sm"
+                >
                   Aucun équipement trouvé.
                 </td>
               </tr>
             ) : (
               currentEquipments.map((eq, index) => (
-                <tr key={eq.idEquipment ?? index} className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors">
-                  <td className="p-4 text-slate-900 font-medium">{eq.idEquipment}</td>
+                <tr
+                  key={eq.idEquipment ?? index}
+                  className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors"
+                >
+                  <td className="p-4 text-slate-900 font-medium">
+                    {eq.idEquipment}
+                  </td>
                   <td className="p-4 text-slate-900 font-medium">{eq.brand}</td>
                   <td className="p-4 text-slate-900 font-medium">{eq.model}</td>
                   <td className="p-4 text-slate-700">{eq.year || "-"}</td>
@@ -252,14 +293,20 @@ export default function EquipmentsList({
         </table>
       </div>
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(page) => setCurrentPage(page)} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={(page) => setCurrentPage(page)}
+      />
 
       {/* Modale de Création */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-lg p-6 space-y-6 my-8">
             <div className="flex justify-between items-center border-b border-slate-100 pb-4">
-              <h3 className="text-xl font-bold text-slate-900">Créer un nouvel équipement</h3>
+              <h3 className="text-xl font-bold text-slate-900">
+                Créer un nouvel équipement
+              </h3>
               <button
                 type="button"
                 onClick={() => setIsCreateModalOpen(false)}
@@ -271,7 +318,9 @@ export default function EquipmentsList({
 
             <form onSubmit={handleCreateEquipment} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Marque</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Marque
+                </label>
                 <input
                   type="text"
                   value={newBrand}
@@ -282,7 +331,9 @@ export default function EquipmentsList({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Modèle</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Modèle
+                </label>
                 <input
                   type="text"
                   value={newModel}
@@ -293,28 +344,44 @@ export default function EquipmentsList({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Année (optionnel)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Année (optionnel)
+                </label>
                 <input
                   type="number"
                   value={newYear}
-                  onChange={(e) => setNewYear(e.target.value ? Number(e.target.value) : "")}
+                  onChange={(e) =>
+                    setNewYear(e.target.value ? Number(e.target.value) : "")
+                  }
                   placeholder="ex: 2024"
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Catégorie associée</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Catégorie associée
+                </label>
                 <select
                   value={newCategoryId}
-                  onChange={(e) => setNewCategoryId(e.target.value ? Number(e.target.value) : "")}
+                  onChange={(e) =>
+                    setNewCategoryId(
+                      e.target.value ? Number(e.target.value) : "",
+                    )
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm cursor-pointer"
                   required
                 >
-                  <option value="" disabled>Sélectionner une catégorie</option>
+                  <option value="" disabled>
+                    Sélectionner une catégorie
+                  </option>
                   {allCategories.map((cat, index) => (
-                    <option key={cat.idCategory ?? index} value={cat.idCategory}>
-                      {cat.icon ? `${cat.icon} ` : ""}{cat.name}
+                    <option
+                      key={cat.idCategory ?? index}
+                      value={cat.idCategory}
+                    >
+                      {cat.icon ? `${cat.icon} ` : ""}
+                      {cat.name}
                     </option>
                   ))}
                 </select>
@@ -360,7 +427,9 @@ export default function EquipmentsList({
 
             <form onSubmit={saveEditing} className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Marque</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Marque
+                </label>
                 <input
                   type="text"
                   value={editBrand}
@@ -371,7 +440,9 @@ export default function EquipmentsList({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Modèle</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Modèle
+                </label>
                 <input
                   type="text"
                   value={editModel}
@@ -382,28 +453,44 @@ export default function EquipmentsList({
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Année (optionnel)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Année (optionnel)
+                </label>
                 <input
                   type="number"
                   value={editYear}
-                  onChange={(e) => setEditYear(e.target.value ? Number(e.target.value) : "")}
+                  onChange={(e) =>
+                    setEditYear(e.target.value ? Number(e.target.value) : "")
+                  }
                   placeholder="ex: 2024"
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Catégorie associée</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                  Catégorie associée
+                </label>
                 <select
                   value={editCategoryId}
-                  onChange={(e) => setEditCategoryId(e.target.value ? Number(e.target.value) : "")}
+                  onChange={(e) =>
+                    setEditCategoryId(
+                      e.target.value ? Number(e.target.value) : "",
+                    )
+                  }
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-blue-500 text-sm cursor-pointer"
                   required
                 >
-                  <option value="" disabled>Sélectionner une catégorie</option>
+                  <option value="" disabled>
+                    Sélectionner une catégorie
+                  </option>
                   {allCategories.map((cat, index) => (
-                    <option key={cat.idCategory ?? index} value={cat.idCategory}>
-                      {cat.icon ? `${cat.icon} ` : ""}{cat.name}
+                    <option
+                      key={cat.idCategory ?? index}
+                      value={cat.idCategory}
+                    >
+                      {cat.icon ? `${cat.icon} ` : ""}
+                      {cat.name}
                     </option>
                   ))}
                 </select>
