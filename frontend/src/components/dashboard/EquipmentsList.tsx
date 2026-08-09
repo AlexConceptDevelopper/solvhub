@@ -4,6 +4,7 @@ import { createEquipment, updateEquipment, deleteEquipment } from "../../api/equ
 import useAsync from "../../hooks/useAsync";
 import ConfirmModal from "../ConfirmModal";
 import Pagination from "../Pagination";
+import ErrorMessage from "../ErrorMessage"; // Import de ton composant d'erreur
 import type { Category } from "../../types/category";
 import type { Equipment, EquipmentCreate } from "../../types/equipment";
 
@@ -37,6 +38,7 @@ export default function EquipmentsList({
   const [editCategoryId, setEditCategoryId] = useState<number | string>("");
 
   const [equipmentToDelete, setEquipmentToDelete] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // État pour stocker l'erreur visuelle
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -59,17 +61,26 @@ export default function EquipmentsList({
 
   const confirmDelete = async () => {
     if (equipmentToDelete === null) return;
+    setErrorMessage(null); // Réinitialiser l'erreur précédente
 
-    await executeDelete(async () => {
-      await deleteEquipment(equipmentToDelete);
-      setEquipments((prev) => prev.filter((eq) => eq.idEquipment !== equipmentToDelete));
-    });
-
-    setEquipmentToDelete(null);
+    try {
+      await executeDelete(async () => {
+        await deleteEquipment(equipmentToDelete);
+        setEquipments((prev) => prev.filter((eq) => eq.idEquipment !== equipmentToDelete));
+      });
+      setEquipmentToDelete(null);
+    } catch (err: any) {
+      // Capture de l'erreur renvoyée par l'API (ex: contrainte de clé étrangère)
+      setErrorMessage(
+        "Impossible de supprimer cet équipement car il est rattaché à un ou plusieurs problèmes. Veuillez d'abord supprimer ou réassigner les problèmes associés."
+      );
+      setEquipmentToDelete(null);
+    }
   };
 
   const handleCreateEquipment = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     const payload: EquipmentCreate = {
       category: { idCategory: Number(newCategoryId) },
       brand: newBrand,
@@ -77,17 +88,21 @@ export default function EquipmentsList({
       year: newYear !== "" ? Number(newYear) : undefined,
     };
 
-    const created = await executeCreate(async () => {
-      return await createEquipment(payload);
-    });
+    try {
+      const created = await executeCreate(async () => {
+        return await createEquipment(payload);
+      });
 
-    if (created) {
-      setEquipments((prev) => [created, ...prev]);
-      setNewBrand("");
-      setNewModel("");
-      setNewYear("");
-      setNewCategoryId("");
-      setIsCreateModalOpen(false);
+      if (created) {
+        setEquipments((prev) => [created, ...prev]);
+        setNewBrand("");
+        setNewModel("");
+        setNewYear("");
+        setNewCategoryId("");
+        setIsCreateModalOpen(false);
+      }
+    } catch (err) {
+      setErrorMessage("Erreur lors de la création de l'équipement.");
     }
   };
 
@@ -110,6 +125,7 @@ export default function EquipmentsList({
   const saveEditing = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEquipment?.idEquipment) return;
+    setErrorMessage(null);
 
     const payload: EquipmentCreate = {
       category: { idCategory: Number(editCategoryId) },
@@ -118,15 +134,19 @@ export default function EquipmentsList({
       year: editYear !== "" ? Number(editYear) : undefined,
     };
 
-    const updatedEquipment = await executeUpdate(async () => {
-      return await updateEquipment(editingEquipment.idEquipment, payload);
-    });
+    try {
+      const updatedEquipment = await executeUpdate(async () => {
+        return await updateEquipment(editingEquipment.idEquipment, payload);
+      });
 
-    if (updatedEquipment) {
-      setEquipments((prev) =>
-        prev.map((eq) => (eq.idEquipment === editingEquipment.idEquipment ? updatedEquipment : eq))
-      );
-      closeEditModal();
+      if (updatedEquipment) {
+        setEquipments((prev) =>
+          prev.map((eq) => (eq.idEquipment === editingEquipment.idEquipment ? updatedEquipment : eq))
+        );
+        closeEditModal();
+      }
+    } catch (err) {
+      setErrorMessage("Erreur lors de la mise à jour de l'équipement.");
     }
   };
 
@@ -161,6 +181,14 @@ export default function EquipmentsList({
           + Créer un équipement
         </button>
       </div>
+
+      {/* Affichage de l'alerte d'erreur si un problème survient */}
+      {errorMessage && (
+        <ErrorMessage 
+          message={errorMessage} 
+          onRetry={() => setErrorMessage(null)} 
+        />
+      )}
 
       <p className="text-slate-500 text-sm">{filteredEquipments.length} équipement(s) trouvé(s)</p>
 
@@ -207,7 +235,10 @@ export default function EquipmentsList({
                       </button>
                       <button
                         type="button"
-                        onClick={() => setEquipmentToDelete(eq.idEquipment)}
+                        onClick={() => {
+                          setErrorMessage(null);
+                          setEquipmentToDelete(eq.idEquipment);
+                        }}
                         className="px-3 py-2 font-bold text-white bg-red-600 hover:bg-red-700 rounded text-xs cursor-pointer shadow-sm transition"
                       >
                         Supprimer
