@@ -24,14 +24,14 @@ export default function LegalNotice() {
             Édition du site
           </h2>
           <p>
-            Le présent site, accessible à l'URL solvhub.com, est édité à titre non
+            Le présent site, accessible à l'URL solvhub.fr, est édité à titre non
             professionnel par un particulier.
           </p>
           <p>
             Conformément à la législation en vigueur, les coordonnées de l'éditeur
             (nom, prénom, adresse et téléphone) ont été communiquées à l'hébergeur
             du site. Pour toute question ou réclamation, vous pouvez nous
-            contacter par email à : contact@solvhub.com
+            contacter par email à : contact@solvhub.fr
           </p>
 
           <h2 className="text-xl font-semibold text-slate-800">Hébergement</h2>
