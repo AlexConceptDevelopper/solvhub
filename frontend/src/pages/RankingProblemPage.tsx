@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { apiFetch } from "../api/client";
 import useAsync from "../hooks/useAsync";
 import type { Problem } from "../types/problem";
+import { getProblemUrl } from "../utils/slug";
 
 export default function RankingProblemPage() {
   const navigate = useNavigate();
@@ -61,7 +62,7 @@ export default function RankingProblemPage() {
               {problems.map((prob, index) => (
                 <div
                   key={prob.idProblem}
-                  onClick={() => navigate(`/problem/${prob.idProblem}`)}
+                  onClick={() => navigate(getProblemUrl(prob.idProblem, prob.title))}
                   className="p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-between cursor-pointer transition"
                 >
                   <div className="flex items-center gap-4 overflow-hidden">

@@ -17,6 +17,7 @@ import useAsync from "../hooks/useAsync";
 import { useAuth } from "../context/AuthContext";
 import BackButton from "../components/BackButton";
 import LoadingState from "../components/LoadingState";
+import { getSolutionUrl } from "../utils/slug";
 
 export default function SolutionDetailPage() {
   const { id } = useParams();
@@ -69,7 +70,7 @@ export default function SolutionDetailPage() {
   const loadSolution = async () => {
     if (!id) return;
 
-    const solutionId = Number(id);
+    const solutionId = parseInt(id, 10);
 
     if (Number.isNaN(solutionId)) {
       return;
@@ -219,6 +220,13 @@ export default function SolutionDetailPage() {
         <meta name="description" content={generateSolutionSeoDescription()} />
         <meta property="og:title" content={generateSolutionSeoTitle()} />
         <meta property="og:description" content={generateSolutionSeoDescription()} />
+        <meta property="og:type" content="article" />
+        {solution && (
+          <link
+            rel="canonical"
+            href={`https://solvhub.fr${getSolutionUrl(solution.idSolution, solution.title)}`}
+          />
+        )}
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">

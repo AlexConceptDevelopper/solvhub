@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Problem } from "../types/problem";
+import { getProblemUrl } from "../utils/slug";
 
 interface Props {
   problem: Problem;
@@ -13,7 +14,7 @@ export default function ProblemCard({ problem, originTo, originLabel }: Props) {
   return (
     <div
       onClick={() =>
-        navigate(`/problem/${problem.idProblem}`, {
+       navigate(getProblemUrl(problem.idProblem, problem.title), {
           state: { returnTo: originTo, returnLabel: originLabel },
         })
       }

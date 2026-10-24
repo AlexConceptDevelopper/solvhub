@@ -12,6 +12,7 @@ import BackButton from "../components/BackButton";
 import EmptyState from "../components/EmptyState";
 import LoadingState from "../components/LoadingState";
 import { matchesSearchQuery } from "../utils/searchUtils";
+import { getProblemUrl } from "../utils/slug";
 
 interface PaginationProps {
   currentPage: number;
@@ -74,8 +75,8 @@ export function Pagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-slate-200">
       <div className="text-sm text-slate-500">
-        Page <span className="font-semibold text-slate-900">{currentPage}</span> sur{" "}
-        <span className="font-semibold text-slate-900">{totalPages}</span>
+        Page <span className="font-semibold text-slate-900">{currentPage}</span>{" "}
+        sur <span className="font-semibold text-slate-900">{totalPages}</span>
       </div>
 
       <div className="flex items-center gap-1.5 flex-wrap justify-center">
@@ -113,10 +114,13 @@ export function Pagination({
               {page}
             </button>
           ) : (
-            <span key={index} className="px-2 text-slate-400 font-semibold text-xs">
+            <span
+              key={index}
+              className="px-2 text-slate-400 font-semibold text-xs"
+            >
               {page}
             </span>
-          )
+          ),
         )}
 
         <button
@@ -165,7 +169,9 @@ const ITEMS_PER_PAGE = 6;
 
 export default function ProblemsPage() {
   const [problems, setProblems] = useState<Problem[]>([]);
-  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>([]);
+  const [categoriesWithCount, setCategoriesWithCount] = useState<Category[]>(
+    [],
+  );
   const [category, setCategory] = useState("Toutes");
 
   const [selectedBrand, setSelectedBrand] = useState("Toutes");
@@ -263,7 +269,7 @@ export default function ProblemsPage() {
 
         const brand = problem.equipment?.brand || "";
         const model = problem.equipment?.model || "";
-        
+
         const matchesSearch =
           matchesSearchQuery(problem.title, searchQuery) ||
           matchesSearchQuery(problem.description, searchQuery) ||
@@ -320,7 +326,10 @@ export default function ProblemsPage() {
     <>
       <Helmet>
         <title>Liste des problèmes techniques | SolvHub</title>
-        <meta name="description" content="Parcourez l'ensemble des problèmes, pannes et questions techniques partagés par la communauté SolvHub." />
+        <meta
+          name="description"
+          content="Parcourez l'ensemble des problèmes, pannes et questions techniques partagés par la communauté SolvHub."
+        />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
@@ -334,8 +343,8 @@ export default function ProblemsPage() {
               Tous les problèmes
             </h1>
             <p className="text-sm text-slate-500 mt-1">
-              Consultez les difficultés rencontrées par la communauté ou proposez
-              vos solutions.
+              Consultez les difficultés rencontrées par la communauté ou
+              proposez vos solutions.
             </p>
           </div>
 
@@ -382,7 +391,8 @@ export default function ProblemsPage() {
         {searchQuery && (
           <div className="flex items-center justify-between bg-blue-50 border border-blue-200 px-4 py-3 rounded-xl text-sm text-blue-800">
             <span>
-              Résultats pour : <strong className="font-semibold">"{searchQuery}"</strong>
+              Résultats pour :{" "}
+              <strong className="font-semibold">"{searchQuery}"</strong>
             </span>
             <span className="text-xs font-medium text-blue-600">
               {filteredProblems.length} trouvé(s)
@@ -478,7 +488,7 @@ export default function ProblemsPage() {
               {paginatedProblems.map((problem) => (
                 <Link
                   key={problem.idProblem || Math.random()}
-                  to={`/problem/${problem.idProblem}`}
+                  to={getProblemUrl(problem.idProblem, problem.title)} // 2. Remplacer l'URL en dur
                   state={{
                     returnTo: "/problems",
                     returnLabel: "Retour aux problèmes",
@@ -503,7 +513,9 @@ export default function ProblemsPage() {
                       )}
                       {problem.createdAt && (
                         <span className="text-slate-400">
-                          {new Date(problem.createdAt).toLocaleDateString("fr-FR")}
+                          {new Date(problem.createdAt).toLocaleDateString(
+                            "fr-FR",
+                          )}
                         </span>
                       )}
                     </div>

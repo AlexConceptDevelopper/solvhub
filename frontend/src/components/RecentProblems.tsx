@@ -5,6 +5,7 @@ import type { Problem } from "../types/problem";
 import ProblemCard from "./ProblemCard";
 import useAsync from "../hooks/useAsync";
 import ErrorMessage from "./ErrorMessage";
+import { getProblemUrl } from "../utils/slug";
 
 interface RecentProblemsProps {
   returnTo?: string;
@@ -88,7 +89,7 @@ export default function RecentProblems({
             <div
               key={problem.idProblem}
               onClick={() =>
-                navigate(`/problem/${problem.idProblem}`, {
+                navigate(getProblemUrl(problem.idProblem, problem.title), {
                   state: { returnTo, returnLabel },
                 })
               }

@@ -17,6 +17,7 @@ import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
+import { getProblemUrl } from "../utils/slug";
 
 export default function CreateProblemPage() {
   const navigate = useNavigate();
@@ -246,14 +247,16 @@ export default function CreateProblemPage() {
     const created = await submitExecute(() => createProblem(payload));
 
     if (created) {
-      navigate(`/problem/${created.idProblem}`);
+      navigate(getProblemUrl(created.idProblem, created.title));
     }
   };
 
   return (
     <>
       <Helmet>
-        <title>Signaler un problème ou une panne | Entraide & Dépannage - SolvHub</title>
+        <title>
+          Signaler un problème ou une panne | Entraide & Dépannage - SolvHub
+        </title>
         <meta
           name="description"
           content="Vous rencontrez un dysfonctionnement, un voyant allumé ou une panne ? Posez votre question gratuitement à la communauté SolvHub."
@@ -282,7 +285,11 @@ export default function CreateProblemPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+            autoComplete="off"
+          >
             {/* Titre */}
             <div>
               <label
@@ -306,8 +313,8 @@ export default function CreateProblemPage() {
             <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-4 space-y-2">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-extrabold text-slate-700 flex items-center gap-1.5 uppercase tracking-wider">
-                  <span aria-hidden="true">🛡️</span> Vérification automatique des
-                  doublons
+                  <span aria-hidden="true">🛡️</span> Vérification automatique
+                  des doublons
                 </h3>
                 {checkingAI && (
                   <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 font-bold bg-blue-100/60 px-2.5 py-0.5 rounded-full animate-pulse">
@@ -344,7 +351,7 @@ export default function CreateProblemPage() {
                           </div>
                           <button
                             type="button"
-                            onClick={() => navigate(`/problem/${item.idProblem}`)}
+                           onClick={() => navigate(getProblemUrl(item.idProblem, item.title))}
                             aria-label={`Consulter le problème similaire : ${item.title}`}
                             className="shrink-0 text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                           >
@@ -355,8 +362,8 @@ export default function CreateProblemPage() {
                     </div>
                   ) : (
                     <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 bg-emerald-50/80 p-2 rounded-xl border border-emerald-100">
-                      <span aria-hidden="true">✨</span> Aucun doublon trouvé. Le
-                      sujet est inédit !
+                      <span aria-hidden="true">✨</span> Aucun doublon trouvé.
+                      Le sujet est inédit !
                     </p>
                   )}
                 </div>

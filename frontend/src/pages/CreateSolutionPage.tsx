@@ -8,6 +8,7 @@ import type { SolutionCreate } from "../types/solutionCreate";
 import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
+import { getSolutionUrl } from "../utils/slug";
 
 const MAX_FILE_SIZE_MB = 8; // marge de sécurité sous la limite serveur de 10MB
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -127,7 +128,7 @@ export default function CreateSolutionPage() {
 
       const created = await createSolution(formData);
 
-      navigate(`/solution/${created.idSolution}`);
+      navigate(getSolutionUrl(created.idSolution, created.title));
     } catch (error) {
       console.error(error);
       setError(
@@ -149,7 +150,7 @@ export default function CreateSolutionPage() {
           content="Partagez vos étapes de résolution, photos et astuces techniques pour aider d'autres utilisateurs à résoudre ce problème."
         />
       </Helmet>
-      
+
       <div className="max-w-3xl mx-auto">
         <div className="bg-white/85 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
           <div className="flex items-center justify-between">

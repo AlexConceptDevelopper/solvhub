@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { apiFetch } from "../api/client";
 import type { Solution } from "../types/solution";
+import { getSolutionUrl } from "../utils/slug";
 
 export default function RankingSolutionsPage() {
   const [solutions, setSolutions] = useState<Solution[]>([]);
@@ -62,7 +63,7 @@ export default function RankingSolutionsPage() {
 
                   return (
                     <div 
-                      onClick={() => navigate(`/solution/${top3[1].idSolution}`)}
+                      onClick={() => navigate(getSolutionUrl(top3[1].idSolution, top3[1].title))}
                       className="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center space-y-3 cursor-pointer hover:border-slate-700 transition shadow-lg order-2 md:order-1"
                     >
                       <span className="text-2xl">🥈</span>
@@ -87,7 +88,7 @@ export default function RankingSolutionsPage() {
 
                   return (
                     <div 
-                      onClick={() => navigate(`/solution/${top3[0].idSolution}`)}
+                      onClick={() => navigate(getSolutionUrl(top3[0].idSolution, top3[0].title))}
                       className="bg-slate-900 border border-amber-500/40 p-6 rounded-2xl text-center space-y-3 cursor-pointer hover:border-amber-500/70 transition shadow-xl shadow-amber-500/5 order-1 md:order-2 -translate-y-2"
                     >
                       <span className="text-3xl">👑</span>
@@ -112,7 +113,7 @@ export default function RankingSolutionsPage() {
 
                   return (
                     <div 
-                      onClick={() => navigate(`/solution/${top3[2].idSolution}`)}
+                      onClick={() => navigate(getSolutionUrl(top3[2].idSolution, top3[2].title))} 
                       className="bg-slate-900 border border-slate-800 p-6 rounded-2xl text-center space-y-3 cursor-pointer hover:border-slate-700 transition shadow-lg order-3"
                     >
                       <span className="text-2xl">🥉</span>
@@ -143,7 +144,7 @@ export default function RankingSolutionsPage() {
                     return (
                       <div
                         key={sol.idSolution}
-                        onClick={() => navigate(`/solution/${sol.idSolution}`)}
+                        onClick={() => navigate(getSolutionUrl(sol.idSolution, sol.title))}
                         className="p-4 flex items-center justify-between hover:bg-slate-950 transition cursor-pointer"
                       >
                         <div className="flex items-center gap-4 overflow-hidden">

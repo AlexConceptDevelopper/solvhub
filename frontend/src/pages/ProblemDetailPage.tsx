@@ -15,6 +15,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import LoadingState from "../components/LoadingState";
+import { getProblemUrl } from "../utils/slug";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -23,6 +24,8 @@ export default function ProblemDetailPage() {
 
   const [problem, setProblem] = useState<Problem | null>(null);
   const [solutions, setSolutions] = useState<Solution[]>([]);
+
+  const problemId = parseInt(id || "", 10); // Extrait automatiquement 68 à partir de "68-disque..."
 
   const {
     loading: loadingProblem,
@@ -43,11 +46,9 @@ export default function ProblemDetailPage() {
   const backTo = state?.returnTo ?? -1;
   const backLabel = state?.returnLabel ?? "Retour";
 
-  useEffect(() => {
-    if (!id) return;
-
-    const problemId = Number(id);
-    if (Number.isNaN(problemId)) return;
+ useEffect(() => {
+    // 2. On vérifie la validité de problemId
+    if (!problemId || Number.isNaN(problemId)) return;
 
     const load = async () => {
       const problemData = await executeProblem(() => getProblemById(problemId));
@@ -64,7 +65,7 @@ export default function ProblemDetailPage() {
     };
 
     load();
-  }, [id]);
+  }, [problemId]); 
 
   useEffect(() => {
     if (!problem) return;
@@ -181,8 +182,15 @@ export default function ProblemDetailPage() {
         <title>{generateProblemSeoTitle()}</title>
         <meta name="description" content={generateProblemSeoDescription()} />
         <meta property="og:title" content={generateProblemSeoTitle()} />
-        <meta property="og:description" content={generateProblemSeoDescription()} />
+        <meta
+          property="og:description"
+          content={generateProblemSeoDescription()}
+        />
         <meta property="og:type" content="article" />
+        <link
+          rel="canonical"
+          href={`https://solvhub.fr${getProblemUrl(problem.idProblem, problem.title)}`}
+        />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-12">
@@ -225,7 +233,9 @@ export default function ProblemDetailPage() {
                 </div>
                 <div className="text-lg md:text-xl font-extrabold tracking-wide">
                   {problem.equipment.brand}{" "}
-                  <span className="text-blue-400">{problem.equipment.model}</span>
+                  <span className="text-blue-400">
+                    {problem.equipment.model}
+                  </span>
                 </div>
               </div>
             </div>
@@ -273,7 +283,8 @@ export default function ProblemDetailPage() {
             </div>
 
             <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 shadow-xs shrink-0">
-              {solutions.length} {solutions.length > 1 ? "solutions" : "solution"}
+              {solutions.length}{" "}
+              {solutions.length > 1 ? "solutions" : "solution"}
             </span>
           </div>
 

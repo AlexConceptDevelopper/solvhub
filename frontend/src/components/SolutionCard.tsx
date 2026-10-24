@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Solution } from "../types/solution";
+import { getSolutionUrl } from "../utils/slug";
 
 interface Props {
   solution: Solution;
@@ -13,7 +14,7 @@ export default function SolutionCard({ solution, originTo, originLabel }: Props)
   return (
     <div
       onClick={() =>
-        navigate(`/solution/${solution.idSolution}`, {
+        navigate(getSolutionUrl(solution.idSolution, solution.title), {
           state: { originTo, originLabel },
         })
       }
