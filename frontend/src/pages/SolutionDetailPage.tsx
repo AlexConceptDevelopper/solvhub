@@ -197,6 +197,17 @@ export default function SolutionDetailPage() {
     return null;
   }
 
+  const generateSolutionSeoTitle = () => {
+    if (!solution) return "Solution technique | SolvHub";
+    return `Solution : ${solution.title} (Réparation & Dépannage) | SolvHub`;
+  };
+
+  const generateSolutionSeoDescription = () => {
+    if (!solution) return "Découvrez cette solution technique détaillée sur SolvHub.";
+    const cleanSteps = solution.steps ? solution.steps.trim() : "";
+    return `Guide pas à pas (${solution.timeMinutes || 10} min) : ${cleanSteps.slice(0, 130)}...`;
+  };
+
   const videoMedia = medias.find((m) => m.type.toUpperCase() === "VIDEO");
   const imageMedias = medias.filter((m) => m.type.toUpperCase() !== "VIDEO");
   const youtubeEmbedUrl = videoMedia ? getYoutubeEmbedUrl(videoMedia.url) : null;
@@ -204,15 +215,10 @@ export default function SolutionDetailPage() {
   return (
     <>
       <Helmet>
-        <title>{`${solution.title} | SolvHub`}</title>
-        <meta
-          name="description"
-          content={
-            solution.steps
-              ? solution.steps.slice(0, 150) + "..."
-              : "Découvrez cette solution technique détaillée sur SolvHub[cite: 35]."
-          }
-        />
+        <title>{generateSolutionSeoTitle()}</title>
+        <meta name="description" content={generateSolutionSeoDescription()} />
+        <meta property="og:title" content={generateSolutionSeoTitle()} />
+        <meta property="og:description" content={generateSolutionSeoDescription()} />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-8">

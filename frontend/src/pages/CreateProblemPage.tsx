@@ -253,10 +253,10 @@ export default function CreateProblemPage() {
   return (
     <>
       <Helmet>
-        <title>Poser un problème | SolvHub</title>
+        <title>Signaler un problème ou une panne | Entraide & Dépannage - SolvHub</title>
         <meta
           name="description"
-          content="Partagez un problème ou une panne avec la communauté SolvHub et obtenez des solutions concrètes."
+          content="Vous rencontrez un dysfonctionnement, un voyant allumé ou une panne ? Posez votre question gratuitement à la communauté SolvHub."
         />
       </Helmet>
 

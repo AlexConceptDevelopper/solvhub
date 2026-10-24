@@ -155,18 +155,34 @@ export default function ProblemDetailPage() {
     );
   }
 
+  const generateProblemSeoTitle = () => {
+    if (!problem) return "Problème technique | SolvHub";
+    let prefix = "";
+    if (problem.equipment?.brand && problem.equipment?.model) {
+      prefix = `${problem.equipment.brand} ${problem.equipment.model} : `;
+    } else if (problem.category?.name) {
+      prefix = `[${problem.category.name}] `;
+    }
+    return `${prefix}${problem.title} : Cause et Solution | SolvHub`;
+  };
+
+  const generateProblemSeoDescription = () => {
+    if (!problem) return "Consultez ce problème technique sur SolvHub.";
+    const cleanDesc = problem.description ? problem.description.trim() : "";
+    if (cleanDesc.length > 0) {
+      return `Problème : ${cleanDesc.slice(0, 140)}... Découvrez les solutions de la communauté.`;
+    }
+    return `Consultez les étapes de résolution pour : ${problem.title} sur SolvHub.`;
+  };
+
   return (
     <>
       <Helmet>
-        <title>{`${problem.title} | SolvHub`}</title>
-        <meta
-          name="description"
-          content={
-            problem.description
-              ? problem.description.slice(0, 150) + "..."
-              : "Consultez ce problème technique et trouvez des solutions sur SolvHub."
-          }
-        />
+        <title>{generateProblemSeoTitle()}</title>
+        <meta name="description" content={generateProblemSeoDescription()} />
+        <meta property="og:title" content={generateProblemSeoTitle()} />
+        <meta property="og:description" content={generateProblemSeoDescription()} />
+        <meta property="og:type" content="article" />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-12">

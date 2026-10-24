@@ -141,20 +141,25 @@ export default function CreateSolutionPage() {
   return (
     <>
       <Helmet>
-        <title>Proposer une solution | SolvHub</title>
-        <meta name="description" content="Partagez votre solution technique pour résoudre ce problème sur SolvHub." />
+        <title>
+          Proposer un tutoriel ou une solution de dépannage | SolvHub
+        </title>
+        <meta
+          name="description"
+          content="Partagez vos étapes de résolution, photos et astuces techniques pour aider d'autres utilisateurs à résoudre ce problème."
+        />
       </Helmet>
-
+      
       <div className="max-w-3xl mx-auto">
         <div className="bg-white/85 backdrop-blur rounded-3xl border border-slate-200 shadow-md p-8">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-slate-800">
               Proposer une solution
             </h1>
-            <BackButton 
+            <BackButton
               to={fromAdmin ? "/admin" : `/problem/${problemId}`}
               state={fromAdmin ? { activeTab: "problems" } : undefined}
-              label={fromAdmin ? "Retour à l'admin" : "Retour au problème"} 
+              label={fromAdmin ? "Retour à l'admin" : "Retour au problème"}
             />
           </div>
 
@@ -168,7 +173,10 @@ export default function CreateSolutionPage() {
             autoComplete="off"
           >
             <div>
-              <label htmlFor="solution-title" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-title"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Titre
               </label>
               <input
@@ -184,7 +192,10 @@ export default function CreateSolutionPage() {
             </div>
 
             <div>
-              <label htmlFor="solution-steps" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-steps"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Étapes
               </label>
               <textarea
@@ -202,7 +213,10 @@ export default function CreateSolutionPage() {
             </div>
 
             <div>
-              <label htmlFor="solution-difficulty" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-difficulty"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Difficulté
               </label>
               <select
@@ -221,7 +235,10 @@ export default function CreateSolutionPage() {
             </div>
 
             <div>
-              <label htmlFor="solution-time" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-time"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Temps estimé
               </label>
               <select
@@ -239,7 +256,10 @@ export default function CreateSolutionPage() {
             </div>
 
             <div>
-              <label htmlFor="solution-risk" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-risk"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Niveau de risque
               </label>
               <select
@@ -264,13 +284,18 @@ export default function CreateSolutionPage() {
                   onClick={() => setShowVideoInput(true)}
                   className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700 bg-blue-50/80 hover:bg-blue-100/80 px-4 py-2.5 rounded-xl border border-blue-200 transition cursor-pointer"
                 >
-                  <span className="text-lg leading-none" aria-hidden="true">+</span>
+                  <span className="text-lg leading-none" aria-hidden="true">
+                    +
+                  </span>
                   <span>Ajouter une vidéo explicative (YouTube)</span>
                 </button>
               ) : (
                 <div className="bg-slate-50/80 border border-slate-200 rounded-2xl p-4 space-y-3 transition-all">
                   <div className="flex items-center justify-between">
-                    <label htmlFor="solution-video" className="block font-semibold text-slate-700 text-sm">
+                    <label
+                      htmlFor="solution-video"
+                      className="block font-semibold text-slate-700 text-sm"
+                    >
                       🎬 Lien de la vidéo YouTube
                     </label>
                     <button
@@ -295,14 +320,18 @@ export default function CreateSolutionPage() {
                     autoComplete="off"
                   />
                   <p className="text-xs text-slate-500">
-                    La vidéo s'affichera directement sous forme de lecteur intégré dans votre solution.
+                    La vidéo s'affichera directement sous forme de lecteur
+                    intégré dans votre solution.
                   </p>
                 </div>
               )}
             </div>
 
             <div>
-              <label htmlFor="solution-images" className="block font-semibold text-slate-700 mb-2">
+              <label
+                htmlFor="solution-images"
+                className="block font-semibold text-slate-700 mb-2"
+              >
                 Images d'illustration (optionnel)
               </label>
               <input
@@ -323,7 +352,8 @@ export default function CreateSolutionPage() {
               )}
               {images && images.length > 0 && !imageError && (
                 <p className="text-xs text-emerald-700 font-medium mt-2">
-                  ✓ {images.length} image{images.length > 1 ? "s" : ""} sélectionnée{images.length > 1 ? "s" : ""}
+                  ✓ {images.length} image{images.length > 1 ? "s" : ""}{" "}
+                  sélectionnée{images.length > 1 ? "s" : ""}
                 </p>
               )}
             </div>
