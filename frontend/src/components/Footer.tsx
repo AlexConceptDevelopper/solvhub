@@ -10,13 +10,26 @@ export default function Footer() {
       <footer className="w-full border-t border-slate-200/60 bg-slate-50/80 backdrop-blur-md py-6 text-slate-500 text-sm mt-auto">
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
           
-          {/* Partie Gauche : Logo + Copyright compact */}
+          {/* Partie Gauche : Logo + Copyright compact & Éditeur CubTaik */}
           <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
             <Logo />
             <span className="text-xs text-slate-400 hidden md:inline">|</span>
-            <p className="text-xs text-slate-400">
-              © {new Date().getFullYear()} SolvHub. Tous droits réservés.
-            </p>
+            <div className="space-y-0.5">
+              <p className="text-xs text-slate-400">
+                © {new Date().getFullYear()} SolvHub. Tous droits réservés.
+              </p>
+              <p className="text-[11px] text-slate-400">
+                Une solution éditée par{" "}
+                <a 
+                  href="https://www.cubtaik.fr" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-slate-600 hover:text-blue-600 font-semibold underline transition-colors"
+                >
+                  CubTaik
+                </a>
+              </p>
+            </div>
           </div>
 
           {/* Partie Centrale : Contact rapide (Ouvre la modale) */}
@@ -31,7 +44,7 @@ export default function Footer() {
             </button>
           </div>
 
-          {/* Partie Droite : Réseaux sociaux (désactivés) & Liens légaux */}
+          {/* Partie Droite : Réseaux sociaux & Liens légaux */}
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* Réseaux sociaux (en attente de création) */}
             <div className="flex items-center gap-2">
