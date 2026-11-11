@@ -16,6 +16,7 @@ import BackButton from "../components/BackButton";
 import PrimaryButton from "../components/PrimaryButton";
 import LoadingState from "../components/LoadingState";
 import { getProblemUrl } from "../utils/slug";
+import SimilarProblemsBlock from "../components/SimilarProblemsBlock";
 
 export default function ProblemDetailPage() {
   const { id } = useParams();
@@ -322,6 +323,14 @@ export default function ProblemDetailPage() {
             ))}
           </div>
         </section>
+        
+        {/* BLOC DE MAILLAGE CONTEXTUEL SIMILAIRE */}
+        {problem && (
+          <SimilarProblemsBlock
+            currentProblemId={problem.idProblem}
+            title={problem.title}
+          />
+        )}
       </div>
     </>
   );
