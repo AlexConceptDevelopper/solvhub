@@ -32,14 +32,27 @@ export default function HomePage() {
     navigate(`/problems?search=${encodeURIComponent(searchQuery)}`);
   };
 
+  const currentUrl = window.location.href;
+
   return (
     <>
       <Helmet>
-        <title>SolvHub | Des solutions pour chaque problème technique</title>
-        <meta name="description" content="Trouvez de l'aide, partagez vos expériences et résolvez des pannes techniques ensemble sur la communauté SolvHub." />
+        <title>SolvHub | Plateforme d'entraide, de diagnostic et de résolution de pannes</title>
+        <meta
+          name="description"
+          content="Rejoignez la communauté SolvHub pour diagnostiquer et résoudre vos pannes mécaniques, problèmes informatiques et défis techniques du quotidien."
+        />
+        <meta property="og:title" content="SolvHub | Plateforme d'entraide & diagnostic de pannes" />
+        <meta
+          property="og:description"
+          content="Trouvez des guides de réparation, partagez vos tutoriels et résolvez tous vos problèmes techniques sur SolvHub."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={currentUrl} />
+        <link rel="canonical" href={currentUrl} />
       </Helmet>
 
-      <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-12 mt-6 mb-16">
+      <div className="max-w-6xl px-4 md:px-6 mx-auto space-y-16 mt-6 mb-16">
         {/* HERO SECTION AVEC RECHERCHE */}
         <section
           className="
@@ -81,7 +94,7 @@ export default function HomePage() {
               "
             >
               <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-              Plateforme communautaire
+              Entraide & Resolution de Pannes
             </span>
 
             <h1
@@ -97,7 +110,7 @@ export default function HomePage() {
               Des solutions pour <br />
               chaque{" "}
               <span className="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                problème
+                panne technique
               </span>
               .
             </h1>
@@ -112,8 +125,7 @@ export default function HomePage() {
                 max-w-xl
               "
             >
-              Trouvez de l'aide, partagez vos expériences et améliorez les
-              solutions ensemble avec la communauté{" "}
+              Trouvez un diagnostic rapide, partagez vos astuces de réparation et résolvez vos problèmes de mécanique, d'informatique et de bricolage avec la communauté{" "}
               <span className="text-slate-900 font-semibold">SolvHub</span>.
             </p>
 
@@ -126,7 +138,7 @@ export default function HomePage() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Rechercher un problème, un mot-clé..."
+                  placeholder="Rechercher par mot-clé (ex: voyant moteur, écran noir, freins)..."
                   className="w-full pl-11 pr-4 py-3.5 bg-white border border-slate-200 rounded-2xl text-slate-800 placeholder-slate-400 text-sm font-medium shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                 />
               </div>
@@ -157,6 +169,39 @@ export default function HomePage() {
                 + Poser un problème
               </Link>
             </div>
+          </div>
+        </section>
+
+        {/* BLOC VISUEL : COMMENT ÇA MARCHE ? (Boost d'UX + Sémantique SEO) */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col items-start space-y-3">
+            <span className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 text-xl font-black flex items-center justify-center">
+              1
+            </span>
+            <h3 className="text-lg font-bold text-slate-900">Décrivez la panne</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Indiquez la marque, le modèle et les symptômes précis de votre problème matériel, auto ou informatique.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col items-start space-y-3">
+            <span className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 text-xl font-black flex items-center justify-center">
+              2
+            </span>
+            <h3 className="text-lg font-bold text-slate-900">Comparez les diagnostics</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Consultez les étapes de résolution proposées et validées par les membres de la communauté.
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col items-start space-y-3">
+            <span className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-600 text-xl font-black flex items-center justify-center">
+              3
+            </span>
+            <h3 className="text-lg font-bold text-slate-900">Réparez & Votez</h3>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              Appliquez la solution, donnez votre retour d'expérience et aidez les prochains utilisateurs en détresse.
+            </p>
           </div>
         </section>
 
@@ -350,6 +395,50 @@ export default function HomePage() {
               </Link>
             </div>
           )}
+        </section>
+
+        {/* NOUVEAU BLOC ÉDITORIAL SEO : LE MONSTRE DE MOTS-CLÉS GOOGLE */}
+        <section className="bg-slate-900 text-white rounded-3xl p-8 md:p-12 space-y-8 shadow-xl">
+          <div className="max-w-3xl space-y-3">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-400 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+              Centre d'expertise & Entraide
+            </span>
+            <h2 className="text-2xl md:text-4xl font-extrabold tracking-tight">
+              Pourquoi utiliser SolvHub pour vos dépannages ?
+            </h2>
+            <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+              SolvHub est la plateforme collaborative pensée pour centraliser les diagnostics d'erreurs, les voyants de pannes et les guides de réparation étape par étape.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-slate-800">
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-blue-400 flex items-center gap-2">
+                🚗 Pannes Automobiles
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Diagnostics de voyants moteur, bruits mécaniques, dysfonctionnements électroniques et pannes courantes classés par marque et modèle de véhicule.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-indigo-400 flex items-center gap-2">
+                💻 Hardware & Informatique
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Résolution de bugs logiciels, pannes d'écran, soucis de composants informatiques, systèmes d'exploitation et configuration réseau.
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-emerald-400 flex items-center gap-2">
+                🛠️ Maison & Bricolage
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Guides Pratiques pour réparer l'électroménager, les outils de jardinage, les vélos et résoudre les tracas techniques du quotidien.
+              </p>
+            </div>
+          </div>
         </section>
       </div>
     </>

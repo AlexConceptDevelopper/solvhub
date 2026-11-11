@@ -307,6 +307,33 @@ export default function ProblemsPage() {
     return filteredProblems.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProblems, currentPage]);
 
+  // Génération dynamique des titres SEO avec Helmet
+  const dynamicSeoTitle = useMemo(() => {
+    let titleParts = [];
+    if (category !== "Toutes") titleParts.push(category);
+    if (selectedBrand !== "Toutes") titleParts.push(selectedBrand);
+    if (selectedModel !== "Toutes") titleParts.push(selectedModel);
+
+    if (titleParts.length > 0) {
+      return `Pannes et Diagnostics ${titleParts.join(" ")} | SolvHub`;
+    }
+    if (searchQuery) {
+      return `Résultats pour "${searchQuery}" - Pannes & Solutions | SolvHub`;
+    }
+    return "Tous les problèmes & pannes techniques : Solutions & Diagnostics | SolvHub";
+  }, [category, selectedBrand, selectedModel, searchQuery]);
+
+  const dynamicSeoDescription = useMemo(() => {
+    if (category === "Automobile") {
+      return `Consultez les pannes mécaniques, voyants d'alerte et solutions de diagnostic pour ${
+        selectedBrand !== "Toutes" ? selectedBrand : "toutes les marques auto"
+      } sur SolvHub.`;
+    }
+    return "Base de données d'entraide communautaire pour la résolution de pannes mécaniques, matérielles, électroniques et bugs informatiques. Trouvez votre solution facilement.";
+  }, [category, selectedBrand]);
+
+  const currentUrl = window.location.href;
+
   if (loading && problems.length === 0) {
     return <LoadingState label="Chargement des problèmes..." />;
   }
@@ -325,11 +352,19 @@ export default function ProblemsPage() {
   return (
     <>
       <Helmet>
-        <title>Liste des problèmes techniques | SolvHub</title>
-        <meta
-          name="description"
-          content="Parcourez l'ensemble des problèmes, pannes et questions techniques partagés par la communauté SolvHub."
-        />
+        {/* Balises SEO dynamically adaptatives */}
+        <title>{dynamicSeoTitle}</title>
+        <meta name="description" content={dynamicSeoDescription} />
+
+        {/* Balises OpenGraph */}
+        <meta property="og:title" content={dynamicSeoTitle} />
+        <meta property="og:description" content={dynamicSeoDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:site_name" content="SolvHub" />
+
+        {/* Lien canonique */}
+        <link rel="canonical" href={currentUrl} />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto py-8 space-y-8">
@@ -338,13 +373,15 @@ export default function ProblemsPage() {
         </div>
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
+          <div className="space-y-2">
+            {/* H1 ultra optimisé sémantiquement */}
             <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Tous les problèmes
+              Tous les problèmes et pannes techniques
             </h1>
-            <p className="text-sm text-slate-500 mt-1">
-              Consultez les difficultés rencontrées par la communauté ou
-              proposez vos solutions.
+            
+            {/* Texte d'introduction riche en mots-clés forts */}
+            <p className="text-sm md:text-base text-slate-600 max-w-3xl leading-relaxed">
+              Consultez la base de connaissances communautaire de SolvHub. Recherchez un diagnostic, trouvez des tutoriels de réparation ou proposez vos solutions aux pannes signalées.
             </p>
           </div>
 
@@ -371,7 +408,7 @@ export default function ProblemsPage() {
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Rechercher par mot-clé (ex: écran, broute, batterie)..."
+            placeholder="Rechercher par mot-clé (ex: écran, broute, batterie, voyant moteur)..."
             className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-2xl text-slate-800 text-sm shadow-xs focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
           />
           {searchQuery && (
@@ -486,55 +523,59 @@ export default function ProblemsPage() {
           <div className="space-y-6">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-xs divide-y divide-slate-100 overflow-hidden">
               {paginatedProblems.map((problem) => (
-                <Link
+                <article
                   key={problem.idProblem || Math.random()}
-                  to={getProblemUrl(problem.idProblem, problem.title)} // 2. Remplacer l'URL en dur
-                  state={{
-                    returnTo: "/problems",
-                    returnLabel: "Retour aux problèmes",
-                  }}
-                  className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4 group"
+                  className="group"
                 >
-                  <div className="space-y-2 flex-1">
-                    <div className="flex items-center gap-3 text-xs flex-wrap">
-                      {problem.category && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
-                          <span>{problem.category.icon || "🏷️"}</span>
-                          <span>{problem.category.name}</span>
-                        </span>
-                      )}
-                      {problem.equipment && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-100">
-                          <span>🚗</span>
-                          <span>
-                            {problem.equipment.brand} {problem.equipment.model}
+                  <Link
+                    to={getProblemUrl(problem.idProblem, problem.title)}
+                    state={{
+                      returnTo: "/problems",
+                      returnLabel: "Retour aux problèmes",
+                    }}
+                    className="p-6 hover:bg-slate-50/80 transition cursor-pointer flex flex-col md:flex-row md:items-center justify-between gap-4"
+                  >
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center gap-3 text-xs flex-wrap">
+                        {problem.category && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 border border-blue-200 text-blue-700 font-bold uppercase tracking-wider text-[11px]">
+                            <span>{problem.category.icon || "🏷️"}</span>
+                            <span>{problem.category.name}</span>
                           </span>
-                        </span>
-                      )}
-                      {problem.createdAt && (
-                        <span className="text-slate-400">
-                          {new Date(problem.createdAt).toLocaleDateString(
-                            "fr-FR",
-                          )}
-                        </span>
-                      )}
+                        )}
+                        {problem.equipment && (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 font-medium border border-blue-100">
+                            <span>🚗</span>
+                            <span>
+                              {problem.equipment.brand} {problem.equipment.model}
+                            </span>
+                          </span>
+                        )}
+                        {problem.createdAt && (
+                          <span className="text-slate-400">
+                            {new Date(problem.createdAt).toLocaleDateString(
+                              "fr-FR",
+                            )}
+                          </span>
+                        )}
+                      </div>
+
+                      <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
+                        {problem.title}
+                      </h2>
+
+                      <p className="text-sm text-slate-600 line-clamp-2">
+                        {problem.description}
+                      </p>
                     </div>
 
-                    <h2 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition">
-                      {problem.title}
-                    </h2>
-
-                    <p className="text-sm text-slate-600 line-clamp-2">
-                      {problem.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center self-end md:self-center">
-                    <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
-                      Voir les solutions →
-                    </span>
-                  </div>
-                </Link>
+                    <div className="flex items-center self-end md:self-center">
+                      <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition">
+                        Voir les solutions →
+                      </span>
+                    </div>
+                  </Link>
+                </article>
               ))}
             </div>
 

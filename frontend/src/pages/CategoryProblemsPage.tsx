@@ -61,12 +61,60 @@ export default function CategoryProblemsPage() {
   });
 
   const category = categoryProblems[0]?.category;
+  const categoryName = category ? category.name : "Catégorie";
+
+  // Contexte SEO riche et ultra-ciblé pour chaque catégorie de ton site
+  const getCategorySEOContext = (name: string) => {
+    const lowerName = name.toLowerCase();
+    switch (lowerName) {
+      case "automobile":
+      case "auto":
+        return "Trouvez et partagez des solutions de diagnostic, des astuces de réparation et des résolutions de pannes mécaniques pour vos véhicules (voyants moteur, dysfonctionnements électroniques, entretien et pièces auto).";
+      case "informatique":
+        return "Résolvez vos bugs informatiques, pannes de matériel, problèmes de systèmes d'exploitation, logiciels et défis techniques grâce à l'entraide de la communauté SolvHub.";
+      case "vélo":
+        return "Guides de réparation, entretien de cycle, réglages de transmission, freinage et résolution de pannes pour tous types de vélos.";
+      case "maison":
+        return "Solutions pratiques, dépannage domestique et entraide pour l'habitat, les installations et la gestion de la maison au quotidien.";
+      case "bricolage":
+        return "Astuces de bricolage, tutoriels de réparation, rénovation et solutions techniques pour tous vos travaux manuels.";
+      case "entretien":
+        return "Conseils et méthodes d'entretien préventif et curatif pour vos équipements, machines et biens du quotidien.";
+      case "jeux vidéo":
+        return "Résolution de bugs de jeux, problèmes de performances graphiques, erreurs de lancement et entraide gaming sur toutes les plateformes.";
+      case "électronique":
+        return "Dépannage de circuits, pannes de matériel électronique, micro-soudure et entraide technique spécialisée.";
+      case "photographie":
+        return "Résolution de problèmes d'appareils photo, objectifs, réglages de prises de vue et pannes de matériel optique et numérique.";
+      case "cuisine":
+        return "Solutions de dépannage pour l'électroménager de cuisine, ustensiles et astuces techniques culinaires.";
+      case "jardin":
+        return "Entretien des espaces verts, pannes d'outils de jardinage (tondeuses, motorisations) et conseils pratiques.";
+      default:
+        return `Espace communautaire de résolution de problèmes et de pannes pour la thématique ${name}. Partagez vos diagnostics et trouvez des solutions testées par la communauté.`;
+    }
+  };
+
+  const seoDescription = category ? getCategorySEOContext(category.name) : "Découvrez les problèmes et pannes sur SolvHub.";
+  const pageTitle = category ? `${category.name} : Pannes, Diagnostics & Solutions | SolvHub` : "Catégorie | SolvHub";
+  const currentUrl = window.location.href;
 
   return (
     <>
       <Helmet>
-        <title>{category ? `${category.name} | SolvHub` : "Catégorie | SolvHub"}</title>
-        <meta name="description" content={`Découvrez les problèmes et pannes de la catégorie ${category?.name || ""} sur SolvHub.`} />
+        {/* Balises SEO principales */}
+        <title>{pageTitle}</title>
+        <meta name="description" content={seoDescription} />
+        
+        {/* Balises OpenGraph pour le partage et l'indexation avancée */}
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:site_name" content="SolvHub" />
+        
+        {/* Lien canonique */}
+        <link rel="canonical" href={currentUrl} />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-8">
@@ -74,14 +122,24 @@ export default function CategoryProblemsPage() {
           <BackButton to={backTo} label={backLabel} />
         </div>
 
-        <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-          {category && <span aria-hidden="true">{category.icon}</span>}
-          <span>{category ? category.name : "Catégorie"}</span>
-        </h1>
+        {/* En-tête de la page pilier SEO */}
+        <div className="space-y-3">
+          <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
+            {category && <span aria-hidden="true">{category.icon}</span>}
+            <span>{categoryName}</span>
+          </h1>
+          
+          {/* Bloc éditorial SEO affiché sur la page pour guider les utilisateurs et Google */}
+          {category && (
+            <p className="text-slate-600 text-sm md:text-base max-w-3xl leading-relaxed">
+              {seoDescription}
+            </p>
+          )}
 
-        <p className="text-slate-500 -mt-4">
-          {categoryProblems.length} problème(s) trouvé(s)
-        </p>
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider pt-2">
+            {categoryProblems.length} problème(s) référencé(s) dans cette catégorie
+          </p>
+        </div>
 
         {categoryProblems.length === 0 ? (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-8 text-center">
