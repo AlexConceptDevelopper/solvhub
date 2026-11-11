@@ -1,20 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import ContactModal from "./ContactModal"; // Assurez-vous que le chemin d'importation est correct
+import ContactModal from "./ContactModal";
+import { getCategoriesWithCount } from "../api/category.api";
+import type { Category } from "../types/category";
+import useAsync from "../hooks/useAsync";
 
 export default function Footer() {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { execute } = useAsync<Category[]>();
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await execute(() => getCategoriesWithCount());
+      if (data) {
+        // Trie par nombre de problèmes pour garder les 6 plus importantes
+        const sorted = [...data].sort(
+          (a, b) => b.problemCount - a.problemCount,
+        );
+        setCategories(sorted.slice(0, 6));
+      }
+    };
+    loadCategories();
+  }, []);
 
   return (
     <>
-      <footer className="w-full border-t border-slate-200/60 bg-slate-50/80 backdrop-blur-md py-6 text-slate-500 text-sm mt-auto">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <footer className="w-full border-t border-slate-200/60 bg-slate-50/90 backdrop-blur-md py-10 text-slate-500 text-sm mt-auto">
+        <div className="w-full px-4 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
           
-          {/* Partie Gauche : Logo + Copyright compact & Éditeur CubTaik */}
-          <div className="flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+          {/* Colonne 1 : Logo + Copyright compact & Éditeur CubTaik */}
+          <div className="flex flex-col items-start gap-4">
             <Logo />
-            <span className="text-xs text-slate-400 hidden md:inline">|</span>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               <p className="text-xs text-slate-400">
                 © {new Date().getFullYear()} SolvHub. Tous droits réservés.
               </p>
@@ -30,23 +49,68 @@ export default function Footer() {
                 </a>
               </p>
             </div>
+            <div className="flex items-center gap-2 text-xs pt-2">
+              <span>📍 Paris, France</span>
+              <span className="text-slate-300">•</span>
+              <button 
+                onClick={() => setIsContactOpen(true)}
+                className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+              >
+                <span>✉️</span> Contact
+              </button>
+            </div>
           </div>
 
-          {/* Partie Centrale : Contact rapide (Ouvre la modale) */}
-          <div className="flex items-center gap-3 text-xs">
-            <span className="text-slate-400">📍 Paris, France</span>
-            <span className="text-slate-300">•</span>
-            <button 
-              onClick={() => setIsContactOpen(true)}
-              className="font-medium text-blue-600 hover:underline flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+          {/* Colonne 2 : Maillage SEO - Catégories principales (1 par ligne) */}
+          <div className="flex flex-col space-y-2">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-1">
+              Pages Piliers (Catégories)
+            </h4>
+            {categories.length > 0 ? (
+              categories.map((cat) => (
+                <Link
+                  key={cat.idCategory}
+                  to={`/categories/${cat.idCategory}`}
+                  className="text-xs text-slate-600 hover:text-blue-600 transition-colors block py-0.5"
+                >
+                  {cat.icon} {cat.name}
+                </Link>
+              ))
+            ) : (
+              <span className="text-xs text-slate-400">Chargement...</span>
+            )}
+            <Link
+              to="/categories"
+              className="text-xs font-semibold text-blue-600 hover:underline pt-1 block"
             >
-              <span>✉️</span> contact@solvhub.fr
-            </button>
+              Voir toutes les catégories →
+            </Link>
           </div>
 
-          {/* Partie Droite : Réseaux sociaux & Liens légaux */}
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            {/* Réseaux sociaux (en attente de création) */}
+          {/* Colonne 3 : Liens légaux & Navigation rapide */}
+          <div className="flex flex-col space-y-2">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-1">
+              Informations légales
+            </h4>
+            <a href="/cgu" className="text-xs text-slate-600 hover:text-blue-600 transition py-0.5">
+              Conditions Générales (CGU)
+            </a>
+            <a href="/legal" className="text-xs text-slate-600 hover:text-blue-600 transition py-0.5">
+              Mentions légales
+            </a>
+            <a href="/privacy" className="text-xs text-slate-600 hover:text-blue-600 transition py-0.5">
+              Politique de confidentialité
+            </a>
+            <a href="/problems" className="text-xs text-slate-600 hover:text-blue-600 transition py-0.5 pt-2 font-semibold">
+              Explorer tous les problèmes
+            </a>
+          </div>
+
+          {/* Colonne 4 : Réseaux sociaux */}
+          <div className="flex flex-col space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 mb-1">
+              Suivre la communauté
+            </h4>
             <div className="flex items-center gap-2">
               {/* Facebook */}
               <a 
@@ -83,17 +147,6 @@ export default function Footer() {
                   <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                 </svg>
               </a>
-            </div>
-
-            <span className="text-slate-300 hidden md:inline">|</span>
-
-            {/* Liens légaux */}
-            <div className="flex items-center gap-3 text-xs text-slate-500">
-              <a href="/cgu" className="hover:text-blue-600 transition">CGU</a>
-              <span>•</span>
-              <a href="/legal" className="hover:text-blue-600 transition">Mentions légales</a>
-              <span>•</span>
-              <a href="/privacy" className="hover:text-blue-600 transition">Confidentialité</a>
             </div>
           </div>
 
