@@ -16,7 +16,7 @@ export default function CGU() {
             Conditions Générales d'Utilisation (CGU)
           </h1>
           <p className="text-sm text-slate-500">
-            Dernière mise à jour : Juillet 2026
+            Dernière mise à jour : Novembre 2026
           </p>
         </header>
 
@@ -25,20 +25,20 @@ export default function CGU() {
           <p className="text-sm leading-relaxed">
             Les présentes Conditions Générales d'Utilisation (CGU) ont pour objet
             de définir les modalités de mise à disposition des services de la
-            plateforme <strong>SolvHub</strong> et les conditions d'utilisation du
+            plateforme <strong>SolvHub</strong> (éditée par CubTaik) et les conditions d'utilisation du
             service par l'Utilisateur.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-xl font-semibold text-slate-900">
-            2. Accès au site
+            2. Accès au site et financement
           </h2>
           <p className="text-sm leading-relaxed">
             Le site SolvHub est accessible gratuitement à tout utilisateur
             disposant d'un accès à Internet. Tous les coûts afférents à l'accès au
-            service, qu'il s'agisse des frais matériels, logiciels ou d'accès à
-            Internet, sont exclusivement à la charge de l'utilisateur.
+            service (matériel, logiciels, connexion Internet) sont à la charge de l'utilisateur. 
+            Afin de maintenir la gratuité de la consultation des solutions, la plateforme est financée par l'affichage d'encarts publicitaires non intrusifs.
           </p>
         </section>
 
@@ -47,11 +47,10 @@ export default function CGU() {
             3. Inscription et Compte Utilisateur
           </h2>
           <p className="text-sm leading-relaxed">
-            Pour accéder à certaines fonctionnalités (publication de problèmes,
-            ajout de solutions), l'utilisateur doit créer un compte en fournissant
-            des informations exactes. L'utilisateur est responsable de la
-            confidentialité de son mot de passe et de l'ensemble des actions
-            effectuées depuis son compte.
+            Pour accéder aux fonctionnalités contributives (publication de pannes,
+            ajout de solutions), l'utilisateur doit créer un compte avec une adresse email valide. 
+            L'utilisateur est responsable de la confidentialité de ses identifiants et des contenus qu'il publie, 
+            lesquels doivent respecter la législation en vigueur et ne pas porter atteinte aux droits de tiers.
           </p>
         </section>
 
@@ -60,11 +59,9 @@ export default function CGU() {
             4. Propriété intellectuelle
           </h2>
           <p className="text-sm leading-relaxed">
-            Les contenus publiés sur SolvHub (textes, graphismes, logos, codes,
-            icônes) sont la propriété exclusive de la plateforme ou de leurs
-            auteurs respectifs. Toute reproduction, représentation, modification
-            ou adaptation de tout ou partie des éléments du site est strictement
-            interdite sans autorisation préalable.
+            Les éléments structurels de SolvHub (interface, code, graphismes, logos) sont la propriété exclusive de CubTaik. 
+            En publiant une solution ou un guide sur la plateforme, l'utilisateur accorde à SolvHub une licence non exclusive d'affichage, 
+            d'indexation et de diffusion sur le site.
           </p>
         </section>
 
@@ -73,10 +70,9 @@ export default function CGU() {
             5. Responsabilité
           </h2>
           <p className="text-sm leading-relaxed">
-            Les solutions techniques partagées sur SolvHub le sont à titre
-            indicatif. La plateforme ne saurait être tenue responsable des
-            dommages matériels ou logiciels causés suite à l'application d'une
-            solution ou d'un conseil trouvé sur le site.
+            Les procédures de diagnostic et de réparation partagées sur SolvHub sont fournies à titre purement informatif. 
+            La plateforme ne saurait être tenue responsable des dommages matériels, logiciels ou corporels résultant d'une intervention 
+            effectuée sur la base des informations publiées sur le site.
           </p>
         </section>
       </main>

@@ -5,21 +5,21 @@ export default function PrivacyPolicy() {
   return (
     <>
       <Helmet>
-        <title>Politique de Confidentialité | SolvHub</title>
-        <meta name="description" content="Découvrez comment SolvHub collecte, utilise et protège vos données personnelles." />
+        <title>Politique de Confidentialité & Cookies | SolvHub</title>
+        <meta name="description" content="Découvrez comment SolvHub collecte, utilise et protège vos données personnelles ainsi que notre gestion des cookies." />
       </Helmet>
 
       <div className="max-w-4xl mx-auto px-4 py-12 space-y-6">
         <BackButton to="/" label="Retour à l'accueil" />
         
-        <h1 className="text-3xl font-bold text-slate-900">Politique de Confidentialité</h1>
-        <p className="text-xs text-slate-400">Dernière mise à jour : Août 2026</p>
+        <h1 className="text-3xl font-bold text-slate-900">Politique de Confidentialité & Cookies</h1>
+        <p className="text-xs text-slate-400">Dernière mise à jour : Novembre 2026</p>
 
         <div className="prose prose-slate text-slate-600 space-y-6">
           <div className="space-y-2">
             <h2 className="text-xl font-semibold text-slate-800">1. Collecte des données</h2>
             <p>
-              Dans le cadre de l'utilisation de SolvHub, nous sommes amenés à collecter certaines informations personnelles vous concernant (nom d'utilisateur, adresse email, mot de passe crypté) lorsque vous créez un compte ou interagissez avec la plateforme. Si vous ajoutez des images à l'appui d'une solution, ces fichiers sont également collectés et stockés.
+              Dans le cadre de l'utilisation de SolvHub, nous collectons uniquement les informations nécessaires au fonctionnement de votre compte (adresse email, nom d'utilisateur, mot de passe chiffré) ainsi que les contenus et images que vous publiez volontairement sur la plateforme.
             </p>
           </div>
 
@@ -28,37 +28,64 @@ export default function PrivacyPolicy() {
             <p>Les données collectées sur SolvHub sont exclusivement utilisées pour :</p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Gérer votre compte et sécuriser votre accès.</li>
-              <li>Permettre la publication et le suivi de vos problèmes et solutions.</li>
-              <li>Vous envoyer des notifications (si activées dans vos paramètres).</li>
+              <li>Permettre la publication et le suivi de vos problèmes et solutions techniques.</li>
+              <li>Vous envoyer des notifications transactionnelles liées à votre compte.</li>
             </ul>
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-slate-800">3. Sous-traitants et hébergement des données</h2>
+            <h2 className="text-xl font-semibold text-slate-800">3. Cookies et Publicité (Google AdSense)</h2>
             <p>
-              Pour assurer le bon fonctionnement de SolvHub, nous faisons appel à des prestataires techniques tiers qui traitent certaines données pour notre compte :
+              Pour financer gratuitement l'hébergement et le développement de la plateforme, SolvHub utilise <strong>Google AdSense</strong> pour diffuser des annonces publicitaires :
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <strong>Cloudinary</strong> : les images que vous ajoutez à vos solutions sont hébergées par Cloudinary, notre prestataire de stockage et de gestion de médias. Ces images sont conservées tant que la solution associée existe, et sont supprimées lorsque vous retirez une image ou supprimez votre solution ou votre compte. Pour en savoir plus, consultez la <a href="https://cloudinary.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">politique de confidentialité de Cloudinary</a>.
+                Des fournisseurs tiers, y compris <strong>Google</strong>, utilisent des cookies pour diffuser des annonces en fonction des visites antérieures des utilisateurs sur ce site web ou sur d'autres sites web.
               </li>
               <li>
-                <strong>Resend</strong> : l'envoi de nos emails (notifications, vérification de compte) est assuré par Resend, notre prestataire d'envoi d'emails transactionnels. Votre adresse email leur est transmise uniquement dans ce cadre.
+                Grâce aux cookies publicitaires, Google et ses partenaires adaptent les annonces diffusées auprès de nos utilisateurs en fonction de leur navigation sur SolvHub et/ou d'autres sites Internet.
+              </li>
+              <li>
+                Vous pouvez à tout moment modifier vos préférences de consentement via notre bandeau de gestion des cookies ou désactiver la publicité personnalisée en consultant les{" "}
+                <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  Paramètres des annonces Google
+                </a>{" "}
+                ou le site{" "}
+                <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  www.aboutads.info
+                </a>.
               </li>
             </ul>
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-slate-800">4. Protection des données</h2>
+            <h2 className="text-xl font-semibold text-slate-800">4. Sous-traitants et hébergement des données</h2>
             <p>
-              Nous mettons en œuvre toutes les mesures de sécurité techniques et organisationnelles nécessaires pour protéger vos données personnelles contre la perte, l'accès non autorisé, la divulgation ou la modification (mots de passe hachés, connexions sécurisées).
+              Pour assurer le bon fonctionnement de SolvHub, nous faisons appel à des prestataires techniques conformes au RGPD :
             </p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>Cloudinary</strong> : stockage et optimisation des images jointes aux solutions. Ces fichiers sont supprimés lorsque vous retirez une image ou supprimez votre compte. Consultez la{" "}
+                <a href="https://cloudinary.com/privacy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                  politique de confidentialité de Cloudinary
+                </a>.
+              </li>
+              <li>
+                <strong>Resend</strong> : acheminement des emails transactionnels (validation d'inscription, notifications).
+              </li>
+              <li>
+                <strong>Google Ireland Limited</strong> : diffusion publicitaire via Google AdSense (sous réserve de votre consentement CMP).
+              </li>
+            </ul>
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-slate-800">5. Vos droits (RGPD)</h2>
+            <h2 className="text-xl font-semibold text-slate-800">5. Protection des données et vos droits (RGPD)</h2>
             <p>
-              Conformément à la réglementation européenne en vigueur, vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles. Vous pouvez exercer ces droits en nous contactant directement à l'adresse : <a href="mailto:contact@solvhub.com" className="text-blue-600 hover:underline">contact@solvhub.com</a>.
+              Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification, de portabilité et de suppression de vos données personnelles (notamment via la suppression directe depuis votre espace profil). Vous pouvez également nous contacter à l'adresse :{" "}
+              <a href="mailto:contact@solvhub.fr" className="text-blue-600 hover:underline">
+                contact@solvhub.fr
+              </a>.
             </p>
           </div>
         </div>
