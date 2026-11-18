@@ -79,10 +79,24 @@ export default function ProblemDetailPage() {
         name: problem.title,
         text: problem.description,
         answerCount: solutions.length,
+        // Champs recommandés par Google pour la question :
+        datePublished: problem.createdAt ? new Date(problem.createdAt).toISOString() : undefined,
+        author: {
+          "@type": "Person", // Ou "Person" si tu récupères l'auteur du problème
+          name: problem.user?.username || "Communauté SolvHub"
+        },
         suggestedAnswer: solutions.map((s) => ({
           "@type": "Answer",
           name: s.title,
           text: s.steps,
+          // Champs recommandés par Google pour chaque réponse/solution :
+          url: `https://solvhub.fr${getProblemUrl(problem.idProblem, problem.title)}#solution-${s.idSolution}`,
+          datePublished: s.createdAt ? new Date(s.createdAt).toISOString() : undefined,
+          upvoteCount: s.score ?? 0, // Remplace par ta propriété de votes si elle existe, sinon 0
+          author: {
+            "@type": "Person",
+            name: s.user?.username || "Communauté SolvHub" // Adapte selon ton objet Solution
+          }
         })),
       },
     };
