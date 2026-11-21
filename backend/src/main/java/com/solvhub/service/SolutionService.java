@@ -202,8 +202,10 @@ public class SolutionService {
 
         // Mise à jour des champs modifiables
         solution.setTitle(dto.getTitle());
+        solution.setSteps(dto.getSteps()); // <-- manquant
         solution.setDifficulty(dto.getDifficulty());
         solution.setTimeMinutes(dto.getTimeMinutes());
+        solution.setRiskLevel(dto.getRiskLevel()); // <-- manquant
 
         Solution updated = repo.save(solution);
         return mapper.toDTO(updated);
