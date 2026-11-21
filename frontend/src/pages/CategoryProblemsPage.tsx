@@ -8,6 +8,8 @@ import useAsync from "../hooks/useAsync";
 import ErrorMessage from "../components/ErrorMessage";
 import BackButton from "../components/BackButton";
 
+const SITE_DOMAIN = "https://www.solvhub.fr";
+
 export default function CategoryProblemsPage() {
   const { idCategory } = useParams();
   const location = useLocation();
@@ -63,7 +65,6 @@ export default function CategoryProblemsPage() {
   const category = categoryProblems[0]?.category;
   const categoryName = category ? category.name : "Catégorie";
 
-  // Contexte SEO riche et ultra-ciblé pour chaque catégorie de ton site
   const getCategorySEOContext = (name: string) => {
     const lowerName = name.toLowerCase();
     switch (lowerName) {
@@ -95,26 +96,27 @@ export default function CategoryProblemsPage() {
     }
   };
 
-  const seoDescription = category ? getCategorySEOContext(category.name) : "Découvrez les problèmes et pannes sur SolvHub.";
-  const pageTitle = category ? `${category.name} : Pannes, Diagnostics & Solutions | SolvHub` : "Catégorie | SolvHub";
-  const currentUrl = window.location.href;
+  const seoDescription = category
+    ? getCategorySEOContext(category.name)
+    : "Découvrez les problèmes et pannes sur SolvHub.";
+  const pageTitle = category
+    ? `${category.name} : Pannes, Diagnostics & Solutions | SolvHub`
+    : "Catégorie | SolvHub";
+  const canonicalUrl = `${SITE_DOMAIN}/categories/${idCategory}`;
 
   return (
     <>
       <Helmet>
-        {/* Balises SEO principales */}
         <title>{pageTitle}</title>
         <meta name="description" content={seoDescription} />
-        
-        {/* Balises OpenGraph pour le partage et l'indexation avancée */}
+
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={currentUrl} />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:site_name" content="SolvHub" />
-        
-        {/* Lien canonique */}
-        <link rel="canonical" href={currentUrl} />
+
+        <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-8">
@@ -122,14 +124,12 @@ export default function CategoryProblemsPage() {
           <BackButton to={backTo} label={backLabel} />
         </div>
 
-        {/* En-tête de la page pilier SEO */}
         <div className="space-y-3">
           <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
             {category && <span aria-hidden="true">{category.icon}</span>}
             <span>{categoryName}</span>
           </h1>
-          
-          {/* Bloc éditorial SEO affiché sur la page pour guider les utilisateurs et Google */}
+
           {category && (
             <p className="text-slate-600 text-sm md:text-base max-w-3xl leading-relaxed">
               {seoDescription}

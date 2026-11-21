@@ -224,7 +224,7 @@ export default function SolutionDetailPage() {
         {solution && (
           <link
             rel="canonical"
-            href={`https://solvhub.fr${getSolutionUrl(solution.idSolution, solution.title)}`}
+            href={`https://www.solvhub.fr${getSolutionUrl(solution.idSolution, solution.title)}`}
           />
         )}
       </Helmet>

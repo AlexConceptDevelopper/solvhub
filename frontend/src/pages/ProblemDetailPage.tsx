@@ -18,6 +18,8 @@ import LoadingState from "../components/LoadingState";
 import { getProblemUrl } from "../utils/slug";
 import SimilarProblemsBlock from "../components/SimilarProblemsBlock";
 
+const SITE_DOMAIN = "https://www.solvhub.fr";
+
 export default function ProblemDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ export default function ProblemDetailPage() {
   const [problem, setProblem] = useState<Problem | null>(null);
   const [solutions, setSolutions] = useState<Solution[]>([]);
 
-  const problemId = parseInt(id || "", 10); // Extrait automatiquement 68 à partir de "68-disque..."
+  const problemId = parseInt(id || "", 10);
 
   const {
     loading: loadingProblem,
@@ -47,8 +49,7 @@ export default function ProblemDetailPage() {
   const backTo = state?.returnTo ?? -1;
   const backLabel = state?.returnLabel ?? "Retour";
 
- useEffect(() => {
-    // 2. On vérifie la validité de problemId
+  useEffect(() => {
     if (!problemId || Number.isNaN(problemId)) return;
 
     const load = async () => {
@@ -66,10 +67,15 @@ export default function ProblemDetailPage() {
     };
 
     load();
-  }, [problemId]); 
+  }, [problemId]);
 
   useEffect(() => {
     if (!problem) return;
+
+    const canonicalProblemUrl = `${SITE_DOMAIN}${getProblemUrl(
+      problem.idProblem,
+      problem.title,
+    )}`;
 
     const structuredData = {
       "@context": "https://schema.org",
@@ -79,24 +85,26 @@ export default function ProblemDetailPage() {
         name: problem.title,
         text: problem.description,
         answerCount: solutions.length,
-        // Champs recommandés par Google pour la question :
-        datePublished: problem.createdAt ? new Date(problem.createdAt).toISOString() : undefined,
+        datePublished: problem.createdAt
+          ? new Date(problem.createdAt).toISOString()
+          : undefined,
         author: {
-          "@type": "Person", // Ou "Person" si tu récupères l'auteur du problème
-          name: problem.user?.username || "Communauté SolvHub"
+          "@type": "Person",
+          name: problem.user?.username || "Communauté SolvHub",
         },
         suggestedAnswer: solutions.map((s) => ({
           "@type": "Answer",
           name: s.title,
           text: s.steps,
-          // Champs recommandés par Google pour chaque réponse/solution :
-          url: `https://solvhub.fr${getProblemUrl(problem.idProblem, problem.title)}#solution-${s.idSolution}`,
-          datePublished: s.createdAt ? new Date(s.createdAt).toISOString() : undefined,
-          upvoteCount: s.score ?? 0, // Remplace par ta propriété de votes si elle existe, sinon 0
+          url: `${canonicalProblemUrl}#solution-${s.idSolution}`,
+          datePublished: s.createdAt
+            ? new Date(s.createdAt).toISOString()
+            : undefined,
+          upvoteCount: s.score ?? 0,
           author: {
             "@type": "Person",
-            name: s.user?.username || "Communauté SolvHub" // Adapte selon ton objet Solution
-          }
+            name: s.user?.username || "Communauté SolvHub",
+          },
         })),
       },
     };
@@ -171,11 +179,28 @@ export default function ProblemDetailPage() {
     );
   }
 
+  const canonicalUrl = `${SITE_DOMAIN}${getProblemUrl(
+    problem.idProblem,
+    problem.title,
+  )}`;
+
+  const equipmentSummary = problem.equipment
+    ? [
+        problem.equipment.brand,
+        problem.equipment.model,
+        problem.equipment.year,
+      ]
+        .filter(Boolean)
+        .join(" ")
+    : "";
+
   const generateProblemSeoTitle = () => {
     if (!problem) return "Problème technique | SolvHub";
     let prefix = "";
     if (problem.equipment?.brand && problem.equipment?.model) {
-      prefix = `${problem.equipment.brand} ${problem.equipment.model} : `;
+      prefix = `${problem.equipment.brand} ${problem.equipment.model}${
+        problem.equipment.year ? ` (${problem.equipment.year})` : ""
+      } : `;
     } else if (problem.category?.name) {
       prefix = `[${problem.category.name}] `;
     }
@@ -202,10 +227,8 @@ export default function ProblemDetailPage() {
           content={generateProblemSeoDescription()}
         />
         <meta property="og:type" content="article" />
-        <link
-          rel="canonical"
-          href={`https://solvhub.fr${getProblemUrl(problem.idProblem, problem.title)}`}
-        />
+        <meta property="og:url" content={canonicalUrl} />
+        <link rel="canonical" href={canonicalUrl} />
       </Helmet>
 
       <div className="max-w-6xl px-4 md:px-6 mx-auto mt-6 space-y-12">
@@ -235,7 +258,7 @@ export default function ProblemDetailPage() {
             )}
           </div>
 
-          {problem.equipment && (
+          {equipmentSummary && (
             <div className="flex items-center gap-4 bg-slate-900 text-white px-5 py-4 rounded-xl shadow-md">
               <span className="text-2xl bg-slate-800 p-2.5 rounded-lg">
                 {problem.category?.icon || "🔧"}
@@ -247,10 +270,15 @@ export default function ProblemDetailPage() {
                     : "Équipement concerné"}
                 </div>
                 <div className="text-lg md:text-xl font-extrabold tracking-wide">
-                  {problem.equipment.brand}{" "}
+                  {problem.equipment?.brand}{" "}
                   <span className="text-blue-400">
-                    {problem.equipment.model}
+                    {problem.equipment?.model}
                   </span>
+                  {problem.equipment?.year ? (
+                    <span className="text-slate-300 font-semibold ml-2">
+                      ({problem.equipment.year})
+                    </span>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -337,8 +365,7 @@ export default function ProblemDetailPage() {
             ))}
           </div>
         </section>
-        
-        {/* BLOC DE MAILLAGE CONTEXTUEL SIMILAIRE */}
+
         {problem && (
           <SimilarProblemsBlock
             currentProblemId={problem.idProblem}
