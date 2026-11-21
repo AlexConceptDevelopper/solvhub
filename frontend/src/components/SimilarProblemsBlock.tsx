@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { checkDuplicates } from "../api/problem.api";
+import { getProblems } from "../api/problem.api";
 import type { Problem } from "../types/problem";
 import { getProblemUrl } from "../utils/slug";
 
@@ -10,37 +10,99 @@ interface SimilarProblemsBlockProps {
   categoryId?: number;
 }
 
+const STOP_WORDS = new Set([
+  "avec",
+  "pour",
+  "dans",
+  "plus",
+  "sans",
+  "qui",
+  "que",
+  "des",
+  "les",
+  "une",
+  "sur",
+  "par",
+  "aux",
+  "est",
+  "sont",
+  "pas",
+  "mon",
+  "ma",
+  "mes",
+  "ton",
+  "ta",
+  "tes",
+]);
+
+function extractKeywords(text: string): string[] {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((word) => word.length >= 4 && !STOP_WORDS.has(word));
+}
+
 export default function SimilarProblemsBlock({
   currentProblemId,
   title,
+  categoryId,
 }: SimilarProblemsBlockProps) {
   const [similarProblems, setSimilarProblems] = useState<Problem[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!title || title.trim().length < 3) return;
+    if (!currentProblemId) return;
 
     const fetchSimilar = async () => {
       setLoading(true);
       try {
-        // On utilise la même API de recherche de doublons/similarité
-        const results = await checkDuplicates({ title, description: "" });
-        if (results) {
-          // On filtre pour exclure le problème actuel de la liste
-          const filtered = results.filter(
-            (p) => p.idProblem !== currentProblemId
-          );
-          setSimilarProblems(filtered.slice(0, 3)); // On garde le top 3 max
+        // Appelle GET /api/problems/dto (route GET publique) au lieu de POST /check-duplicates
+        const allProblems = await getProblems();
+        if (!Array.isArray(allProblems)) {
+          setSimilarProblems([]);
+          return;
         }
+
+        const currentKeywords = new Set(extractKeywords(title || ""));
+
+        const scored = allProblems
+          .filter((p) => p.idProblem !== currentProblemId)
+          .map((p) => {
+            let score = 0;
+
+            if (categoryId != null && p.category?.idCategory === categoryId) {
+              score += 3;
+            }
+
+            const candidateWords = extractKeywords(p.title || "");
+            for (const word of candidateWords) {
+              if (currentKeywords.has(word)) {
+                score += 1;
+              }
+            }
+
+            return { problem: p, score };
+          })
+          .filter((item) => item.score > 0)
+          .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return (b.problem.idProblem ?? 0) - (a.problem.idProblem ?? 0);
+          });
+
+        setSimilarProblems(scored.slice(0, 3).map((item) => item.problem));
       } catch (err) {
-        console.error("Erreur lors du chargement des problèmes similaires", err);
+        // En consultation publique, on reste discret sans polluer la console
+        setSimilarProblems([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchSimilar();
-  }, [title, currentProblemId]);
+  }, [currentProblemId, title, categoryId]);
 
   if (loading || similarProblems.length === 0) return null;
 
@@ -49,11 +111,12 @@ export default function SimilarProblemsBlock({
       <div className="flex items-center gap-2">
         <span className="text-xl">🔗</span>
         <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-        Problèmes similaires & connexes
+          Problèmes similaires & connexes
         </h2>
       </div>
       <p className="text-xs text-slate-500">
-        Découvrez d'autres discussions et résolutions partagées par la communauté sur des sujets proches.
+        Découvrez d&apos;autres discussions et résolutions partagées par la
+        communauté sur des sujets proches.
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
@@ -76,7 +139,9 @@ export default function SimilarProblemsBlock({
             </div>
             <div className="mt-4 text-xs font-semibold text-blue-600 flex items-center gap-1">
               <span>Voir la solution</span>
-              <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+              <span className="transform group-hover:translate-x-1 transition-transform">
+                →
+              </span>
             </div>
           </Link>
         ))}
